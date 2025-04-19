@@ -59,3 +59,52 @@
     font-size: 24px;
     color: #999;
 }
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.report-header select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.analytics-card svg {
+    margin-bottom: 10px;
+}
+
+.chart-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.top-destinations {
+    margin-top: 40px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.top-destinations table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.top-destinations th,
+.top-destinations td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.top-destinations th {
+    background-color: #f4f4f4;
+    font-weight: 600;
+}

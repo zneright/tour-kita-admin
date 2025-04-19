@@ -2,7 +2,6 @@
     display: flex;
 }
 
-/* Adjusted to align properly with 270px sidebar */
 .dashboard-main {
     flex: 1;
     margin-left: 270px;
@@ -11,7 +10,6 @@
     min-height: 100vh;
 }
 
-/* Header section */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -19,14 +17,12 @@
     margin-bottom: 20px;
 }
 
-/* Filter on top right */
 .date-filter {
     font-size: 14px;
     color: #555;
     cursor: pointer;
 }
 
-/* Cards row */
 .cards-container {
     display: flex;
     gap: 20px;
@@ -61,7 +57,6 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-/* Feedback table */
 .feedback-table {
     width: 100%;
     border-collapse: collapse;
@@ -81,4 +76,41 @@
 .feedback-table th {
     background-color: #f4f4f4;
     font-weight: 600;
+}
+
+.search-bar {
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f2f2f2;
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .dashboard-main {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .cards-container {
+        flex-direction: column;
+    }
+
+    .search-bar {
+        margin-top: 10px;
+    }
+
+    .feedback-table th,
+    .feedback-table td {
+        font-size: 12px;
+        padding: 8px;
+    }
 }
