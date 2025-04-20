@@ -7,6 +7,7 @@ const NotificationManagement = () => {
     const [message, setMessage] = useState('');
     const [audience, setAudience] = useState('all');
     const [schedule, setSchedule] = useState('now');
+    const [scheduledDate, setScheduledDate] = useState('');
     const [charCount, setCharCount] = useState(0);
     const [previewVisible, setPreviewVisible] = useState(false);
 
@@ -17,12 +18,15 @@ const NotificationManagement = () => {
             return;
         }
 
-        alert(`Notification sent to ${audience} (${schedule === 'now' ? 'immediately' : 'scheduled'})`);
+        const sendTime = schedule === 'now' ? 'immediately' : `on ${scheduledDate}`;
+        alert(`Notification sent to ${audience} (${sendTime})`);
+
         setTitle('');
         setMessage('');
         setCharCount(0);
         setAudience('all');
         setSchedule('now');
+        setScheduledDate('');
         setPreviewVisible(false);
     };
 
@@ -70,28 +74,43 @@ const NotificationManagement = () => {
                         <option value="later">Schedule for Later</option>
                     </select>
 
-                    <button type="button" className="preview-btn" onClick={() => setPreviewVisible(true)}>Preview</button>
+                    {schedule === 'later' && (
+                        <>
+                            <label htmlFor="date">Select Date</label>
+                            <input
+                                type="date"
+                                id="date"
+                                value={scheduledDate}
+                                onChange={(e) => setScheduledDate(e.target.value)}
+                            />
+                        </>
+                    )}
+
+                    <button type="button" className="preview-btn" onClick={() => setPreviewVisible(true)}>
+                        Preview
+                    </button>
                     <button type="submit" className="send-btn">Send Notification</button>
                 </form>
 
                 {previewVisible && (
-                    <div className="notification-preview">
-                        <h3>Preview</h3>
-                        <p><strong>To:</strong> {audience}</p>
-                        <p><strong>Title:</strong> {title}</p>
-                        <p><strong>Message:</strong> {message}</p>
-                        <p><strong>Schedule:</strong> {schedule === 'now' ? 'Immediately' : 'Scheduled'}</p>
+                    <div className="notification-popup">
+                        <div className="popup-content">
+                            <h3>Preview</h3>
+                            <p><strong>To:</strong> {audience}</p>
+                            <p><strong>Title:</strong> {title}</p>
+                            <p><strong>Message:</strong> {message}</p>
+                            <p>
+                                <strong>Schedule:</strong>{' '}
+                                {schedule === 'now' ? 'Immediately' : `Scheduled for ${scheduledDate}`}
+                            </p>
+
+                            <div className="popup-actions">
+                                <button className="exit-btn" onClick={() => setPreviewVisible(false)}>Exit</button>
+                                <button className="send-btn" onClick={handleSend}>Post</button>
+                            </div>
+                        </div>
                     </div>
                 )}
-
-                <div className="notification-history">
-                    <h3>Recent Notifications</h3>
-                    <ul>
-                        <li><strong>All Users</strong> Tour Update - “New tours now available!”</li>
-                        <li><strong>Registered</strong> Reminder - “Don't forget your upcoming trip.”</li>
-                        <li><strong>Guest</strong> Welcome - “Sign up now to unlock more features.”</li>
-                    </ul>
-                </div>
             </main>
         </div>
     );

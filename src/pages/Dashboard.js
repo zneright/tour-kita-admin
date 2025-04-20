@@ -1,83 +1,77 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Sidebar from '../components/Sidebar';
-import {
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
-} from 'recharts';
 import './Dashboard.css';
+import {
+    ResponsiveContainer,
+    BarChart,
+    Bar,
+    CartesianGrid,
+    XAxis,
+    YAxis,
+    Tooltip,
+} from 'recharts';
+import constantUsers from '../data/constantusers';
 
 const Dashboard = () => {
-    const [filter, setFilter] = useState("Today");
+    const nonArchivedUsers = constantUsers.filter(user => user.status !== 'archived');
+    const activeUsers = nonArchivedUsers.filter(user => user.online);
+    const activeRegistered = activeUsers.filter(user => user.status === 'registered');
+    const activeGuests = activeUsers.filter(user => user.status === 'guest');
 
-    const dataSets = {
-        Today: [
-            { name: '9 AM', users: 200 },
-            { name: '12 PM', users: 450 },
-            { name: '3 PM', users: 320 },
-            { name: '6 PM', users: 560 },
-        ],
-        Monthly: [
-            { name: 'Week 1', users: 900 },
-            { name: 'Week 2', users: 1400 },
-            { name: 'Week 3', users: 1100 },
-            { name: 'Week 4', users: 1700 },
-        ],
-        Quarterly: [
-            { name: 'Jan', users: 1200 },
-            { name: 'Feb', users: 900 },
-            { name: 'Mar', users: 1500 },
-            { name: 'Apr', users: 2200 },
-            { name: 'May', users: 3100 },
-            { name: 'Jun', users: 2500 },
-            { name: 'Jul', users: 2800 },
-        ]
-    };
+    const topRatedDestinations = [
+        { site: 'Manila Cathedral', rating: 4.8 },
+        { site: 'Fort Santiago', rating: 4.6 },
+        { site: 'Casa Manila', rating: 4.5 },
+        { site: 'San Agustin Church', rating: 4.4 },
+        { site: 'Baluarte de San Diego', rating: 4.3 },
+    ];
 
-    const handleFilterChange = (e) => {
-        setFilter(e.target.value);
+    const getPercentageColor = (value) => {
+        if (value > 0) return { color: 'green' };
+        if (value < 0) return { color: 'red' };
+        return { color: '#999' };
     };
 
     return (
         <div className="dashboard-wrapper">
             <Sidebar />
-
             <main className="dashboard-main">
                 <div className="dashboard-header">
                     <h1>Overview</h1>
-                    <select className="date-filter" value={filter} onChange={handleFilterChange}>
-                        <option value="Today">Today</option>
-                        <option value="Monthly">Monthly</option>
-                        <option value="Quarterly">Quarterly</option>
-                    </select>
                 </div>
 
                 <div className="cards-container">
-                    <div className="card purple">
+                    <div className="card brown">
                         <p>Active Users</p>
-                        <h2>{filter === "Today" ? 156 : filter === "Monthly" ? 3120 : 8800}</h2>
-                        <span>+15.03%</span>
+                        <h2>{activeUsers.length}</h2>
+                        <span style={getPercentageColor(15.03)}>+15.03%</span>
                     </div>
-                    <div className="card blue">
+                    <div className="card brown">
                         <p>Active Registered</p>
-                        <h2>{filter === "Today" ? 114 : filter === "Monthly" ? 2280 : 6450}</h2>
-                        <span>+11.01%</span>
+                        <h2>{activeRegistered.length}</h2>
+                        <span style={getPercentageColor(11.01)}>+11.01%</span>
                     </div>
-                    <div className="card lightblue">
-                        <p>Active Guest</p>
-                        <h2>{filter === "Today" ? 42 : filter === "Monthly" ? 840 : 2350}</h2>
-                        <span>+6.08%</span>
+                    <div className="card brown">
+                        <p>Active Guests</p>
+                        <h2>{activeGuests.length}</h2>
+                        <span style={getPercentageColor(-6.08)}>-6.08%</span>
                     </div>
                 </div>
 
-                <div className="chart-container">
-                    <h2>Total Additional Users</h2>
-                    <ResponsiveContainer width="100%" height={300}>
-                        <LineChart data={dataSets[filter]}>
+                <div className="chart-container" style={{ marginTop: '2rem' }}>
+                    <h2>Top Rated Sites - Intramuros</h2>
+                    <ResponsiveContainer width="100%" height={350}>
+                        <BarChart
+                            data={topRatedDestinations}
+                            layout="vertical"
+                            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                        >
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="name" />
-                            <YAxis />
-                            <Tooltip />
-                            <Line type="monotone" dataKey="users" stroke="#000" strokeWidth={2} dot={false} />
-                        </LineChart>
+                            <XAxis type="number" domain={[0, 5]} />
+                            <YAxis type="category" dataKey="site" />
+                            <Tooltip formatter={(value) => `${value} / 5`} />
+                            <Bar dataKey="rating" fill="#AB886D" barSize={30} />
+                        </BarChart>
                     </ResponsiveContainer>
                 </div>
             </main>

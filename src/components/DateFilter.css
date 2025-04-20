@@ -1,0 +1,9 @@
+.date-filter {
+    font-size: 14px;
+    color: #555;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+}

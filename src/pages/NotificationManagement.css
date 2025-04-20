@@ -33,7 +33,7 @@
 .send-btn {
     background-color: #AB886D;
     color: white;
-    padding: 12px;
+    padding: 12px 20px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -45,18 +45,10 @@
     background-color: #493628;
 }
 
-.char-counter {
-    font-size: 12px;
-    color: #777;
-    margin-top: -12px;
-    margin-bottom: 10px;
-    text-align: right;
-}
-
 .preview-btn {
     background-color: #6c757d;
     color: white;
-    padding: 12px;
+    padding: 12px 20px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -68,38 +60,63 @@
     background-color: #545b62;
 }
 
-.notification-preview {
-    margin-top: 30px;
-    background-color: #fff3cd;
-    padding: 20px;
-    border-left: 5px solid #ffc107;
-    border-radius: 8px;
+.exit-btn {
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
 }
 
-.notification-history {
-    margin-top: 40px;
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+.exit-btn:hover {
+    background-color: #c5c5c5;
 }
 
-.notification-history h3 {
+.char-counter {
+    font-size: 12px;
+    color: #777;
+    margin-top: -12px;
     margin-bottom: 10px;
+    text-align: right;
 }
 
-.notification-history ul {
-    padding-left: 20px;
-    list-style: square;
+/* Popup Styles */
+.notification-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.popup-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.popup-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 @media (max-width: 768px) {
-    .notification-form {
-        padding: 15px;
-    }
 
-    .notification-preview,
-    .notification-history {
+    .notification-form,
+    .popup-content {
         padding: 15px;
     }
 }
