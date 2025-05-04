@@ -27,9 +27,9 @@ const UserManagement = () => {
     const filterUsers = () => {
         return users.filter(user => {
             const matchesSearch =
-                user.name.toLowerCase().includes(search.toLowerCase()) ||
-                user.email.toLowerCase().includes(search.toLowerCase()) ||
-                user.id.includes(search);
+                (user.name?.toLowerCase().includes(search.toLowerCase()) || false) ||
+                (user.email?.toLowerCase().includes(search.toLowerCase()) || false) ||
+                user.id.toLowerCase().includes(search.toLowerCase());
 
             const matchesFilter =
                 viewFilter === 'all'
@@ -58,8 +58,13 @@ const UserManagement = () => {
     };
 
     const onlineOfflineFiltered = countOnlineOffline();
-    const onlineCount = onlineOfflineFiltered.filter(u => u.online).length;
-    const offlineCount = onlineOfflineFiltered.filter(u => !u.online).length;
+    const onlineCount = onlineOfflineFiltered.filter(u => u.activestatus).length;
+    const offlineCount = onlineOfflineFiltered.filter(u => !u.activestatus).length;
+
+    // Function to return the appropriate color for the online status
+    const getStatusColor = (activestatus) => {
+        return activestatus ? 'green' : 'red';
+    };
 
     return (
         <div className="dashboard-wrapper">
@@ -134,8 +139,9 @@ const UserManagement = () => {
                                     <th>Name</th>
                                     <th>Age</th>
                                     <th>Gender</th>
+                                    <th>Contact Number</th>
                                     <th>Status</th>
-                                    <th>Online</th>
+                                    <th>Active Status</th>
                                     <th>User Type</th>
                                     <th>Registered Date</th>
                                     <th>Actions</th>
@@ -146,12 +152,21 @@ const UserManagement = () => {
                                     filteredUsers.map((user) => (
                                         <tr key={user.id}>
                                             <td>{user.id}</td>
-                                            <td>{user.email}</td>
-                                            <td>{user.name}</td>
+                                            <td>{user.email || '—'}</td>
+                                            <td>{user.name || '—'}</td>
                                             <td>{user.age > 0 ? user.age : 'N/A'}</td>
-                                            <td>{user.gender}</td>
+                                            <td>{user.gender || '—'}</td>
+                                            <td>{user.contactNumber || '—'}</td>
                                             <td>{user.status.charAt(0).toUpperCase() + user.status.slice(1)}</td>
-                                            <td>{user.status !== 'archived' ? (user.online ? '🟢 Online' : '🔴 Offline') : 'N/A'}</td>
+                                            <td>
+                                                <span
+                                                    style={{
+                                                        color: getStatusColor(user.activestatus),
+                                                    }}
+                                                >
+                                                    {user.activestatus ? ' Online' : 'Offline'}
+                                                </span>
+                                            </td>
                                             <td>{user.status === 'registered' ? user.userType || 'N/A' : '—'}</td>
                                             <td>{user.registeredDate || 'N/A'}</td>
                                             <td>
@@ -166,7 +181,7 @@ const UserManagement = () => {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="10" className="no-data">No users found.</td>
+                                        <td colSpan="11" className="no-data">No users found.</td>
                                     </tr>
                                 )}
                             </tbody>

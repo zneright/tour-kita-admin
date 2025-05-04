@@ -3,7 +3,8 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 import TourkitaLogo from './TourkitaLogo.jpg';
 import { FaSignOutAlt, FaUserCircle } from 'react-icons/fa';
-import { FaTachometerAlt, FaUsers, FaComments, FaBell, FaChartBar } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaTachometerAlt, FaUsers, FaComments, FaBell, FaChartBar } from 'react-icons/fa';
+
 
 
 const Sidebar = () => {
@@ -41,10 +42,16 @@ const Sidebar = () => {
                         <FaBell className="nav-icon" />
                         Notification Management
                     </NavLink>
+                    <NavLink to="/markers-management" className="nav-link">
+                        <FaMapMarkerAlt className="nav-icon" />
+                        Markers Management
+                    </NavLink>
                     <NavLink to="/analysis-report" className="nav-link">
                         <FaChartBar className="nav-icon" />
                         Analysis & Reports
                     </NavLink>
+
+
                 </nav>
 
 

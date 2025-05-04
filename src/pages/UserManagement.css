@@ -214,3 +214,12 @@
     transform: scale(1.03);
 }
 
+.status-online {
+    color: green;
+    font-weight: 500;
+}
+
+.status-offline {
+    color: red;
+    font-weight: 500;
+}

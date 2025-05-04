@@ -7,6 +7,7 @@ import FeedbackReview from './pages/FeedbackReview';
 import NotificationManagement from './pages/NotificationManagement';
 import AnalysisReport from './pages/AnalysisReport';
 import Login from './pages/LoginPage';
+import MarkersManagement from './pages/MarkersManagement';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/feedback" element={<FeedbackReview />} />
         <Route path="/notification-management" element={<NotificationManagement />} />
         <Route path="/analysis-report" element={<AnalysisReport />} />
+        <Route path="/markers-management" element={<MarkersManagement />} />
       </Routes>
     </Router>
   );

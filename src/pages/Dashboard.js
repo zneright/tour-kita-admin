@@ -14,7 +14,7 @@ import constantUsers from '../data/constantusers';
 
 const Dashboard = () => {
     const nonArchivedUsers = constantUsers.filter(user => user.status !== 'archived');
-    const activeUsers = nonArchivedUsers.filter(user => user.online);
+    const activeUsers = nonArchivedUsers.filter(user => user.activestatus); // Change from user.online to user.activestatus
     const activeRegistered = activeUsers.filter(user => user.status === 'registered');
     const activeGuests = activeUsers.filter(user => user.status === 'guest');
 
@@ -42,17 +42,17 @@ const Dashboard = () => {
 
                 <div className="cards-container">
                     <div className="card brown">
-                        <p>Active Users</p>
+                        <p>Online All Users</p>
                         <h2>{activeUsers.length}</h2>
                         <span style={getPercentageColor(15.03)}>+15.03%</span>
                     </div>
                     <div className="card brown">
-                        <p>Active Registered</p>
+                        <p>Online Registered Users</p>
                         <h2>{activeRegistered.length}</h2>
                         <span style={getPercentageColor(11.01)}>+11.01%</span>
                     </div>
                     <div className="card brown">
-                        <p>Active Guests</p>
+                        <p>Online Guests Users</p>
                         <h2>{activeGuests.length}</h2>
                         <span style={getPercentageColor(-6.08)}>-6.08%</span>
                     </div>

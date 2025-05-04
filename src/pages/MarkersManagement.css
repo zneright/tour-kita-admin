@@ -1,0 +1,127 @@
+.marker-form {
+    width: 100%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.marker-form input,
+.marker-form textarea,
+.marker-form select {
+    padding: 14px 16px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: 'Segoe UI', sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: #fdfdfd;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.marker-form input:focus,
+.marker-form textarea:focus,
+.marker-form select:focus {
+    border-color: #d4aa7d;
+    box-shadow: 0 0 0 3px rgba(212, 170, 125, 0.25);
+    outline: none;
+}
+
+.marker-form label {
+    font-weight: 600;
+    color: #4b2e2e;
+    margin-bottom: 4px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Submit Button */
+.marker-form .send-btn {
+    padding: 14px;
+    background-color: #d4aa7d;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.marker-form .send-btn:hover {
+    background-color: #b78c64;
+}
+
+/* Image preview */
+.marker-form .preview-img {
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Radio button group wrapper */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Optional: Horizontal layout */
+.radio-group.horizontal {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Label wrapping each radio input */
+.radio-group label {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #4b2e2e;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* Radio input */
+.radio-group input[type="radio"] {
+    accent-color: #d4aa7d;
+    cursor: pointer;
+}
+
+.popup-message {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.popup-message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.popup-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.marker-img {
+    max-width: 200px;
+    max-height: 150px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
