@@ -1,122 +1,257 @@
+.dashboard-wrapper {
+    display: flex;
+    height: 100vh;
+    background-color: #f5f6fa;
+}
+
 .dashboard-main {
     flex: 1;
-    margin-left: 270px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    min-height: 100vh;
+    padding: 30px;
+    overflow-y: auto;
 }
 
-.notification-form {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    margin-top: 20px;
+.notification-header {
     display: flex;
-    flex-direction: column;
-    gap: 16px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
 }
 
-.notification-form label {
+.notification-header h2 {
+    font-size: 28px;
     font-weight: 600;
+    margin: 0;
 }
 
-.notification-form input,
-.notification-form textarea,
-.notification-form select {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background-color: #f2f2f2;
-}
-
-.send-btn {
-    background-color: #AB886D;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background 0.2s;
-}
-
-.send-btn:hover {
+.new-notification-btn {
     background-color: #493628;
-}
-
-.preview-btn {
-    background-color: #6c757d;
-    color: white;
-    padding: 12px 20px;
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 14px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.new-notification-btn:hover {
+    background-color: #5e3c21;
+}
+
+.notification-history {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+
+.notification-history h3 {
+    margin-top: 0;
+    font-size: 20px;
     font-weight: 600;
-    transition: background 0.2s;
+    margin-bottom: 15px;
 }
 
-.preview-btn:hover {
-    background-color: #545b62;
+.notification-history ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
-.exit-btn {
-    background-color: #e0e0e0;
-    color: #333;
-    padding: 12px 20px;
-    border: none;
+.notification-history li {
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.notification-history li:last-child {
+    border-bottom: none;
+}
+
+.notif-image {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.notif-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
     border-radius: 6px;
-    cursor: pointer;
+}
+
+.icon-placeholder {
+    font-size: 22px;
+    color: #7b4f2c;
+}
+
+.notif-details {
+    flex: 1;
+}
+
+.notif-details strong {
+    display: block;
     font-weight: 600;
-    transition: background 0.2s;
+    margin-bottom: 5px;
 }
 
-.exit-btn:hover {
-    background-color: #c5c5c5;
+.notif-details p {
+    margin: 0;
+    color: #555;
 }
 
-.char-counter {
+.notif-details small {
+    display: block;
     font-size: 12px;
-    color: #777;
-    margin-top: -12px;
-    margin-bottom: 10px;
-    text-align: right;
+    color: #aaa;
+    margin-top: 5px;
 }
 
-/* Popup Styles */
-.notification-popup {
+.popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 999;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.notification-popup {
+    background-color: #fff;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.scrollable-popup {
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .popup-content {
-    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     padding: 30px;
-    border-radius: 12px;
-    max-width: 500px;
-    width: 90%;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.popup-content h3 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.popup-content label {
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.popup-content input[type="text"],
+.popup-content input[type="date"],
+.popup-content input[type="time"],
+.popup-content input[type="file"],
+.popup-content select,
+.popup-content textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    width: 100%;
+}
+
+.popup-content textarea {
+    resize: vertical;
+}
+
+.popup-content small {
+    font-size: 12px;
+    color: #777;
+    align-self: flex-end;
 }
 
 .popup-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 10px;
+}
+
+.send-btn {
+    background-color: #28a745;
+    color: #fff;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.send-btn:hover {
+    background-color: #218838;
+}
+
+.exit-btn {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.exit-btn:hover {
+    background-color: #c82333;
 }
 
 @media (max-width: 768px) {
-
-    .notification-form,
-    .popup-content {
+    .dashboard-main {
         padding: 15px;
     }
+
+    .popup-content {
+        padding: 20px;
+    }
+
+    .new-notification-btn,
+    .send-btn,
+    .exit-btn {
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
 }

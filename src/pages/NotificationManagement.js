@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import './NotificationManagement.css';
-import { db } from '../firebase'; // Import Firestore from your firebaseConfig
-import { collection, addDoc } from 'firebase/firestore'; // Firestore functions
+import { db } from '../firebase';
+import { collection, addDoc, getDocs, deleteDoc, doc, Timestamp } from 'firebase/firestore';
 
 const NotificationManagement = () => {
+    const [notifications, setNotifications] = useState([]);
+    const [popupVisible, setPopupVisible] = useState(false);
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
     const [category, setCategory] = useState('updates');
@@ -13,19 +15,32 @@ const NotificationManagement = () => {
     const [scheduledDate, setScheduledDate] = useState('');
     const [scheduledTime, setScheduledTime] = useState('');
     const [charCount, setCharCount] = useState(0);
-    const [previewVisible, setPreviewVisible] = useState(false);
+    const [loading, setLoading] = useState(false);  // Add loading state
+
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            const querySnapshot = await getDocs(collection(db, 'notifications'));
+            const fetched = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+
+            // Sort notifications by timestamp in descending order
+            fetched.sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate());
+            setNotifications(fetched);
+        };
+        fetchNotifications();
+    }, []);
 
     const handleSend = async (e) => {
         e.preventDefault();
-
         if (!title.trim() || !message.trim()) {
             alert('Please fill out both the title and message.');
             return;
         }
 
-        const sendTime = schedule === 'now' ? 'immediately' : `on ${scheduledDate} at ${scheduledTime}`;
+        setLoading(true);  // Set loading to true when sending
 
-        // Send notification to Firebase Firestore
         try {
             const docRef = await addDoc(collection(db, 'notifications'), {
                 title,
@@ -33,13 +48,12 @@ const NotificationManagement = () => {
                 category,
                 audience,
                 schedule: schedule === 'now' ? 'immediately' : `on ${scheduledDate} at ${scheduledTime}`,
-                timestamp: new Date(), // Save the timestamp of when the notification was created
+                timestamp: Timestamp.now(),
             });
 
-            console.log('Notification sent to Firestore with ID: ', docRef.id);
-            alert(`Notification sent to ${audience} (${sendTime}) in category: ${category}`);
+            alert(`Notification sent to ${audience}`);
 
-            // Reset form state after sending the notification
+            // Reset form fields
             setTitle('');
             setMessage('');
             setCharCount(0);
@@ -48,124 +62,179 @@ const NotificationManagement = () => {
             setSchedule('now');
             setScheduledDate('');
             setScheduledTime('');
-            setPreviewVisible(false); // Close preview when notification is sent
+            setPopupVisible(false);
+
+            // Refresh notifications after sending
+            const querySnapshot = await getDocs(collection(db, 'notifications'));
+            const fetched = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+
+            // Sort notifications by timestamp in descending order
+            fetched.sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate());
+            setNotifications(fetched);
+
         } catch (error) {
-            console.error('Error adding document: ', error);
-            alert('Error sending notification. Please try again later.');
+            console.error('Error sending notification:', error);
+            alert('Failed to send notification.');
+        } finally {
+            setLoading(false);  // Set loading to false after sending
         }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            // Delete notification from Firestore
+            await deleteDoc(doc(db, 'notifications', id));
+
+            // Update local state by removing the deleted notification
+            setNotifications(prevNotifications =>
+                prevNotifications.filter(notification => notification.id !== id)
+            );
+
+            alert('Notification deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting notification:', error);
+            alert('Failed to delete notification.');
+        }
+    };
+
+    const categoryIcons = {
+        updates: '🔔',
+        promotions: '🎉',
+        reminders: '⏰',
+        alerts: '⚠️',
     };
 
     return (
         <div className="dashboard-wrapper">
             <Sidebar />
-
             <main className="dashboard-main">
-                <h2>Notification Management</h2>
-
-                <form className="notification-form" onSubmit={handleSend}>
-                    <label htmlFor="title">Title</label>
-                    <input
-                        type="text"
-                        id="title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Enter notification title"
-                    />
-
-                    <label htmlFor="message">Message</label>
-                    <textarea
-                        id="message"
-                        rows="5"
-                        value={message}
-                        onChange={(e) => {
-                            setMessage(e.target.value);
-                            setCharCount(e.target.value.length);
-                        }}
-                        placeholder="Enter your message..."
-                        maxLength={300}
-                    ></textarea>
-                    <small className="char-counter">{charCount}/300 characters</small>
-
-                    <label htmlFor="category">Category</label>
-                    <select
-                        id="category"
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                    >
-                        <option value="updates">Updates</option>
-                        <option value="promotions">Promotions</option>
-                        <option value="reminders">Reminders</option>
-                        <option value="alerts">Alerts</option>
-                    </select>
-
-                    <label htmlFor="audience">Audience</label>
-                    <select
-                        id="audience"
-                        value={audience}
-                        onChange={(e) => setAudience(e.target.value)}
-                    >
-                        <option value="all">All Users</option>
-                        <option value="registered">Registered Users</option>
-                        <option value="guest">Guest Users</option>
-                    </select>
-
-                    <label htmlFor="schedule">Send</label>
-                    <select
-                        id="schedule"
-                        value={schedule}
-                        onChange={(e) => setSchedule(e.target.value)}
-                    >
-                        <option value="now">Immediately</option>
-                        <option value="later">Schedule for Later</option>
-                    </select>
-
-                    {schedule === 'later' && (
-                        <>
-                            <label htmlFor="date">Select Date</label>
-                            <input
-                                type="date"
-                                id="date"
-                                value={scheduledDate}
-                                onChange={(e) => setScheduledDate(e.target.value)}
-                            />
-
-                            <label htmlFor="time">Select Time</label>
-                            <input
-                                type="time"
-                                id="time"
-                                value={scheduledTime}
-                                onChange={(e) => setScheduledTime(e.target.value)}
-                            />
-                        </>
-                    )}
-
-                    <button
-                        type="button"
-                        className="preview-btn"
-                        onClick={() => setPreviewVisible(!previewVisible)}
-                    >
-                        {previewVisible ? 'Close Preview' : 'Preview'}
+                <div className="notification-header">
+                    <h2>Notification Management</h2>
+                    <button className="new-notification-btn" onClick={() => setPopupVisible(true)}>
+                        + New Notification
                     </button>
-                    <button type="submit" className="send-btn">Send Notification</button>
-                </form>
+                </div>
 
-                {previewVisible && (
-                    <div className="notification-popup">
-                        <div className="popup-content">
-                            <h3>Preview</h3>
-                            <p><strong>To:</strong> {audience}</p>
-                            <p><strong>Category:</strong> {category}</p>
-                            <p><strong>Title:</strong> {title}</p>
-                            <p><strong>Message:</strong> {message}</p>
-                            <p>
-                                <strong>Schedule:</strong>{' '}
-                                {schedule === 'now' ? 'Immediately' : `Scheduled for ${scheduledDate} at ${scheduledTime}`}
-                            </p>
+                <div className="notification-history">
+                    <h3>History</h3>
+                    <ul className="notification-list">
+                        {notifications.map((notif) => {
+                            const dateSent = notif.timestamp?.toDate?.().toLocaleString?.() || 'Unknown Date';
+                            const icon = categoryIcons[notif.category] || '📢';
 
-                            <div className="popup-actions">
-                                <button className="exit-btn" onClick={() => setPreviewVisible(false)}>Exit</button>
-                                <button className="send-btn" onClick={handleSend}>Post</button>
-                            </div>
+                            return (
+                                <li key={notif.id} className="notification-item">
+                                    <div className="notif-image">
+                                        <div className="icon-placeholder">{icon}</div>
+                                    </div>
+                                    <div className="notif-details">
+                                        <strong>{notif.title}</strong>
+                                        <p>{notif.message}</p>
+                                        <small>{dateSent}</small>
+                                    </div>
+                                    <button
+                                        className="delete-btn"
+                                        onClick={() => handleDelete(notif.id)}
+                                    >
+                                        Delete
+                                    </button>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>
+
+                {popupVisible && (
+                    <div className="popup-overlay">
+                        <div className="notification-popup scrollable-popup">
+                            <form className="popup-content" onSubmit={handleSend}>
+                                <h3>Create Notification</h3>
+
+                                <label htmlFor="title">Title</label>
+                                <input
+                                    type="text"
+                                    id="title"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    required
+                                />
+
+                                <label htmlFor="message">Message</label>
+                                <textarea
+                                    id="message"
+                                    rows="4"
+                                    value={message}
+                                    onChange={(e) => {
+                                        setMessage(e.target.value);
+                                        setCharCount(e.target.value.length);
+                                    }}
+                                    maxLength={300}
+                                    required
+                                />
+                                <small>{charCount}/300 characters</small>
+
+                                <label htmlFor="category">Category</label>
+                                <select
+                                    id="category"
+                                    value={category}
+                                    onChange={(e) => setCategory(e.target.value)}
+                                >
+                                    <option value="updates">Updates</option>
+                                    <option value="promotions">Promotions</option>
+                                    <option value="reminders">Reminders</option>
+                                    <option value="alerts">Alerts</option>
+                                </select>
+
+                                <label htmlFor="audience">Audience</label>
+                                <select
+                                    id="audience"
+                                    value={audience}
+                                    onChange={(e) => setAudience(e.target.value)}
+                                >
+                                    <option value="all">All Users</option>
+                                    <option value="registered">Registered Users</option>
+                                    <option value="guest">Guest Users</option>
+                                </select>
+
+                                <label htmlFor="schedule">Schedule</label>
+                                <select
+                                    id="schedule"
+                                    value={schedule}
+                                    onChange={(e) => setSchedule(e.target.value)}
+                                >
+                                    <option value="now">Immediately</option>
+                                    <option value="later">Schedule for Later</option>
+                                </select>
+
+                                {schedule === 'later' && (
+                                    <>
+                                        <label htmlFor="date">Date</label>
+                                        <input
+                                            type="date"
+                                            id="date"
+                                            value={scheduledDate}
+                                            onChange={(e) => setScheduledDate(e.target.value)}
+                                        />
+                                        <label htmlFor="time">Time</label>
+                                        <input
+                                            type="time"
+                                            id="time"
+                                            value={scheduledTime}
+                                            onChange={(e) => setScheduledTime(e.target.value)}
+                                        />
+                                    </>
+                                )}
+
+                                <div className="popup-actions">
+                                    <button type="submit" className="send-btn" disabled={loading}>
+                                        {loading ? 'Sending...' : 'Send'}
+                                    </button>
+                                    <button type="button" className="exit-btn" onClick={() => setPopupVisible(false)}>Cancel</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 )}

@@ -28,11 +28,13 @@ const MarkersManagement = () => {
             sunday: ''
         }
     });
-    const [imageMode, setImageMode] = useState('url'); // 'url' or 'upload'
+    const [imageMode, setImageMode] = useState('url');
     const [editingId, setEditingId] = useState(null);
     const [search, setSearch] = useState('');
-    const [loading, setLoading] = useState(false); // To control the button disabling
-    const [popup, setPopup] = useState({ message: '', status: '' }); // For displaying pop-ups (message + success/error status)
+    const [loading, setLoading] = useState(false);
+    const [popup, setPopup] = useState({ message: '', status: '' });
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         const fetchMarkers = async () => {
@@ -43,9 +45,8 @@ const MarkersManagement = () => {
             }));
             setMarkers(markersData);
         };
-
         fetchMarkers();
-    }, []); // Run this effect once when the component mounts
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -65,7 +66,6 @@ const MarkersManagement = () => {
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
-            // Upload image to Firebase Storage
             const storageRef = ref(storage, 'markers/' + file.name);
             const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -89,7 +89,6 @@ const MarkersManagement = () => {
     };
 
     const handleSubmit = async () => {
-
         if (!form.name || !form.latitude || !form.longitude) {
             setPopup({ message: 'Please fill in all required fields.', status: 'error' });
             return;
@@ -99,7 +98,6 @@ const MarkersManagement = () => {
             setPopup({ message: 'Latitude and Longitude must be valid numbers.', status: 'error' });
             return;
         }
-
 
         if (form.entranceFee && isNaN(form.entranceFee)) {
             setPopup({ message: 'Entrance Fee must be a valid number.', status: 'error' });
@@ -117,11 +115,10 @@ const MarkersManagement = () => {
         };
 
         try {
-            // Save to Firestore
             const docRef = doc(db, "markers", String(newMarkerData.id));
             await setDoc(docRef, newMarkerData);
 
-            if (editingId) {
+            if (isEditing) {
                 setMarkers(markers.map(m => m.id === editingId ? newMarkerData : m));
                 setEditingId(null);
                 setPopup({ message: 'Marker updated successfully!', status: 'success' });
@@ -130,7 +127,6 @@ const MarkersManagement = () => {
                 setPopup({ message: 'Marker added successfully!', status: 'success' });
             }
 
-            // Reset form 
             setForm({
                 id: '',
                 name: '',
@@ -153,6 +149,8 @@ const MarkersManagement = () => {
                 }
             });
             setImageMode('url');
+            setIsModalOpen(false);
+            setIsEditing(false);
         } catch (error) {
             console.error('Error saving marker: ', error);
             setPopup({ message: 'Error occurred. Please try again.', status: 'error' });
@@ -169,7 +167,8 @@ const MarkersManagement = () => {
             customCategory: isCustom ? marker.category : '',
         });
         setEditingId(marker.id);
-        setImageMode(marker.image.startsWith('blob:') ? 'upload' : 'url');
+        setIsEditing(true);
+        setIsModalOpen(true);
     };
 
     const handleDelete = async (id) => {
@@ -177,35 +176,11 @@ const MarkersManagement = () => {
         if (confirmDelete) {
             setLoading(true);
             try {
-                // Delete marker from Firestore
                 const markerRef = doc(db, 'markers', String(id));
                 await deleteDoc(markerRef);
 
                 setMarkers(markers.filter(marker => marker.id !== id));
                 setPopup({ message: 'Marker deleted successfully!', status: 'success' });
-                if (editingId === id) {
-                    setForm({
-                        id: '',
-                        name: '',
-                        image: '',
-                        latitude: '',
-                        longitude: '',
-                        entranceFee: '',
-                        address: '',
-                        description: '',
-                        openingHours: {
-                            monday: '',
-                            tuesday: '',
-                            wednesday: '',
-                            thursday: '',
-                            friday: '',
-                            saturday: '',
-                            sunday: ''
-                        }
-                    });
-                    setEditingId(null);
-                    setImageMode('url');
-                }
             } catch (error) {
                 console.error('Error deleting marker: ', error);
                 setPopup({ message: 'Error occurred while deleting the marker.', status: 'error' });
@@ -219,144 +194,150 @@ const MarkersManagement = () => {
         marker.name.toLowerCase().includes(search.toLowerCase())
     );
 
+    const handleAddMarkerClick = () => {
+        setForm({
+            id: '',
+            name: '',
+            image: '',
+            latitude: '',
+            longitude: '',
+            entranceFee: '',
+            address: '',
+            description: '',
+            categoryOption: '',
+            customCategory: '',
+            openingHours: {
+                monday: '',
+                tuesday: '',
+                wednesday: '',
+                thursday: '',
+                friday: '',
+                saturday: '',
+                sunday: ''
+            }
+        });
+        setEditingId(null);
+        setIsEditing(false);
+        setIsModalOpen(true);
+    };
+
     return (
         <div className="dashboard-wrapper">
             <Sidebar />
             <main className="dashboard-main">
                 <h2>Markers Management</h2>
 
-                {/*pop up */}
                 {popup.message && (
                     <div className={`popup-message ${popup.status}`}>
                         {popup.message}
                     </div>
                 )}
 
-                <form className="marker-form" onSubmit={(e) => e.preventDefault()}>
-                    <input name="name" placeholder="Name" value={form.name} onChange={handleChange} />
-
-                    <label>Image Mode</label>
-                    <select value={imageMode} onChange={(e) => setImageMode(e.target.value)}>
-                        <option value="url">Use Image URL</option>
-                        <option value="upload">Upload Image</option>
-                    </select>
-
-                    {imageMode === 'url' ? (
-                        <input
-                            name="image"
-                            placeholder="Image URL"
-                            value={form.image}
-                            onChange={handleChange}
-                        />
-                    ) : (
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageUpload}
-                        />
-                    )}
-
-                    {form.image && (
-                        <img
-                            src={form.image}
-                            alt="Preview"
-                            className="preview-img"
-                        />
-                    )}
-
-                    <input name="latitude" placeholder="Latitude" value={form.latitude} onChange={handleChange} />
-                    <input name="longitude" placeholder="Longitude" value={form.longitude} onChange={handleChange} />
-                    <input name="entranceFee" placeholder="Entrance Fee" value={form.entranceFee} onChange={handleChange} />
-                    <input name="address" placeholder="Address" value={form.address} onChange={handleChange} />
-                    <textarea name="description" placeholder="Description" value={form.description} onChange={handleChange} />
-
-                    <label>Category</label>
-                    <select name="categoryOption" value={form.categoryOption} onChange={handleChange}>
-                        <option value="">Select category</option>
-                        <option value="Historical">Historical</option>
-                        <option value="Restaurant">Restaurant</option>
-                        <option value="Park">Park</option>
-                        <option value="Museum">Museum</option>
-                        <option value="Other">Other</option>
-                    </select>
-
-                    {form.categoryOption === 'Other' && (
-                        <input
-                            type="text"
-                            name="customCategory"
-                            placeholder="Custom category"
-                            value={form.customCategory}
-                            onChange={handleChange}
-                        />
-                    )}
-
-                    <div className="opening-hours">
-                        <h3>Opening Hours</h3>
-                        {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map((day) => (
-                            <div key={day}>
-                                <label>{day.charAt(0).toUpperCase() + day.slice(1)}</label>
-                                <input
-                                    type="text"
-                                    name={day}
-                                    placeholder="Opening time (e.g., 9:00 AM - 5:00 PM) or Closed"
-                                    value={form.openingHours[day]}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                        ))}
-                    </div>
-
-                    <button
-                        type="button"
-                        className="send-btn"
-                        onClick={handleSubmit}
-                        disabled={loading}
-                    >
-                        {editingId ? 'Update Marker' : 'Add Marker'}
-                    </button>
-                </form>
-
-                <input
-                    type="text"
-                    placeholder="Search landmark..."
-                    className="search-bar"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-
-                <div className="marker-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Name</th>
-                                <th>Category</th>
-                                <th>Lat</th>
-                                <th>Lng</th>
-                                <th>Opening Hours</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredMarkers.map((marker) => (
-                                <tr key={marker.id}>
-                                    <td><img src={marker.image} alt="Marker" className="marker-img" /></td>
-                                    <td>{marker.name}</td>
-                                    <td>{marker.category}</td>
-                                    <td>{marker.latitude}</td>
-                                    <td>{marker.longitude}</td>
-                                    <td>{Object.keys(marker.openingHours).map(day => (
-                                        <div key={day}>{`${day.charAt(0).toUpperCase() + day.slice(1)}: ${marker.openingHours[day]}`}</div>
-                                    ))}</td>
-                                    <td>
-                                        <button onClick={() => handleEdit(marker)}>Edit</button>
-                                        <button onClick={() => handleDelete(marker.id)}>Delete</button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                <div className="top-controls">
+                    <input
+                        type="text"
+                        placeholder="Search markers..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                    <button onClick={handleAddMarkerClick}>Add New Marker</button>
                 </div>
+
+                <div className="markers-list">
+                    {filteredMarkers.map(marker => (
+                        <div key={marker.id} className="marker-card">
+                            <img src={marker.image} alt={marker.name} />
+                            <h4>{marker.name}</h4>
+                            <p>{marker.category}</p>
+                            <div className="card-actions">
+                                <button onClick={() => handleEdit(marker)}>Edit</button>
+                                <button onClick={() => handleDelete(marker.id)}>Delete</button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {isModalOpen && (
+                    <div className="modal-overlay">
+                        <div className="modal-content">
+                            <form className="marker-form" onSubmit={(e) => e.preventDefault()}>
+                                <label>Name</label>
+                                <input name="name" value={form.name} onChange={handleChange} />
+
+                                <label>Image Mode</label>
+                                <select value={imageMode} onChange={(e) => setImageMode(e.target.value)}>
+                                    <option value="url">Use Image URL</option>
+                                    <option value="upload">Upload Image</option>
+                                </select>
+
+                                {imageMode === 'url' ? (
+                                    <input name="image" placeholder="Image URL" value={form.image} onChange={handleChange} />
+                                ) : (
+                                    <input type="file" accept="image/*" onChange={handleImageUpload} />
+                                )}
+
+                                {form.image && (
+                                    <div className="preview-container">
+                                        <img src={form.image} alt="Preview" className="preview-img" />
+                                    </div>
+                                )}
+
+                                <label>Latitude</label>
+                                <input name="latitude" value={form.latitude} onChange={handleChange} />
+
+                                <label>Longitude</label>
+                                <input name="longitude" value={form.longitude} onChange={handleChange} />
+
+                                <label>Entrance Fee</label>
+                                <input name="entranceFee" value={form.entranceFee} onChange={handleChange} />
+
+                                <label>Address</label>
+                                <input name="address" value={form.address} onChange={handleChange} />
+
+                                <label>Description</label>
+                                <textarea name="description" value={form.description} onChange={handleChange}></textarea>
+
+                                <label>Category</label>
+                                <select name="categoryOption" value={form.categoryOption} onChange={handleChange}>
+                                    <option value="Historical">Historical</option>
+                                    <option value="Restaurant">Restaurant</option>
+                                    <option value="Park">Park</option>
+                                    <option value="Museum">Museum</option>
+                                    <option value="Other">Other</option>
+                                </select>
+
+                                {form.categoryOption === 'Other' && (
+                                    <input
+                                        name="customCategory"
+                                        placeholder="Custom Category"
+                                        value={form.customCategory}
+                                        onChange={handleChange}
+                                    />
+                                )}
+
+                                <label>Opening Hours</label>
+                                {Object.keys(form.openingHours).map(day => (
+                                    <div key={day}>
+                                        <label>{day.charAt(0).toUpperCase() + day.slice(1)}</label>
+                                        <input
+                                            name={day}
+                                            value={form.openingHours[day]}
+                                            onChange={handleChange}
+                                            placeholder="e.g. 9:00 AM - 5:00 PM"
+                                        />
+                                    </div>
+                                ))}
+
+                                <div className="form-actions">
+                                    <button type="button" onClick={handleSubmit} disabled={loading}>
+                                        {loading ? 'Saving...' : isEditing ? 'Update Marker' : 'Add Marker'}
+                                    </button>
+                                    <button type="button" className="cancel-btn" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
             </main>
         </div>
     );
