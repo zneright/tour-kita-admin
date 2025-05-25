@@ -1,10 +1,11 @@
 .login-container {
     height: 100vh;
-    background: radial-gradient(circle at bottom left, #3c2415 25%, transparent 26%),
-        radial-gradient(circle at top right, #3c2415 35%, transparent 36%),
-        #a0795e;
+    background:
+        linear-gradient(135deg, rgba(60, 36, 21, 0.9) 0%, rgba(160, 121, 94, 0.9) 100%),
+        url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+    background-blend-mode: overlay;
     background-size: cover;
-    background-repeat: no-repeat;
+    background-repeat: repeat;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -83,8 +84,8 @@
 .login-form button {
     width: 100%;
     padding: 12px;
-    background-color: #fff;
-    color: #3c2415;
+    background-color: #6e513d;
+    color: #E4E0E1;
     border: none;
     border-radius: 8px;
     font-weight: bold;
@@ -96,7 +97,7 @@
 }
 
 .login-form button:hover {
-    background-color: #eae2dc;
+    background-color: #493628;
     transform: translateY(-2px);
     box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.2);
 }

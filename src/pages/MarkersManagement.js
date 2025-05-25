@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import './MarkersManagement.css';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { doc, setDoc, getDocs, collection, deleteDoc } from 'firebase/firestore';
-import { storage, db } from '../firebase'; // Import storage and db from your firebase.js
+import { db } from '../firebase';
 
 const MarkersManagement = () => {
     const [markers, setMarkers] = useState([]);
@@ -18,24 +17,29 @@ const MarkersManagement = () => {
         description: '',
         categoryOption: '',
         customCategory: '',
+        arCameraSupported: false,
+        accessibleRestrooms: false,
         openingHours: {
-            monday: '',
-            tuesday: '',
-            wednesday: '',
-            thursday: '',
-            friday: '',
-            saturday: '',
-            sunday: ''
+            monday: { open: '', close: '', closed: false },
+            tuesday: { open: '', close: '', closed: false },
+            wednesday: { open: '', close: '', closed: false },
+            thursday: { open: '', close: '', closed: false },
+            friday: { open: '', close: '', closed: false },
+            saturday: { open: '', close: '', closed: false },
+            sunday: { open: '', close: '', closed: false }
         }
+
+
     });
-    const [imageMode, setImageMode] = useState('url');
     const [editingId, setEditingId] = useState(null);
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(false);
     const [popup, setPopup] = useState({ message: '', status: '' });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-
+    const [previewMarker, setPreviewMarker] = useState(null);
+    const [copyDay, setCopyDay] = useState(null);
+    const [copyTargets, setCopyTargets] = useState([])
     useEffect(() => {
         const fetchMarkers = async () => {
             const querySnapshot = await getDocs(collection(db, 'markers'));
@@ -63,47 +67,35 @@ const MarkersManagement = () => {
         }
     };
 
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const storageRef = ref(storage, 'markers/' + file.name);
-            const uploadTask = uploadBytesResumable(storageRef, file);
-
-            uploadTask.on(
-                'state_changed',
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    console.log('Upload is ' + progress + '% done');
-                },
-                (error) => {
-                    console.error("Error uploading image: ", error);
-                    setPopup({ message: 'Error uploading image.', status: 'error' });
-                },
-                async () => {
-                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                    setForm({ ...form, image: downloadURL });
-                    console.log("File available at: ", downloadURL);
-                }
-            );
-        }
-    };
 
     const handleSubmit = async () => {
-        if (!form.name || !form.latitude || !form.longitude) {
+        if (!form.name || !form.latitude || !form.longitude || !form.address || !form.description) {
+            alert('Please fill in all required fields.');
             setPopup({ message: 'Please fill in all required fields.', status: 'error' });
             return;
         }
 
         if (isNaN(form.latitude) || isNaN(form.longitude)) {
+            alert('Latitude and Longitude must be valid numbers.');
             setPopup({ message: 'Latitude and Longitude must be valid numbers.', status: 'error' });
             return;
         }
 
         if (form.entranceFee && isNaN(form.entranceFee)) {
+            alert('Entrance Fee must be a valid number.');
             setPopup({ message: 'Entrance Fee must be a valid number.', status: 'error' });
             return;
         }
+        const isTimeOverlap = Object.keys(form.openingHours).some(day => {
+            const { open, close } = form.openingHours[day];
+            return open && close && open === close;
+        });
 
+        if (isTimeOverlap) {
+            alert('Opening and closing times cannot be the same.');
+            setPopup({ message: 'Opening and closing times cannot be the same.', status: 'error' });
+            return;
+        }
         setLoading(true);
 
         const finalCategory = form.categoryOption === 'Other' ? form.customCategory : form.categoryOption;
@@ -138,17 +130,19 @@ const MarkersManagement = () => {
                 description: '',
                 categoryOption: '',
                 customCategory: '',
+                arCameraSupported: false,
+                accessibleRestrooms: false,
                 openingHours: {
-                    monday: '',
-                    tuesday: '',
-                    wednesday: '',
-                    thursday: '',
-                    friday: '',
-                    saturday: '',
-                    sunday: ''
+                    monday: { open: '', close: '', closed: false },
+                    tuesday: { open: '', close: '', closed: false },
+                    wednesday: { open: '', close: '', closed: false },
+                    thursday: { open: '', close: '', closed: false },
+                    friday: { open: '', close: '', closed: false },
+                    saturday: { open: '', close: '', closed: false },
+                    sunday: { open: '', close: '', closed: false }
                 }
+
             });
-            setImageMode('url');
             setIsModalOpen(false);
             setIsEditing(false);
         } catch (error) {
@@ -206,15 +200,18 @@ const MarkersManagement = () => {
             description: '',
             categoryOption: '',
             customCategory: '',
+            arCameraSupported: false,
+            accessibleRestrooms: false,
             openingHours: {
-                monday: '',
-                tuesday: '',
-                wednesday: '',
-                thursday: '',
-                friday: '',
-                saturday: '',
-                sunday: ''
+                monday: { open: '', close: '', closed: false },
+                tuesday: { open: '', close: '', closed: false },
+                wednesday: { open: '', close: '', closed: false },
+                thursday: { open: '', close: '', closed: false },
+                friday: { open: '', close: '', closed: false },
+                saturday: { open: '', close: '', closed: false },
+                sunday: { open: '', close: '', closed: false }
             }
+
         });
         setEditingId(null);
         setIsEditing(false);
@@ -243,10 +240,15 @@ const MarkersManagement = () => {
                     <button onClick={handleAddMarkerClick}>Add New Marker</button>
                 </div>
 
-                <div className="markers-list">
+                <div className="markers-list grid grid-cols-4 gap-4">
                     {filteredMarkers.map(marker => (
                         <div key={marker.id} className="marker-card">
-                            <img src={marker.image} alt={marker.name} />
+                            <img
+                                src={marker.image}
+                                alt={marker.name}
+                                onClick={() => setPreviewMarker(marker)}
+                                style={{ cursor: 'pointer' }}
+                            />
                             <h4>{marker.name}</h4>
                             <p>{marker.category}</p>
                             <div className="card-actions">
@@ -263,18 +265,9 @@ const MarkersManagement = () => {
                             <form className="marker-form" onSubmit={(e) => e.preventDefault()}>
                                 <label>Name</label>
                                 <input name="name" value={form.name} onChange={handleChange} />
+                                <label>Image Url</label>
+                                <input name="image" value={form.image} onChange={handleChange} />
 
-                                <label>Image Mode</label>
-                                <select value={imageMode} onChange={(e) => setImageMode(e.target.value)}>
-                                    <option value="url">Use Image URL</option>
-                                    <option value="upload">Upload Image</option>
-                                </select>
-
-                                {imageMode === 'url' ? (
-                                    <input name="image" placeholder="Image URL" value={form.image} onChange={handleChange} />
-                                ) : (
-                                    <input type="file" accept="image/*" onChange={handleImageUpload} />
-                                )}
 
                                 {form.image && (
                                     <div className="preview-container">
@@ -314,19 +307,166 @@ const MarkersManagement = () => {
                                         onChange={handleChange}
                                     />
                                 )}
+                                <div className="checkbox-group">
+                                    <input
+                                        type="checkbox"
+                                        name="arCameraSupported"
+                                        checked={form.arCameraSupported || false}
+                                        onChange={(e) => setForm(prev => ({ ...prev, arCameraSupported: e.target.checked }))}
+                                    />
+                                    <label htmlFor="arCameraSupported">AR Camera Supported</label>
+                                </div>
+
+                                <div className="checkbox-group">
+                                    <input
+                                        type="checkbox"
+                                        name="accessibleRestrooms"
+                                        checked={form.accessibleRestrooms || false}
+                                        onChange={(e) => setForm(prev => ({ ...prev, accessibleRestrooms: e.target.checked }))}
+                                    />
+                                    <label htmlFor="accessibleRestrooms">Accessible Restrooms</label>
+                                </div>
 
                                 <label>Opening Hours</label>
-                                {Object.keys(form.openingHours).map(day => (
-                                    <div key={day}>
-                                        <label>{day.charAt(0).toUpperCase() + day.slice(1)}</label>
-                                        <input
-                                            name={day}
-                                            value={form.openingHours[day]}
-                                            onChange={handleChange}
-                                            placeholder="e.g. 9:00 AM - 5:00 PM"
-                                        />
-                                    </div>
-                                ))}
+                                {Object.keys(form.openingHours).map(day => {
+                                    const dayData = form.openingHours[day];
+                                    const otherDays = Object.keys(form.openingHours).filter(d => d !== day);
+
+                                    return (
+                                        <div key={day} className="opening-hours-container">
+                                            <label className="opening-hours-day-label">
+                                                {day.charAt(0).toUpperCase() + day.slice(1)}
+                                            </label>
+
+                                            <div className="opening-hours-row">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={dayData.closed || false}
+                                                    onChange={(e) => {
+                                                        const checked = e.target.checked;
+                                                        setForm(prevForm => ({
+                                                            ...prevForm,
+                                                            openingHours: {
+                                                                ...prevForm.openingHours,
+                                                                [day]: checked
+                                                                    ? { closed: true }
+                                                                    : { open: '', close: '', closed: false }
+                                                            }
+                                                        }));
+                                                    }}
+                                                />
+                                                <span>Closed</span>
+
+                                                {!dayData.closed && (
+                                                    <>
+                                                        <input
+                                                            type="time"
+                                                            value={dayData.open}
+                                                            onChange={(e) =>
+                                                                setForm(prevForm => ({
+                                                                    ...prevForm,
+                                                                    openingHours: {
+                                                                        ...prevForm.openingHours,
+                                                                        [day]: {
+                                                                            ...prevForm.openingHours[day],
+                                                                            open: e.target.value
+                                                                        }
+                                                                    }
+                                                                }))
+                                                            }
+                                                        />
+                                                        <span>to</span>
+                                                        <input
+                                                            type="time"
+                                                            value={dayData.close}
+                                                            onChange={(e) =>
+                                                                setForm(prevForm => ({
+                                                                    ...prevForm,
+                                                                    openingHours: {
+                                                                        ...prevForm.openingHours,
+                                                                        [day]: {
+                                                                            ...prevForm.openingHours[day],
+                                                                            close: e.target.value
+                                                                        }
+                                                                    }
+                                                                }))
+                                                            }
+                                                        />
+
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setCopyDay(day);
+                                                                setCopyTargets([]);
+                                                            }}
+                                                            className="opening-hours-copy-button"
+                                                        >
+                                                            Copy to...
+                                                        </button>
+                                                    </>
+                                                )}
+                                            </div>
+
+                                            {/* Copy to modal/section */}
+                                            {copyDay === day && (
+                                                <div className="opening-hours-copy-modal">
+                                                    <p>Select days to copy opening hours to:</p>
+                                                    {otherDays.map(d => (
+                                                        <label key={d} className="opening-hours-copy-target-label">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={copyTargets.includes(d)}
+                                                                onChange={(e) => {
+                                                                    const checked = e.target.checked;
+                                                                    setCopyTargets(prev =>
+                                                                        checked ? [...prev, d] : prev.filter(day => day !== d)
+                                                                    );
+                                                                }}
+                                                            />
+                                                            {d.charAt(0).toUpperCase() + d.slice(1)}
+                                                        </label>
+                                                    ))}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setForm(prevForm => {
+                                                                const newOpeningHours = { ...prevForm.openingHours };
+                                                                copyTargets.forEach(targetDay => {
+                                                                    newOpeningHours[targetDay] = {
+                                                                        open: prevForm.openingHours[copyDay].open,
+                                                                        close: prevForm.openingHours[copyDay].close,
+                                                                        closed: false
+                                                                    };
+                                                                });
+                                                                return {
+                                                                    ...prevForm,
+                                                                    openingHours: newOpeningHours
+                                                                };
+                                                            });
+                                                            setCopyDay(null);
+                                                            setCopyTargets([]);
+                                                        }}
+                                                        disabled={copyTargets.length === 0}
+                                                        className="opening-hours-copy-action-button"
+                                                    >
+                                                        Copy
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setCopyDay(null);
+                                                            setCopyTargets([]);
+                                                        }}
+                                                        className="opening-hours-cancel-button"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+
 
                                 <div className="form-actions">
                                     <button type="button" onClick={handleSubmit} disabled={loading}>
@@ -335,6 +475,16 @@ const MarkersManagement = () => {
                                     <button type="button" className="cancel-btn" onClick={() => setIsModalOpen(false)}>Cancel</button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                )}
+
+                {previewMarker && (
+                    <div className="image-preview-popup" onClick={() => setPreviewMarker(null)}>
+                        <div className="image-popup-content" onClick={(e) => e.stopPropagation()}>
+                            <img src={previewMarker.image} alt={previewMarker.name} />
+                            <h3>{previewMarker.name}</h3>
+                            <button onClick={() => setPreviewMarker(null)}>Close</button>
                         </div>
                     </div>
                 )}

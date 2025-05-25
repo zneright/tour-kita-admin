@@ -15,7 +15,7 @@ const NotificationManagement = () => {
     const [scheduledDate, setScheduledDate] = useState('');
     const [scheduledTime, setScheduledTime] = useState('');
     const [charCount, setCharCount] = useState(0);
-    const [loading, setLoading] = useState(false);  // Add loading state
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchNotifications = async () => {
@@ -25,7 +25,7 @@ const NotificationManagement = () => {
                 ...doc.data()
             }));
 
-            // Sort notifications by timestamp in descending order
+            // Sort notifications\
             fetched.sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate());
             setNotifications(fetched);
         };
@@ -39,7 +39,7 @@ const NotificationManagement = () => {
             return;
         }
 
-        setLoading(true);  // Set loading to true when sending
+        setLoading(true);
 
         try {
             const docRef = await addDoc(collection(db, 'notifications'), {
@@ -53,7 +53,7 @@ const NotificationManagement = () => {
 
             alert(`Notification sent to ${audience}`);
 
-            // Reset form fields
+            // rereset ang form
             setTitle('');
             setMessage('');
             setCharCount(0);
@@ -64,14 +64,14 @@ const NotificationManagement = () => {
             setScheduledTime('');
             setPopupVisible(false);
 
-            // Refresh notifications after sending
+            // Refresh after send
             const querySnapshot = await getDocs(collection(db, 'notifications'));
             const fetched = querySnapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             }));
 
-            // Sort notifications by timestamp in descending order
+            // Sort notifications
             fetched.sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate());
             setNotifications(fetched);
 
@@ -79,16 +79,15 @@ const NotificationManagement = () => {
             console.error('Error sending notification:', error);
             alert('Failed to send notification.');
         } finally {
-            setLoading(false);  // Set loading to false after sending
+            setLoading(false); 
         }
     };
 
     const handleDelete = async (id) => {
         try {
-            // Delete notification from Firestore
+            // Delete ng notifiation sa firebase
             await deleteDoc(doc(db, 'notifications', id));
 
-            // Update local state by removing the deleted notification
             setNotifications(prevNotifications =>
                 prevNotifications.filter(notification => notification.id !== id)
             );

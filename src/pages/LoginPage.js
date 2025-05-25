@@ -16,9 +16,18 @@ const LoginPage = () => {
         e.preventDefault();
         setError('');
 
+        const email = username.trim();
+
+        const allowedAdminDomain = '@tourkita.com';
+        const allowedAdminEmails = ['admin@tourkita.com'];
+
+        if (!email.endsWith(allowedAdminDomain) && !allowedAdminEmails.includes(email)) {
+            setError('Access denied. Admins only.');
+            return;
+        }
+
         try {
-            await signInWithEmailAndPassword(auth, username.trim(), password);
-            localStorage.setItem('isAuthenticated', 'true');
+            await signInWithEmailAndPassword(auth, email, password);
             navigate('/dashboard');
         } catch (err) {
             console.error("Firebase Auth Error:", err.code, err.message);
@@ -34,9 +43,9 @@ const LoginPage = () => {
         }
     };
 
+
     return (
         <div className="login-container">
-            {/* Animated dots */}
             <div className="marker-dot"></div>
             <div className="marker-dot"></div>
             <div className="marker-dot"></div>
@@ -52,7 +61,7 @@ const LoginPage = () => {
                         <FaUser className="input-icon" />
                         <input
                             type="email"
-                            placeholder="EMAIL (e.g., admin@tourkita.com)"
+                            placeholder="EMAIL"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             required
