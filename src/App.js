@@ -8,12 +8,14 @@ import NotificationManagement from './pages/NotificationManagement';
 import AnalysisReport from './pages/AnalysisReport';
 import Login from './pages/LoginPage';
 import MarkersManagement from './pages/MarkersManagement';
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/user-management" element={<UserManagement />} />
         <Route path="/feedback" element={<FeedbackReview />} />

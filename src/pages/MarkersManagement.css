@@ -31,11 +31,13 @@
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .top-controls button:hover {
     background-color: #5e3c21;
 }
+
 
 .markers-list {
     display: grid;
@@ -59,6 +61,7 @@
     margin-bottom: 0.75rem;
 }
 
+/* Card Buttons */
 .card-actions {
     display: flex;
     justify-content: space-between;
@@ -68,10 +71,11 @@
 .card-actions button {
     background-color: #493628;
     color: white;
-    border: none;
     padding: 0.4rem 0.8rem;
+    border: none;
     border-radius: 6px;
     cursor: pointer;
+    transition: opacity 0.3s ease;
 }
 
 .card-actions button:last-child {
@@ -82,6 +86,7 @@
     opacity: 0.9;
 }
 
+/* Popup Messages */
 .popup-message {
     margin-bottom: 1rem;
     padding: 0.8rem 1rem;
@@ -100,7 +105,7 @@
     color: #721c24;
 }
 
-/* Modal Styles */
+/* Modal */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -120,15 +125,14 @@
     max-width: 600px;
     padding: 2rem;
     border-radius: 12px;
-    position: relative;
     overflow-y: auto;
     max-height: 90vh;
+    position: relative;
 }
 
 .marker-form label {
     display: block;
-    margin-top: 1rem;
-    margin-bottom: 0.25rem;
+    margin: 1rem 0 0.25rem;
     font-weight: 600;
 }
 
@@ -160,49 +164,40 @@
     display: flex;
     justify-content: flex-end;
     margin-top: 1.5rem;
+    gap: 1rem;
 }
 
 .form-actions button {
-    background-color: #28a745;
+    padding: 0.6rem 1.2rem;
     color: white;
     border: none;
-    padding: 0.6rem 1.2rem;
     border-radius: 8px;
     cursor: pointer;
-    margin-left: 1rem;
+    transition: background-color 0.3s ease;
 }
-
-
 
 .form-actions button:first-child {
     background-color: #28a745;
-}
-
-.form-actions button:last-child {
-    background-color: #dc3545;
 }
 
 .form-actions button:first-child:hover {
     background-color: #218838;
 }
 
+.form-actions button:last-child {
+    background-color: #dc3545;
+}
 
 .form-actions button:last-child:hover {
     background-color: #c82333;
 }
 
-.marker-form label {
-    display: block;
-    margin-top: 1rem;
-    margin-bottom: 0.25rem;
-    font-weight: 600;
-}
-
+/* Checkbox Groups */
 .marker-form .checkbox-wrapper {
     display: flex;
+    flex-wrap: wrap;
     gap: 2rem;
     margin-top: 1rem;
-    flex-wrap: wrap;
 }
 
 .marker-form .checkbox-group {
@@ -212,19 +207,20 @@
     font-weight: 600;
 }
 
-.marker-form .checkbox-group input[type="checkbox"] {
+.checkbox-group input[type="checkbox"] {
     width: 18px;
     height: 18px;
-    cursor: pointer;
-    border-radius: 4px;
     border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-.marker-form .checkbox-group label {
+.checkbox-group label {
     cursor: pointer;
     user-select: none;
 }
 
+/* Opening Hours */
 .opening-hours-container {
     margin-bottom: 10px;
 }
@@ -241,27 +237,50 @@
     gap: 10px;
 }
 
-.opening-hours-copy-button {
-    margin-left: 10px;
+/* Opening Hours Buttons */
+.opening-hours-copy-button,
+.opening-hours-copy-action-button,
+.opening-hours-cancel-button {
     padding: 6px 12px;
-    background-color: #493628;
-    color: white;
     border: none;
     border-radius: 6px;
-    cursor: pointer;
     font-weight: 600;
+    cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.opening-hours-copy-button:hover {
+.opening-hours-copy-button,
+.opening-hours-copy-action-button {
+    background-color: #493628;
+    color: white;
+}
+
+.opening-hours-copy-button:hover,
+.opening-hours-copy-action-button:hover:enabled {
     background-color: #5e3c21;
 }
 
+.opening-hours-copy-action-button:disabled {
+    background-color: #a0c8ff;
+    color: #eee;
+    cursor: not-allowed;
+}
+
+.opening-hours-cancel-button {
+    background-color: #6c757d;
+    color: white;
+}
+
+.opening-hours-cancel-button:hover {
+    background-color: #5a6268;
+}
+
+/* Copy Modal */
 .opening-hours-copy-modal {
     margin-top: 5px;
-    border: 1px solid #ccc;
     padding: 8px;
     background: #f9f9f9;
+    border: 1px solid #ccc;
     border-radius: 8px;
 }
 
@@ -275,41 +294,4 @@
 .opening-hours-copy-target-label input[type="checkbox"] {
     margin-right: 8px;
     cursor: pointer;
-}
-
-.opening-hours-copy-action-button {
-    padding: 6px 12px;
-    background-color: #493628;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-    margin-right: 10px;
-}
-
-.opening-hours-copy-action-button:hover:enabled {
-    background-color: #5e3c21;
-}
-
-.opening-hours-copy-action-button:disabled {
-    background-color: #a0c8ff;
-    cursor: not-allowed;
-    color: #eee;
-}
-
-.opening-hours-cancel-button {
-    padding: 6px 12px;
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-}
-
-.opening-hours-cancel-button:hover {
-    background-color: #5a6268;
 }

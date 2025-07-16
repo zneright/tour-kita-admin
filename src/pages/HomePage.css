@@ -1,0 +1,201 @@
+.home-wrapper {
+    font-family: 'Segoe UI', sans-serif;
+    color: #2e2e2e;
+    margin: 0;
+    padding: 0;
+    background-color: #fafafa;
+}
+
+.home-header {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 16px 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    gap: 10px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.header-logo {
+    height: 40px;
+}
+
+.header-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1f1f1f;
+}
+
+.header-right {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: flex-end;
+    align-items: center;
+    min-width: 0;
+    padding-right: 50px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.header-link,
+.header-button {
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+.header-link {
+    text-decoration: none;
+    color: #555;
+    transition: color 0.3s;
+}
+
+.header-link:hover {
+    color: #111;
+}
+
+.header-button {
+    background-color: #f5f5f5;
+    color: #444;
+    border: 1px solid #ddd;
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.header-button:hover {
+    background-color: #e5e5e5;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-wrapper {
+    padding-top: 80px;
+    position: relative;
+    height: calc(100vh - 80px);
+    overflow: hidden;
+}
+
+.carousel {
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 1s ease-in-out;
+}
+
+.download-banner {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    color: #1f1f1f;
+    padding: 30px 40px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    animation: slideUp 1s ease-out;
+    max-width: 90%;
+}
+
+.download-banner h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.download-banner p {
+    font-size: 16px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.download-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.download-btn.android {
+    background-color: #0277bd;
+    color: #fff;
+    border: none;
+    padding: 12px 26px;
+    font-size: 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.download-btn.android:hover {
+    background-color: #015fa4;
+    transform: translateY(-2px);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 60px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+@media (max-width: 768px) {
+    .home-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px 20px;
+    }
+
+    .header-right {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .header-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .download-banner h2 {
+        font-size: 24px;
+    }
+
+    .download-banner p {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-title {
+        font-size: 18px;
+    }
+
+    .download-btn.android {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}

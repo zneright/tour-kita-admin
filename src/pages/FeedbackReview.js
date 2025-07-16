@@ -1,81 +1,136 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { collection, getDocs, query, orderBy, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebase';
 import Sidebar from '../components/Sidebar';
 import './FeedbackReview.css';
 
-const feedbackData = {
-    appFeedback: [
-        {
-            email: 'alex.rivera@email.com',
-            name: 'Alex Rivera',
-            feature: 'Booking Interface',
-            message: 'The new booking interface is super intuitive and fast!',
-            rating: 5,
-        },
-        {
-            email: 'camila.mendoza@email.com',
-            name: 'Camila Mendoza',
-            feature: 'Dark Mode',
-            message: 'Please add a dark mode option for late-night browsing.',
-            rating: 4,
-        },
-        {
-            email: 'daniel.gomez@email.com',
-            name: 'Daniel Gomez',
-            feature: 'Notifications',
-            message: 'I like how timely the trip reminders are!',
-            rating: 5,
-        }
-    ],
-    locationFeedback: [
-        {
-            email: 'jane.santos@email.com',
-            name: 'Jane Santos',
-            location: 'Casa Manila',
-            message: 'The tour was informative and the guide was amazing!',
-            rating: 5,
-        },
-        {
-            email: 'vince.reyes@email.com',
-            name: 'Vince Reyes',
-            location: 'Fort Santiago',
-            message: 'Had a great time but it was a bit crowded.',
-            rating: 4,
-        },
-        {
-            email: 'marie.lopez@email.com',
-            name: 'Marie Lopez',
-            location: 'Intramuros',
-            message: 'Loved the history and architecture!',
-            rating: 5,
-        }
-    ]
-};
-
 const FeedbackReview = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [activeTab, setActiveTab] = useState('locationFeedback');
+    const [activeTab, setActiveTab] = useState('Location Feedback');
+    const [feedbackList, setFeedbackList] = useState([]);
+
+    const [averageRating, setAverageRating] = useState('N/A');
+    const [mostLovedLocation, setMostLovedLocation] = useState('N/A');
+    const [areaOfConcern, setAreaOfConcern] = useState('N/A');
+    const [mostLovedFeature, setMostLovedFeature] = useState('N/A');
+    const [areaOfConcernFeature, setAreaOfConcernFeature] = useState('N/A');
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedUserEmail, setSelectedUserEmail] = useState('');
+    const [selectedFeatureOrLocation, setSelectedFeatureOrLocation] = useState('');
+    const [messageText, setMessageText] = useState('');
+    const [isSending, setIsSending] = useState(false);
+
+    const isFeatureTab = activeTab === 'Feature Feedback';
+
+    useEffect(() => {
+        const fetchFeedback = async () => {
+            try {
+                const q = query(collection(db, 'feedbacks'), orderBy('createdAt', 'desc'));
+                const querySnapshot = await getDocs(q);
+                const feedback = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setFeedbackList(feedback);
+                calculateStats(feedback, activeTab);
+            } catch (error) {
+                console.error('Error fetching feedback:', error);
+            }
+        };
+
+        fetchFeedback();
+    }, []);
+
+    useEffect(() => {
+        calculateStats(feedbackList, activeTab);
+    }, [activeTab, feedbackList]);
+
+    const calculateStats = (data, tabType) => {
+        const isFeature = tabType === 'Feature Feedback';
+        const filtered = data.filter(item =>
+            isFeature ? item.feedbackType === 'App Feedback' : item.feedbackType === 'Location Feedback'
+        );
+
+        if (isFeature) {
+            setMostLovedFeature('N/A');
+            setAreaOfConcernFeature('N/A');
+        } else {
+            setMostLovedLocation('N/A');
+            setAreaOfConcern('N/A');
+        }
+
+        const avg = filtered.reduce((acc, cur) => acc + (cur.rating || 0), 0) / filtered.length;
+        setAverageRating(isNaN(avg) ? 'N/A' : avg.toFixed(1));
+
+        const categoryRatings = {};
+        filtered.forEach(item => {
+            const key = isFeature ? item.feature : item.location;
+            if (key) {
+                if (!categoryRatings[key]) categoryRatings[key] = [];
+                categoryRatings[key].push(item.rating || 0);
+            }
+        });
+
+        const averages = Object.entries(categoryRatings).map(([key, ratings]) => ({
+            key,
+            avg: ratings.reduce((a, b) => a + b, 0) / ratings.length
+        }));
+
+        if (averages.length) {
+            averages.sort((a, b) => b.avg - a.avg);
+            if (isFeature) {
+                setMostLovedFeature(averages[0].key);
+                setAreaOfConcernFeature(averages[averages.length - 1].key);
+            } else {
+                setMostLovedLocation(averages[0].key);
+                setAreaOfConcern(averages[averages.length - 1].key);
+            }
+        }
+    };
 
     const handleTabClick = (tab) => {
         setActiveTab(tab);
         setSearchTerm('');
     };
 
-    const filteredFeedback = feedbackData[activeTab].filter(item =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (activeTab === 'appFeedback'
-            ? item.feature.toLowerCase()
-            : item.location.toLowerCase()
-        ).includes(searchTerm.toLowerCase()) ||
-        item.message.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredFeedback = feedbackList.filter(item =>
+        ((isFeatureTab && item.feedbackType === 'App Feedback') ||
+            (!isFeatureTab && item.feedbackType === 'Location Feedback')) &&
+        (
+            item.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (item.location || item.feature)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.comment?.toLowerCase().includes(searchTerm.toLowerCase())
+        )
     );
 
     const renderStars = (rating) => '★'.repeat(rating) + '☆'.repeat(5 - rating);
 
+    const formatTimestamp = (timestamp) =>
+        timestamp?.toDate ? timestamp.toDate().toLocaleString() : 'N/A';
+
+    const sendMessage = async () => {
+        if (!messageText.trim()) return alert("Message cannot be empty.");
+        setIsSending(true);
+        try {
+            await addDoc(collection(db, 'adminMessages'), {
+                to: selectedUserEmail,
+                message: messageText,
+                context: selectedFeatureOrLocation,
+                contextType: isFeatureTab ? "Feature" : "Location",
+                sentAt: serverTimestamp(),
+            });
+            alert("Message sent successfully!");
+            setIsModalOpen(false);
+            setMessageText('');
+        } catch (err) {
+            console.error("Failed to send message:", err);
+            alert("Failed to send message.");
+        } finally {
+            setIsSending(false);
+        }
+    };
+
     return (
         <div className="dashboard-wrapper">
             <Sidebar />
-
             <div className="dashboard-main">
                 <div className="dashboard-header">
                     <h1>Feedback Overview</h1>
@@ -83,29 +138,45 @@ const FeedbackReview = () => {
 
                 <div className="cards-container">
                     <div className="card brown">
-                        <p>Average Rating</p>
-                        <h2 style={{ color: 'green' }}>4.6</h2>
+                        <p>Average Rating ({isFeatureTab ? 'Feature' : 'Location'})</p>
+                        <h2 style={{ color: 'green' }}>{averageRating}</h2>
                     </div>
-                    <div className="card brown">
-                        <p>Most Loved Location</p>
-                        <h2>Intramuros</h2>
-                    </div>
-                    <div className="card brown">
-                        <p>Area of Concern</p>
-                        <h2>Muralla</h2>
-                    </div>
+
+                    {!isFeatureTab ? (
+                        <>
+                            <div className="card brown">
+                                <p>Most Loved Location</p>
+                                <h2>{mostLovedLocation}</h2>
+                            </div>
+                            <div className="card brown">
+                                <p>Area of Concern</p>
+                                <h2>{areaOfConcern}</h2>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className="card brown">
+                                <p>Most Loved Feature</p>
+                                <h2>{mostLovedFeature}</h2>
+                            </div>
+                            <div className="card brown">
+                                <p>Area of Concern (Feature)</p>
+                                <h2>{areaOfConcernFeature}</h2>
+                            </div>
+                        </>
+                    )}
                 </div>
 
                 <div className="filter-toggle">
                     <button
-                        className={activeTab === 'locationFeedback' ? 'active' : ''}
-                        onClick={() => handleTabClick('locationFeedback')}
+                        className={activeTab === 'Location Feedback' ? 'active' : ''}
+                        onClick={() => handleTabClick('Location Feedback')}
                     >
                         Location Feedback
                     </button>
                     <button
-                        className={activeTab === 'appFeedback' ? 'active' : ''}
-                        onClick={() => handleTabClick('appFeedback')}
+                        className={activeTab === 'Feature Feedback' ? 'active' : ''}
+                        onClick={() => handleTabClick('Feature Feedback')}
                     >
                         Feature Feedback
                     </button>
@@ -115,7 +186,7 @@ const FeedbackReview = () => {
                     <input
                         type="text"
                         className="search-bar"
-                        placeholder="Search by name, email, feature/location, or message..."
+                        placeholder="Search by email, feature/location, or message..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -124,32 +195,71 @@ const FeedbackReview = () => {
                         <thead>
                             <tr>
                                 <th>Email</th>
-                                <th>Name</th>
-                                <th>{activeTab === 'appFeedback' ? 'App Feature' : 'Location'}</th>
+                                <th>{isFeatureTab ? 'App Feature' : 'Location'}</th>
                                 <th>Feedback</th>
                                 <th>Rating</th>
+                                <th>Time</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredFeedback.length > 0 ? (
-                                filteredFeedback.map((entry, index) => (
-                                    <tr key={index}>
+                                filteredFeedback.map((entry) => (
+                                    <tr key={entry.id}>
                                         <td>{entry.email}</td>
-                                        <td>{entry.name}</td>
-                                        <td>{activeTab === 'appFeedback' ? entry.feature : entry.location}</td>
-                                        <td>{entry.message}</td>
-                                        <td>{renderStars(entry.rating)}</td>
+                                        <td>{isFeatureTab ? entry.feature || 'N/A' : entry.location || 'N/A'}</td>
+                                        <td>{entry.comment}</td>
+                                        <td>{renderStars(entry.rating || 0)}</td>
+                                        <td>{formatTimestamp(entry.createdAt)}</td>
+                                        <td>
+                                            <button
+                                                className="action-btn"
+                                                onClick={() => {
+                                                    setSelectedUserEmail(entry.email);
+                                                    setSelectedFeatureOrLocation(isFeatureTab ? entry.feature || 'N/A' : entry.location || 'N/A');
+                                                    setIsModalOpen(true);
+                                                }}
+                                            >
+                                                Send Message
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
+                                    <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
                                         No feedback found.
                                     </td>
                                 </tr>
                             )}
                         </tbody>
                     </table>
+
+                    {isModalOpen && (
+                        <div className="modal-overlay">
+                            <div className="modal-content">
+                                <h3>Send Message to <span className="modal-email">{selectedUserEmail}</span></h3>
+                                <p className="modal-sub">
+                                    Regarding: <strong>{isFeatureTab ? "Feature" : "Location"} - {selectedFeatureOrLocation}</strong>
+                                </p>
+                                <textarea
+                                    className="modal-textarea"
+                                    value={messageText}
+                                    onChange={(e) => setMessageText(e.target.value)}
+                                    placeholder="Type your message here..."
+                                    rows={5}
+                                />
+                                <div className="modal-actions">
+                                    <button className="send-btn" onClick={sendMessage} disabled={isSending}>
+                                        {isSending ? 'Sending...' : 'Send'}
+                                    </button>
+                                    <button className="cancel-btn" onClick={() => setIsModalOpen(false)} disabled={isSending}>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
