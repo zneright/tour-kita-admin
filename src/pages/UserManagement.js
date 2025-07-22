@@ -1,13 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './UserManagement.css';
 import Sidebar from '../components/Sidebar';
-import constantUsers from '../data/constantusers';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase'; // make sure your Firebase config is in this file
 
 const UserManagement = () => {
     const [search, setSearch] = useState('');
     const [viewFilter, setViewFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('all');
-    const [users, setUsers] = useState(constantUsers);
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const usersSnapshot = await getDocs(collection(db, 'users'));
+                const usersList = usersSnapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        id: data.uid,
+                        email: data.email || '',
+                        name: `${data.firstName || ''} ${data.middleInitial || ''} ${data.lastName || ''}`.trim(),
+                        age: data.age || 0,
+                        gender: data.gender || '',
+                        contactNumber: data.contactNumber || '',
+                        status: 'registered', // Default all to 'registered' unless you store status
+                        activestatus: true, // Or fetch from Firestore if you store this
+                        userType: data.userType || '',
+                        registeredDate: data.createdAt
+                            ? new Date(data.createdAt).toLocaleDateString()
+                            : 'N/A',
+                    };
+                });
+                setUsers(usersList);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+
+        fetchUsers();
+    }, []);
 
     const handleArchive = (userId, reason) => {
         alert(`🚫 User ID: ${userId} has been archived.\nReason: ${reason}`);
@@ -61,7 +92,6 @@ const UserManagement = () => {
     const onlineCount = onlineOfflineFiltered.filter(u => u.activestatus).length;
     const offlineCount = onlineOfflineFiltered.filter(u => !u.activestatus).length;
 
-    // Function to return the appropriate color for the online status
     const getStatusColor = (activestatus) => {
         return activestatus ? 'green' : 'red';
     };
@@ -75,22 +105,10 @@ const UserManagement = () => {
 
                     <div className="summary-row">
                         <div className="user-count-summary">
-                            <div className="count-box">
-                                <span className="label">All Users</span>
-                                <span className="count">{totalUsers}</span>
-                            </div>
-                            <div className="count-box">
-                                <span className="label">Registered</span>
-                                <span className="count">{registeredCount}</span>
-                            </div>
-                            <div className="count-box">
-                                <span className="label">Guests</span>
-                                <span className="count">{guestCount}</span>
-                            </div>
-                            <div className="count-box">
-                                <span className="label">Archived</span>
-                                <span className="count">{archivedCount}</span>
-                            </div>
+                            <div className="count-box"><span className="label">All Users</span><span className="count">{totalUsers}</span></div>
+                            <div className="count-box"><span className="label">Registered</span><span className="count">{registeredCount}</span></div>
+                            <div className="count-box"><span className="label">Guests</span><span className="count">{guestCount}</span></div>
+                            <div className="count-box"><span className="label">Archived</span><span className="count">{archivedCount}</span></div>
                         </div>
 
                         <div className="online-status-summary">
@@ -104,14 +122,8 @@ const UserManagement = () => {
                                 </select>
                             </div>
                             <div className="status-counts">
-                                <div className="count-box">
-                                    <span className="label">Online</span>
-                                    <span className="count">{onlineCount}</span>
-                                </div>
-                                <div className="count-box">
-                                    <span className="label">Offline</span>
-                                    <span className="count">{offlineCount}</span>
-                                </div>
+                                <div className="count-box"><span className="label">Online</span><span className="count">{onlineCount}</span></div>
+                                <div className="count-box"><span className="label">Offline</span><span className="count">{offlineCount}</span></div>
                             </div>
                         </div>
                     </div>
@@ -159,11 +171,7 @@ const UserManagement = () => {
                                             <td>{user.contactNumber || '—'}</td>
                                             <td>{user.status.charAt(0).toUpperCase() + user.status.slice(1)}</td>
                                             <td>
-                                                <span
-                                                    style={{
-                                                        color: getStatusColor(user.activestatus),
-                                                    }}
-                                                >
+                                                <span style={{ color: getStatusColor(user.activestatus) }}>
                                                     {user.activestatus ? ' Online' : 'Offline'}
                                                 </span>
                                             </td>

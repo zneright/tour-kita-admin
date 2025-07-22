@@ -10,6 +10,7 @@
     overflow-y: auto;
 }
 
+/* Header */
 .notification-header {
     display: flex;
     justify-content: space-between;
@@ -38,6 +39,7 @@
     background-color: #5e3c21;
 }
 
+/* Notification History */
 .notification-history {
     background: #fff;
     padding: 20px;
@@ -53,69 +55,160 @@
     margin-bottom: 15px;
 }
 
-.notification-history ul {
-    list-style-type: none;
+.notification-history ul,
+.reply-list {
+    list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.notification-history li {
-    padding: 10px 0;
-    border-bottom: 1px solid #e0e0e0;
-    font-size: 14px;
+/* Notification + Reply Items */
+.notification-item,
+.reply-item {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-start;
+    background: #fff;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    gap: 14px;
+    flex-wrap: wrap;
 }
 
-.notification-history li:last-child {
-    border-bottom: none;
-}
-
-.notif-image {
-    flex-shrink: 0;
+.notification-item .icon-placeholder,
+.reply-item .reply-icon {
     width: 50px;
     height: 50px;
-    margin-right: 15px;
+    background-color: #eef2f3;
+    border-radius: 50%;
+    font-size: 22px;
+    color: #7b4f2c;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
 }
 
-.notif-image img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: cover;
-    border-radius: 6px;
-}
-
-.icon-placeholder {
-    font-size: 22px;
-    color: #7b4f2c;
-}
-
-.notif-details {
+.notif-details,
+.reply-details {
     flex: 1;
+    min-width: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
-.notif-details strong {
+.notif-details strong,
+.reply-details strong {
     display: block;
+    font-size: 16px;
     font-weight: 600;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
+    color: #333;
 }
 
-.notif-details p {
-    margin: 0;
+.notif-details p,
+.reply-details p {
+    margin: 6px 0;
+    font-size: 14px;
     color: #555;
 }
 
-.notif-details small {
-    display: block;
+.notif-details small,
+.reply-details small {
     font-size: 12px;
-    color: #aaa;
-    margin-top: 5px;
+    color: #888;
+    display: block;
 }
 
+/* Search Input */
+.search-input {
+    padding: 10px;
+    margin: 15px 0;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* Admin Reply Section Container */
+.admin-reply-history {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 30px;
+}
+
+/* Buttons */
+.send-btn,
+.exit-btn,
+.delete-btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    color: #fff;
+}
+
+.send-btn {
+    background-color: #28a745;
+}
+
+.send-btn:hover {
+    background-color: #218838;
+}
+
+.exit-btn {
+    background-color: #dc3545;
+}
+
+.exit-btn:hover {
+    background-color: #c82333;
+}
+
+.delete-btn {
+    background-color: #c0392b;
+    font-size: 13px;
+    padding: 6px 12px;
+}
+
+.delete-btn:hover {
+    background-color: #a93226;
+}
+
+/* Tabs */
+.tab-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 10px 20px;
+    background-color: #eaeaea;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tab:hover {
+    background-color: #dcdcdc;
+}
+
+.tab.active {
+    background-color: #493628;
+    color: #fff;
+}
+
+/* Popup */
 .popup-overlay {
     position: fixed;
     top: 0;
@@ -153,20 +246,16 @@
 }
 
 .popup-content h3 {
-    margin-top: 0;
     font-size: 1.5rem;
     font-weight: 700;
+    margin: 0;
 }
 
 .popup-content label {
     font-weight: 600;
-    margin-top: 8px;
 }
 
-.popup-content input[type="text"],
-.popup-content input[type="date"],
-.popup-content input[type="time"],
-.popup-content input[type="file"],
+.popup-content input,
 .popup-content select,
 .popup-content textarea {
     padding: 10px;
@@ -181,47 +270,11 @@
     resize: vertical;
 }
 
-.popup-content small {
-    font-size: 12px;
-    color: #777;
-    align-self: flex-end;
-}
-
 .popup-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
     margin-top: 10px;
-}
-
-.send-btn {
-    background-color: #28a745;
-    color: #fff;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-}
-
-.send-btn:hover {
-    background-color: #218838;
-}
-
-.exit-btn {
-    background-color: #dc3545;
-    color: #fff;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-}
-
-.exit-btn:hover {
-    background-color: #c82333;
 }
 
 @media (max-width: 768px) {
@@ -241,17 +294,49 @@
     }
 }
 
-.delete-btn {
-    background-color: #dc3545;
-    color: #fff;
-    padding: 6px 12px;
+.notif-thumbnail {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.modal-image {
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 10px;
+}
+
+.ok-button {
+    margin-top: 15px;
+    padding: 8px 16px;
+    background: #007bff;
+    color: white;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-}
-
-.delete-btn:hover {
-    background-color: #c82333;
 }

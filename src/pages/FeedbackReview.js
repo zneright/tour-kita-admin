@@ -23,6 +23,9 @@ const FeedbackReview = () => {
 
     const isFeatureTab = activeTab === 'Feature Feedback';
 
+    const [imagePreview, setImagePreview] = useState(null);
+    const [showImageModal, setShowImageModal] = useState(false);
+
     useEffect(() => {
         const fetchFeedback = async () => {
             try {
@@ -197,11 +200,13 @@ const FeedbackReview = () => {
                                 <th>Email</th>
                                 <th>{isFeatureTab ? 'App Feature' : 'Location'}</th>
                                 <th>Feedback</th>
+                                <th>Image</th> {/* Add this line */}
                                 <th>Rating</th>
                                 <th>Time</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {filteredFeedback.length > 0 ? (
                                 filteredFeedback.map((entry) => (
@@ -209,6 +214,30 @@ const FeedbackReview = () => {
                                         <td>{entry.email}</td>
                                         <td>{isFeatureTab ? entry.feature || 'N/A' : entry.location || 'N/A'}</td>
                                         <td>{entry.comment}</td>
+                                        <td>
+                                            {entry.imageUrl ? (
+                                                <img
+                                                    src={entry.imageUrl}
+                                                    alt="Feedback"
+                                                    className="feedback-image"
+                                                    onClick={() => {
+                                                        setImagePreview(entry.imageUrl);
+                                                        setShowImageModal(true);
+                                                    }}
+                                                />
+                                            ) : (
+                                                '—'
+                                            )}
+                                        </td>
+                                        {showImageModal && (
+                                            <div className="modal-overlay" onClick={() => setShowImageModal(false)}>
+                                                <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>
+                                                    <img src={imagePreview} alt="Full Feedback" className="modal-full-image" />
+                                                    <button className="close-btn" onClick={() => setShowImageModal(false)}>×</button>
+                                                </div>
+                                            </div>
+                                        )}
+
                                         <td>{renderStars(entry.rating || 0)}</td>
                                         <td>{formatTimestamp(entry.createdAt)}</td>
                                         <td>

@@ -1,11 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Sidebar from '../components/Sidebar';
 import './NotificationManagement.css';
 import { db } from '../firebase';
-import { collection, addDoc, getDocs, deleteDoc, doc, Timestamp } from 'firebase/firestore';
+import {
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc,
+    Timestamp
+} from 'firebase/firestore';
 
 const NotificationManagement = () => {
     const [notifications, setNotifications] = useState([]);
+    const [adminReplies, setAdminReplies] = useState([]);
+    const [activeTab, setActiveTab] = useState('notifications');
+
+    const [searchTermNotif, setSearchTermNotif] = useState('');
+    const [searchTermReply, setSearchTermReply] = useState('');
+
     const [popupVisible, setPopupVisible] = useState(false);
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
@@ -17,6 +31,12 @@ const NotificationManagement = () => {
     const [charCount, setCharCount] = useState(0);
     const [loading, setLoading] = useState(false);
 
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState('');
+
+    const [modalImageUrl, setModalImageUrl] = useState(null);
+
+
     useEffect(() => {
         const fetchNotifications = async () => {
             const querySnapshot = await getDocs(collection(db, 'notifications'));
@@ -24,13 +44,43 @@ const NotificationManagement = () => {
                 id: doc.id,
                 ...doc.data()
             }));
-
-            // Sort notifications\
             fetched.sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate());
             setNotifications(fetched);
         };
+
+        const fetchAdminReplies = async () => {
+            const snapshot = await getDocs(collection(db, 'adminMessages'));
+            const replies = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            replies.sort((a, b) => b.sentAt.toDate() - a.sentAt.toDate());
+            setAdminReplies(replies);
+        };
+
         fetchNotifications();
+        fetchAdminReplies();
     }, []);
+
+    const handleImageUpload = async () => {
+        if (!imageFile) return null;
+
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('upload_preset', 'Notification Image'); // ✅ Replace with your preset
+
+        try {
+            const res = await axios.post(
+                'https://api.cloudinary.com/v1_1/dupjdmjha/image/upload',
+                // ✅ Replace with your cloud name
+                formData
+            );
+            return res.data.secure_url;
+        } catch (err) {
+            console.error('Cloudinary Upload Failed:', err);
+            return null;
+        }
+    };
 
     const handleSend = async (e) => {
         e.preventDefault();
@@ -40,20 +90,20 @@ const NotificationManagement = () => {
         }
 
         setLoading(true);
-
         try {
-            const docRef = await addDoc(collection(db, 'notifications'), {
+            const imageUrl = await handleImageUpload();
+
+            await addDoc(collection(db, 'notifications'), {
                 title,
                 message,
                 category,
                 audience,
+                imageUrl: imageUrl || '',
                 schedule: schedule === 'now' ? 'immediately' : `on ${scheduledDate} at ${scheduledTime}`,
                 timestamp: Timestamp.now(),
             });
 
             alert(`Notification sent to ${audience}`);
-
-            // rereset ang form
             setTitle('');
             setMessage('');
             setCharCount(0);
@@ -63,39 +113,43 @@ const NotificationManagement = () => {
             setScheduledDate('');
             setScheduledTime('');
             setPopupVisible(false);
+            setImageFile(null);
+            setImagePreview('');
 
-            // Refresh after send
             const querySnapshot = await getDocs(collection(db, 'notifications'));
             const fetched = querySnapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             }));
-
-            // Sort notifications
             fetched.sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate());
             setNotifications(fetched);
-
         } catch (error) {
             console.error('Error sending notification:', error);
             alert('Failed to send notification.');
         } finally {
-            setLoading(false); 
+            setLoading(false);
         }
     };
 
     const handleDelete = async (id) => {
         try {
-            // Delete ng notifiation sa firebase
             await deleteDoc(doc(db, 'notifications', id));
-
-            setNotifications(prevNotifications =>
-                prevNotifications.filter(notification => notification.id !== id)
-            );
-
+            setNotifications(prev => prev.filter(notification => notification.id !== id));
             alert('Notification deleted successfully!');
         } catch (error) {
             console.error('Error deleting notification:', error);
             alert('Failed to delete notification.');
+        }
+    };
+
+    const handleDeleteReply = async (id) => {
+        try {
+            await deleteDoc(doc(db, 'adminMessages', id));
+            setAdminReplies(prev => prev.filter(reply => reply.id !== id));
+            alert('Admin reply deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting admin reply:', error);
+            alert('Failed to delete reply.');
         }
     };
 
@@ -105,6 +159,16 @@ const NotificationManagement = () => {
         reminders: '⏰',
         alerts: '⚠️',
     };
+
+    const filteredNotifications = notifications.filter(n =>
+        n.title?.toLowerCase().includes(searchTermNotif.toLowerCase()) ||
+        n.message?.toLowerCase().includes(searchTermNotif.toLowerCase())
+    );
+
+    const filteredReplies = adminReplies.filter(r =>
+        r.message?.toLowerCase().includes(searchTermReply.toLowerCase()) ||
+        r.to?.toLowerCase().includes(searchTermReply.toLowerCase())
+    );
 
     return (
         <div className="dashboard-wrapper">
@@ -117,54 +181,113 @@ const NotificationManagement = () => {
                     </button>
                 </div>
 
-                <div className="notification-history">
-                    <h3>History</h3>
-                    <ul className="notification-list">
-                        {notifications.map((notif) => {
-                            const dateSent = notif.timestamp?.toDate?.().toLocaleString?.() || 'Unknown Date';
-                            const icon = categoryIcons[notif.category] || '📢';
-
-                            return (
-                                <li key={notif.id} className="notification-item">
-                                    <div className="notif-image">
-                                        <div className="icon-placeholder">{icon}</div>
-                                    </div>
-                                    <div className="notif-details">
-                                        <strong>{notif.title}</strong>
-                                        <p>{notif.message}</p>
-                                        <small>{dateSent}</small>
-                                    </div>
-                                    <button
-                                        className="delete-btn"
-                                        onClick={() => handleDelete(notif.id)}
-                                    >
-                                        Delete
-                                    </button>
-                                </li>
-                            );
-                        })}
-                    </ul>
+                <div className="tab-buttons">
+                    <button className={`tab ${activeTab === 'notifications' ? 'active' : ''}`} onClick={() => setActiveTab('notifications')}>
+                        Notifications
+                    </button>
+                    <button className={`tab ${activeTab === 'feedback' ? 'active' : ''}`} onClick={() => setActiveTab('feedback')}>
+                        Feedback Replies
+                    </button>
                 </div>
+
+                {activeTab === 'notifications' && (
+                    <div className="notification-history">
+                        <h3>Notification History</h3>
+                        <input
+                            type="text"
+                            className="search-bar"
+                            placeholder="Search notifications..."
+                            value={searchTermNotif}
+                            onChange={(e) => setSearchTermNotif(e.target.value)}
+                        />
+                        <ul className="notification-list">
+                            {filteredNotifications.map((notif) => {
+                                const dateSent = notif.timestamp?.toDate?.().toLocaleString?.() || 'Unknown Date';
+                                const icon = categoryIcons[notif.category] || '📢';
+                                return (
+                                    <li key={notif.id} className="notification-item">
+                                        <div className="notif-image">
+                                            {notif.imageUrl ? (
+                                                <img
+                                                    src={notif.imageUrl}
+                                                    alt="notification"
+                                                    className="notif-thumbnail"
+                                                    onClick={() => setModalImageUrl(notif.imageUrl)}
+                                                />
+                                            ) : (
+                                                <div className="icon-placeholder">{icon}</div>
+                                            )}
+                                        </div>
+
+                                        <div className="notif-details">
+                                            <strong>{notif.title}</strong>
+                                            <p>{notif.message}</p>
+                                            <small>{dateSent}</small>
+
+                                        </div>
+                                        <button className="delete-btn" onClick={() => handleDelete(notif.id)}>
+                                            Delete
+                                        </button>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                        {modalImageUrl && (
+                            <div className="modal-overlay" onClick={() => setModalImageUrl(null)}>
+                                <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                                    <img src={modalImageUrl} alt="Full view" className="modal-image" />
+                                    <button onClick={() => setModalImageUrl(null)} className="ok-button">OK</button>
+                                </div>
+                            </div>
+                        )}
+
+                    </div>
+                )}
+
+                {activeTab === 'feedback' && (
+                    <div className="admin-reply-history">
+                        <h3>Feedback Replies</h3>
+                        <input
+                            type="text"
+                            className="search-bar"
+                            placeholder="Search feedback replies..."
+                            value={searchTermReply}
+                            onChange={(e) => setSearchTermReply(e.target.value)}
+                        />
+                        <ul className="notification-list">
+                            {filteredReplies.map((reply) => {
+                                const sentDate = reply.sentAt?.toDate?.().toLocaleString?.() || 'Unknown Date';
+                                return (
+                                    <li key={reply.id} className="notification-item">
+                                        <div className="notif-image">
+                                            <div className="icon-placeholder">💬</div>
+                                        </div>
+                                        <div className="notif-details">
+                                            <strong>To: {reply.to}</strong>
+                                            <p>{reply.message}</p>
+                                            <small>{sentDate}</small>
+                                        </div>
+                                        <button className="delete-btn" onClick={() => handleDeleteReply(reply.id)}>
+                                            Delete
+                                        </button>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                )}
 
                 {popupVisible && (
                     <div className="popup-overlay">
                         <div className="notification-popup scrollable-popup">
                             <form className="popup-content" onSubmit={handleSend}>
                                 <h3>Create Notification</h3>
+                                <label>Title</label>
+                                <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
 
-                                <label htmlFor="title">Title</label>
-                                <input
-                                    type="text"
-                                    id="title"
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                    required
-                                />
-
-                                <label htmlFor="message">Message</label>
+                                <label>Message</label>
                                 <textarea
-                                    id="message"
-                                    rows="4"
+                                    rows={4}
                                     value={message}
                                     onChange={(e) => {
                                         setMessage(e.target.value);
@@ -175,63 +298,56 @@ const NotificationManagement = () => {
                                 />
                                 <small>{charCount}/300 characters</small>
 
-                                <label htmlFor="category">Category</label>
-                                <select
-                                    id="category"
-                                    value={category}
-                                    onChange={(e) => setCategory(e.target.value)}
-                                >
+                                <label>Category</label>
+                                <select value={category} onChange={(e) => setCategory(e.target.value)}>
                                     <option value="updates">Updates</option>
                                     <option value="promotions">Promotions</option>
                                     <option value="reminders">Reminders</option>
                                     <option value="alerts">Alerts</option>
                                 </select>
 
-                                <label htmlFor="audience">Audience</label>
-                                <select
-                                    id="audience"
-                                    value={audience}
-                                    onChange={(e) => setAudience(e.target.value)}
-                                >
+                                <label>Audience</label>
+                                <select value={audience} onChange={(e) => setAudience(e.target.value)}>
                                     <option value="all">All Users</option>
                                     <option value="registered">Registered Users</option>
                                     <option value="guest">Guest Users</option>
                                 </select>
 
-                                <label htmlFor="schedule">Schedule</label>
-                                <select
-                                    id="schedule"
-                                    value={schedule}
-                                    onChange={(e) => setSchedule(e.target.value)}
-                                >
+                                <label>Schedule</label>
+                                <select value={schedule} onChange={(e) => setSchedule(e.target.value)}>
                                     <option value="now">Immediately</option>
                                     <option value="later">Schedule for Later</option>
                                 </select>
 
                                 {schedule === 'later' && (
                                     <>
-                                        <label htmlFor="date">Date</label>
-                                        <input
-                                            type="date"
-                                            id="date"
-                                            value={scheduledDate}
-                                            onChange={(e) => setScheduledDate(e.target.value)}
-                                        />
-                                        <label htmlFor="time">Time</label>
-                                        <input
-                                            type="time"
-                                            id="time"
-                                            value={scheduledTime}
-                                            onChange={(e) => setScheduledTime(e.target.value)}
-                                        />
+                                        <label>Date</label>
+                                        <input type="date" value={scheduledDate} onChange={(e) => setScheduledDate(e.target.value)} />
+                                        <label>Time</label>
+                                        <input type="time" value={scheduledTime} onChange={(e) => setScheduledTime(e.target.value)} />
                                     </>
+                                )}
+
+                                <label>Optional Image</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        setImageFile(e.target.files[0]);
+                                        setImagePreview(URL.createObjectURL(e.target.files[0]));
+                                    }}
+                                />
+                                {imagePreview && (
+                                    <img src={imagePreview} alt="Preview" style={{ width: '100%', marginTop: 10 }} />
                                 )}
 
                                 <div className="popup-actions">
                                     <button type="submit" className="send-btn" disabled={loading}>
                                         {loading ? 'Sending...' : 'Send'}
                                     </button>
-                                    <button type="button" className="exit-btn" onClick={() => setPopupVisible(false)}>Cancel</button>
+                                    <button type="button" className="exit-btn" onClick={() => setPopupVisible(false)}>
+                                        Cancel
+                                    </button>
                                 </div>
                             </form>
                         </div>
