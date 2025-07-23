@@ -38,7 +38,6 @@
     background-color: #5e3c21;
 }
 
-
 .markers-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -61,7 +60,6 @@
     margin-bottom: 0.75rem;
 }
 
-/* Card Buttons */
 .card-actions {
     display: flex;
     justify-content: space-between;
@@ -86,7 +84,6 @@
     opacity: 0.9;
 }
 
-/* Popup Messages */
 .popup-message {
     margin-bottom: 1rem;
     padding: 0.8rem 1rem;
@@ -103,195 +100,4 @@
 .popup-message.error {
     background-color: #f8d7da;
     color: #721c24;
-}
-
-/* Modal */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background: white;
-    width: 90%;
-    max-width: 600px;
-    padding: 2rem;
-    border-radius: 12px;
-    overflow-y: auto;
-    max-height: 90vh;
-    position: relative;
-}
-
-.marker-form label {
-    display: block;
-    margin: 1rem 0 0.25rem;
-    font-weight: 600;
-}
-
-.marker-form input,
-.marker-form select,
-.marker-form textarea {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-}
-
-.marker-form textarea {
-    resize: vertical;
-}
-
-.preview-container {
-    margin-top: 1rem;
-    text-align: center;
-}
-
-.preview-img {
-    max-width: 100%;
-    max-height: 200px;
-    border-radius: 8px;
-}
-
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 1.5rem;
-    gap: 1rem;
-}
-
-.form-actions button {
-    padding: 0.6rem 1.2rem;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.form-actions button:first-child {
-    background-color: #28a745;
-}
-
-.form-actions button:first-child:hover {
-    background-color: #218838;
-}
-
-.form-actions button:last-child {
-    background-color: #dc3545;
-}
-
-.form-actions button:last-child:hover {
-    background-color: #c82333;
-}
-
-/* Checkbox Groups */
-.marker-form .checkbox-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    margin-top: 1rem;
-}
-
-.marker-form .checkbox-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-}
-
-.checkbox-group input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.checkbox-group label {
-    cursor: pointer;
-    user-select: none;
-}
-
-/* Opening Hours */
-.opening-hours-container {
-    margin-bottom: 10px;
-}
-
-.opening-hours-day-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 4px;
-}
-
-.opening-hours-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* Opening Hours Buttons */
-.opening-hours-copy-button,
-.opening-hours-copy-action-button,
-.opening-hours-cancel-button {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.opening-hours-copy-button,
-.opening-hours-copy-action-button {
-    background-color: #493628;
-    color: white;
-}
-
-.opening-hours-copy-button:hover,
-.opening-hours-copy-action-button:hover:enabled {
-    background-color: #5e3c21;
-}
-
-.opening-hours-copy-action-button:disabled {
-    background-color: #a0c8ff;
-    color: #eee;
-    cursor: not-allowed;
-}
-
-.opening-hours-cancel-button {
-    background-color: #6c757d;
-    color: white;
-}
-
-.opening-hours-cancel-button:hover {
-    background-color: #5a6268;
-}
-
-/* Copy Modal */
-.opening-hours-copy-modal {
-    margin-top: 5px;
-    padding: 8px;
-    background: #f9f9f9;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-}
-
-.opening-hours-copy-target-label {
-    display: block;
-    margin-bottom: 6px;
-    cursor: pointer;
-    user-select: none;
-}
-
-.opening-hours-copy-target-label input[type="checkbox"] {
-    margin-right: 8px;
-    cursor: pointer;
 }
