@@ -1,21 +1,8 @@
-.dashboard-wrapper {
-    display: flex;
-    height: 100vh;
-    background-color: #f5f6fa;
-}
-
-.dashboard-main {
-    flex: 1;
-    padding: 30px;
-    overflow-y: auto;
-}
-
-/* Header */
-.notification-header {
+.notif-header-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 16px;
 }
 
 .notification-header h2 {
@@ -24,12 +11,19 @@
     margin: 0;
 }
 
-.new-notification-btn {
+.notif-top-controls {
+    display: flex-end;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.notif-top-controls-button {
     background-color: #493628;
     color: #fff;
     padding: 10px 16px;
     font-size: 14px;
     border: none;
+    font-weight: 600;
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -39,7 +33,6 @@
     background-color: #5e3c21;
 }
 
-/* Notification History */
 .notification-history {
     background: #fff;
     padding: 20px;

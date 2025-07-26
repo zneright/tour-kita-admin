@@ -1,0 +1,56 @@
+.help-sidebar {
+    width: 220px;
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    padding: 1.5rem;
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.sidebar-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-link {
+    padding: 10px 0;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #333;
+    border-left: 3px solid transparent;
+    transition: all 0.3s;
+}
+
+.sidebar-link:hover {
+    color: #007bff;
+}
+
+.sidebar-link.active {
+    color: #007bff;
+    border-left: 3px solid #007bff;
+    font-weight: bold;
+}
+
+.back-home-button {
+    margin-top: 30px;
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-align: left;
+    padding: 0;
+    transition: color 0.3s;
+}
+
+.back-home-button:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}

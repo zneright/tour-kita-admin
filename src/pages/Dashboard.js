@@ -79,9 +79,10 @@ const Dashboard = () => {
         <div className="dashboard-wrapper">
             <Sidebar />
             <main className="dashboard-main">
-                <div className="dashboard-header">
-                    <h1>Overview</h1>
+                <div classname="dashboard-header">
+                    <h2>Overview</h2>
                 </div>
+
 
                 <div className="cards-container">
                     <div className="card brown">
@@ -126,8 +127,8 @@ const Dashboard = () => {
                         * Only locations with feedback are shown. Some locations may have feedback without ratings.
                     </p>
                 </div>
-            </main>
-        </div>
+            </main >
+        </div >
     );
 };
 

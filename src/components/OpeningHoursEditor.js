@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './OpeningHoursEditor.css';
 
-const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
 const OpeningHoursEditor = ({ value = {}, onChange }) => {
     const [copiedDay, setCopiedDay] = useState(null);

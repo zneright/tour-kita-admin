@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './UserManagement.css';
 import Sidebar from '../components/Sidebar';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebase'; // make sure your Firebase config is in this file
+import { db } from '../firebase';
 
 const UserManagement = () => {
     const [search, setSearch] = useState('');
@@ -14,26 +14,47 @@ const UserManagement = () => {
         const fetchUsers = async () => {
             try {
                 const usersSnapshot = await getDocs(collection(db, 'users'));
-                const usersList = usersSnapshot.docs.map(doc => {
+                const registeredUsers = usersSnapshot.docs.map(doc => {
                     const data = doc.data();
                     return {
-                        id: data.uid,
+                        id: data.uid || doc.id,
                         email: data.email || '',
                         name: `${data.firstName || ''} ${data.middleInitial || ''} ${data.lastName || ''}`.trim(),
-                        age: data.age || 0,
+                        age: data.age || '',
                         gender: data.gender || '',
                         contactNumber: data.contactNumber || '',
-                        status: 'registered', // Default all to 'registered' unless you store status
-                        activestatus: true, // Or fetch from Firestore if you store this
+                        status: 'registered',
+                        activestatus: data.activestatus ?? false,
                         userType: data.userType || '',
                         registeredDate: data.createdAt
-                            ? new Date(data.createdAt).toLocaleDateString()
+                            ? new Date(data.createdAt.toDate?.() || data.createdAt).toLocaleDateString()
                             : 'N/A',
                     };
                 });
-                setUsers(usersList);
+
+                const guestsSnapshot = await getDocs(collection(db, 'guests'));
+                const guestUsers = guestsSnapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        id: data.guestId || doc.id,
+                        email: '',
+                        name: 'Guest User',
+                        age: '',
+                        gender: '',
+                        contactNumber: '',
+                        status: 'guest',
+                        activestatus: data.activestatus ?? false,
+                        userType: 'Guest',
+                        registeredDate: data.createdAt
+                            ? new Date(data.createdAt.toDate?.() || data.createdAt).toLocaleDateString()
+                            : 'N/A',
+                    };
+                });
+
+                const allUsers = [...registeredUsers, ...guestUsers];
+                setUsers(allUsers);
             } catch (error) {
-                console.error('Error fetching users:', error);
+                console.error('Error fetching users and guests:', error);
             }
         };
 
@@ -100,8 +121,9 @@ const UserManagement = () => {
         <div className="dashboard-wrapper">
             <Sidebar />
             <main className="dashboard-main">
+                <h2>User Management</h2>
                 <div className="main-content">
-                    <h2>User Management</h2>
+
 
                     <div className="summary-row">
                         <div className="user-count-summary">

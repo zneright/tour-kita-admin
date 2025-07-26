@@ -136,7 +136,7 @@ const FeedbackReview = () => {
             <Sidebar />
             <div className="dashboard-main">
                 <div className="dashboard-header">
-                    <h1>Feedback Overview</h1>
+                    <h2>Feedback Overview</h2>
                 </div>
 
                 <div className="cards-container">

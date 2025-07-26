@@ -65,6 +65,9 @@ const MarkerFormModal = ({ onCancel, loading, form, setForm, isEditing }) => {
         if (!form.name) newErrors.name = 'Name is required.';
         if (!form.address) newErrors.address = 'Address is required.';
         if (!form.category) newErrors.category = 'Category is required.';
+        if (!form.latitude || !form.longitude) {
+            newErrors.address = 'Please pick a location on the map.';
+        }
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -147,10 +150,10 @@ const MarkerFormModal = ({ onCancel, loading, form, setForm, isEditing }) => {
                         </div>
 
                         <div className="field-group full-width">
-                            <label htmlFor="imageUrl">Or Paste Image URL</label>
+                            <label htmlFor="image Url">Or Paste Image URL</label>
                             <input
                                 type="url"
-                                id="imageUrl"
+                                id="image"
                                 placeholder="https://example.com/image.jpg"
                                 value={form.image}
                                 onChange={(e) => {
@@ -232,13 +235,29 @@ const MarkerFormModal = ({ onCancel, loading, form, setForm, isEditing }) => {
                 )}
 
                 <div className="form-actions full-width">
-                    {activeTab === 'details' && <button type="button" onClick={() => setActiveTab('hours')}>Next</button>}
-                    {activeTab === 'hours' && <button type="button" onClick={() => setActiveTab('details')}>Back</button>}
-                    <button type="button" onClick={handleSubmit} disabled={saving || uploading}>
+                    {activeTab === 'details' && (
+                        <button type="button" className="next-button" onClick={() => setActiveTab('hours')}>
+                            Next
+                        </button>
+                    )}
+                    {activeTab === 'hours' && (
+                        <button type="button" className="back-button" onClick={() => setActiveTab('details')}>
+                            Back
+                        </button>
+                    )}
+                    <button
+                        type="button"
+                        className="save-button"
+                        onClick={handleSubmit}
+                        disabled={saving || uploading}
+                    >
                         {saving || uploading ? 'Saving...' : isEditing ? 'Update Marker' : 'Save Marker'}
                     </button>
-                    <button type="button" className="cancel-btn" onClick={onCancel}>Cancel</button>
+                    <button type="button" className="cancel-butn" onClick={onCancel}>
+                        Cancel
+                    </button>
                 </div>
+
             </div>
         </div>
     );

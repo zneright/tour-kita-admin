@@ -67,7 +67,7 @@ const NotificationManagement = () => {
 
         const formData = new FormData();
         formData.append('file', imageFile);
-        formData.append('upload_preset', 'Notification Image'); // ✅ Replace with your preset
+        formData.append('upload_preset', 'Notification Image');
 
         try {
             const res = await axios.post(
@@ -174,20 +174,26 @@ const NotificationManagement = () => {
         <div className="dashboard-wrapper">
             <Sidebar />
             <main className="dashboard-main">
-                <div className="notification-header">
+                <div className="dashboard-header">
                     <h2>Notification Management</h2>
-                    <button className="new-notification-btn" onClick={() => setPopupVisible(true)}>
-                        + New Notification
-                    </button>
                 </div>
 
-                <div className="tab-buttons">
-                    <button className={`tab ${activeTab === 'notifications' ? 'active' : ''}`} onClick={() => setActiveTab('notifications')}>
-                        Notifications
-                    </button>
-                    <button className={`tab ${activeTab === 'feedback' ? 'active' : ''}`} onClick={() => setActiveTab('feedback')}>
-                        Feedback Replies
-                    </button>
+
+                <div className="notif-header-row">
+                    <div className="tab-buttons">
+                        <button className={`tab ${activeTab === 'notifications' ? 'active' : ''}`} onClick={() => setActiveTab('notifications')}>
+                            Notifications
+                        </button>
+                        <button className={`tab ${activeTab === 'feedback' ? 'active' : ''}`} onClick={() => setActiveTab('feedback')}>
+                            Feedback Replies
+                        </button>
+                    </div>
+
+                    <div className="notif-top-controls">
+                        <button className="notif-top-controls-button" onClick={() => setPopupVisible(true)}>
+                            + New Notification
+                        </button>
+                    </div>
                 </div>
 
                 {activeTab === 'notifications' && (

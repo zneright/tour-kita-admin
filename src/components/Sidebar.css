@@ -1,7 +1,8 @@
+/* Sidebar Layout */
 .sidebar {
-    width: 240px;
+    width: 250px;
     height: 100vh;
-    background: linear-gradient(180deg, #fffaf5 0%, #fdf7f0 100%);
+    background: linear-gradient(180deg, #fffaf5 0%, #fcf4e8 100%);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -12,9 +13,14 @@
     left: 0;
     top: 0;
     z-index: 1000;
-    transition: all 0.3s ease;
 }
 
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Admin Info */
 .admin-info {
     display: flex;
     align-items: center;
@@ -23,28 +29,28 @@
 }
 
 .admin-icon {
-    font-size: 38px;
-    color: #555;
+    font-size: 40px;
+    color: #493628;
 }
 
 .admin-name {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
-    color: #333;
+    color: #493628;
 }
 
+/* Navigation Links */
 .nav-links {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 12px;
+    gap: 8px;
 }
 
 .nav-link {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: #444;
+    color: #493628;
     padding: 10px 14px;
     border-radius: 10px;
     font-size: 15px;
@@ -55,29 +61,30 @@
 .nav-icon {
     font-size: 16px;
     margin-right: 10px;
-    color: #888;
+    color: #8a6d4e;
     transition: color 0.2s;
 }
 
 .nav-link:hover {
-    background-color: #f4e7d6;
-    color: #000;
+    background-color: #f0e0d0;
+    color: #3a2819;
 }
 
 .nav-link:hover .nav-icon {
-    color: #000;
+    color: #3a2819;
 }
 
 .nav-link.active {
-    background-color: #e8d4b7;
-    color: #000;
+    background-color: #e4c8a9;
+    color: #2e1c10;
     font-weight: 600;
 }
 
 .nav-link.active .nav-icon {
-    color: #000;
+    color: #2e1c10;
 }
 
+/* Logout Button */
 .logout-button {
     display: flex;
     align-items: center;
@@ -101,19 +108,23 @@
     font-size: 16px;
 }
 
+/* Logo Styling */
 .logo-wrapper {
     text-align: center;
-    margin-top: auto;
-    padding-bottom: 24px;
+    padding-top: 1rem;
+    padding-bottom: 16px;
+    border-top: 1px solid #eee;
+    margin-top: 2rem;
 }
 
 .app-logo {
     width: 120px;
     height: auto;
-    opacity: 0.9;
-    transition: transform 0.3s;
+    opacity: 0.95;
+    transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .app-logo:hover {
     transform: scale(1.05);
+    opacity: 1;
 }
