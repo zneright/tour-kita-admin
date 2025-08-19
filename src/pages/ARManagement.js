@@ -10,7 +10,10 @@ const ARManagement = () => {
         description: "",
         image: null,
         model: null,
+        audioFiles: [],
+        videoFiles: [],
     });
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -19,7 +22,11 @@ const ARManagement = () => {
 
     const handleFileChange = (e) => {
         const { name, files } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: files[0] }));
+        if (name === "audioFiles" || name === "videoFiles") {
+            setFormData((prev) => ({ ...prev, [name]: Array.from(files) }));
+        } else {
+            setFormData((prev) => ({ ...prev, [name]: files[0] }));
+        }
     };
 
     const handleAddMarkerClick = () => {
@@ -113,6 +120,28 @@ const ARManagement = () => {
                                     required
                                 />
                             </label>
+                            <label>
+                                Audio Files:
+                                <input
+                                    type="file"
+                                    name="audioFiles"
+                                    accept="audio/*"
+                                    onChange={handleFileChange}
+                                    multiple
+                                />
+                            </label>
+
+                            <label>
+                                Video Files:
+                                <input
+                                    type="file"
+                                    name="videoFiles"
+                                    accept="video/*"
+                                    onChange={handleFileChange}
+                                    multiple
+                                />
+                            </label>
+
 
                             <div className="form-actions">
                                 <button type="submit">Submit</button>

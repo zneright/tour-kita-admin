@@ -180,11 +180,11 @@ const NotificationManagement = () => {
 
 
                 <div className="notif-header-row">
-                    <div className="tab-buttons">
-                        <button className={`tab ${activeTab === 'notifications' ? 'active' : ''}`} onClick={() => setActiveTab('notifications')}>
+                    <div className="ntab-buttons">
+                        <button className={`ntab ${activeTab === 'notifications' ? 'active' : ''}`} onClick={() => setActiveTab('notifications')}>
                             Notifications
                         </button>
-                        <button className={`tab ${activeTab === 'feedback' ? 'active' : ''}`} onClick={() => setActiveTab('feedback')}>
+                        <button className={`ntab ${activeTab === 'feedback' ? 'active' : ''}`} onClick={() => setActiveTab('feedback')}>
                             Feedback Replies
                         </button>
                     </div>

@@ -111,20 +111,18 @@
 }
 
 .tab {
-    padding: 6px 16px;
+    padding: 10px 20px;
+    background-color: #eaeaea;
     border: none;
     border-radius: 6px;
-    background-color: #f4dfcc;
-    color: #5c3d2e;
+    font-weight: 600;
     cursor: pointer;
-    font-weight: 500;
     transition: background-color 0.3s;
-    font-size: 14px;
 }
 
 .tab.active {
-    background-color: #d4aa7d;
-    color: white;
+    background-color: #2c1d13;
+    color: #fff;
 }
 
 .search-bar {

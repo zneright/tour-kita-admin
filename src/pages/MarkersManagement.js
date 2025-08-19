@@ -4,6 +4,9 @@ import './MarkersManagement.css';
 import { doc, setDoc, getDocs, collection, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import MarkerFormModal from '../components/MarkerFormModal';
+import EventFormModal from "../components/EventFormModal";
+import EventCalendar from "../components/EventCalendar";
+
 
 const getEmptyForm = () => ({
     id: '',
@@ -38,6 +41,30 @@ const MarkersManagement = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [previewMarker, setPreviewMarker] = useState(null);
+    const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+    const [eventForm, setEventForm] = useState({
+        title: '',
+        description: '',
+        date: '',
+        time: ''
+    });
+    const [selectedTab, setSelectedTab] = useState("markers");
+    const [events, setEvents] = useState([]); // Fetched from Firestore
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [editingEvent, setEditingEvent] = useState(null);
+    const handleEventSave = (eventData) => {
+        // logic to save or update an event in Firestore
+    };
+
+    const handleEventDelete = (eventId) => {
+        // logic to delete event from Firestore
+    };
+
+    const [activeTab, setActiveTab] = useState('markers'); // default tab
+
+
+
+
     const fetchMarkers = async () => {
         const querySnapshot = await getDocs(collection(db, 'markers'));
         const markersData = querySnapshot.docs.map(doc => ({
@@ -151,6 +178,21 @@ const MarkersManagement = () => {
             <Sidebar />
             <main className="dashboard-main">
                 <h2>Markers Management</h2>
+                <div className="mtab-buttons">
+                    <button
+                        className={`mtab ${activeTab === 'markers' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('markers')}
+                    >
+                        Manage Markers
+                    </button>
+                    <button
+                        className={`mtab ${activeTab === 'events' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('events')}
+                    >
+                        Manage Events
+                    </button>
+                </div>
+
 
                 {popup.message && (
                     <div className={`popup-message ${popup.status}`}>
@@ -158,58 +200,112 @@ const MarkersManagement = () => {
                     </div>
                 )}
 
-                <div className="top-controls">
-                    <input
-                        type="text"
-                        placeholder="Search markers..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                    <button onClick={handleAddMarkerClick}>Add New Marker</button>
-                </div>
-
-                <div className="markers-list">
-                    {filteredMarkers.map(marker => (
-                        <div key={marker.id} className="marker-card">
-                            <img
-                                src={marker.image}
-                                alt={marker.name}
-                                onClick={() => setPreviewMarker(marker)}
-                                style={{ cursor: 'pointer' }}
+                {activeTab === 'markers' && (
+                    <>
+                        <div className="top-controls">
+                            <input
+                                type="text"
+                                placeholder="Search markers..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
                             />
-                            <h4>{marker.name}</h4>
-                            <p>{marker.category}</p>
-                            <div className="card-actions">
-                                <button onClick={() => handleEdit(marker)}>Edit</button>
-                                <button onClick={() => handleDelete(marker.id)}>Delete</button>
+                            <button onClick={handleAddMarkerClick}>Add New Marker</button>
+                        </div>
+
+                        <div className="markers-list">
+                            {filteredMarkers.map(marker => (
+                                <div key={marker.id} className="marker-card">
+                                    <img
+                                        src={marker.image}
+                                        alt={marker.name}
+                                        onClick={() => setPreviewMarker(marker)}
+                                        style={{ cursor: 'pointer' }}
+                                    />
+                                    <h4>{marker.name}</h4>
+                                    <p>{marker.category}</p>
+                                    <div className="card-actions">
+                                        <button onClick={() => handleEdit(marker)}>Edit</button>
+                                        <button onClick={() => handleDelete(marker.id)}>Delete</button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                )}
+
+                {activeTab === "events" && (
+                    <>
+                        <div className="top-controls">
+                            <h3>Event Schedule</h3>
+                            <button onClick={() => {
+                                setSelectedDate(new Date()); // ✅ Ensure selectedDate is set
+                                setEditingEvent(null);
+                                setIsEventModalOpen(true);
+                            }}>
+                                + Add Event
+                            </button>
+
+                        </div>
+
+                        <div className="event-calendar-wrapper">
+                            <EventCalendar
+                                events={events}
+                                onDateSelect={(date) => setSelectedDate(date)}
+                                onEventClick={(event) => {
+                                    setEditingEvent(event);
+                                    setIsEventModalOpen(true);
+                                }}
+                            />
+                        </div>
+
+                        <EventFormModal
+                            isOpen={isEventModalOpen}
+                            formData={eventForm}
+                            setFormData={setEventForm}
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleEventSave(eventForm);
+                                setIsEventModalOpen(false);
+                                setEditingEvent(null);
+                                setEventForm({ title: '', description: '', date: '', time: '' });
+                            }}
+                            onCancel={() => {
+                                setIsEventModalOpen(false);
+                                setEditingEvent(null);
+                            }}
+                        />
+
+                    </>
+                )}
+
+
+                {
+                    isModalOpen && (
+                        <MarkerFormModal
+                            form={form}
+                            setForm={setForm}
+                            onSubmit={handleSubmit}
+                            onCancel={() => setIsModalOpen(false)}
+                            loading={loading}
+                            isEditing={isEditing}
+                        />
+                    )
+                }
+
+
+                {
+                    previewMarker && (
+                        <div className="image-preview-popup" onClick={() => setPreviewMarker(null)}>
+                            <div className="image-popup-content" onClick={(e) => e.stopPropagation()}>
+                                <img src={previewMarker.image} alt={previewMarker.name} />
+                                <h3>{previewMarker.name}</h3>
+                                <button onClick={() => setPreviewMarker(null)}>Close</button>
                             </div>
                         </div>
-                    ))}
-                </div>
-
-                {isModalOpen && (
-                    <MarkerFormModal
-                        form={form}
-                        setForm={setForm}
-                        onSubmit={handleSubmit}
-                        onCancel={() => setIsModalOpen(false)}
-                        loading={loading}
-                        isEditing={isEditing}
-                    />
-                )}
-
-
-                {previewMarker && (
-                    <div className="image-preview-popup" onClick={() => setPreviewMarker(null)}>
-                        <div className="image-popup-content" onClick={(e) => e.stopPropagation()}>
-                            <img src={previewMarker.image} alt={previewMarker.name} />
-                            <h3>{previewMarker.name}</h3>
-                            <button onClick={() => setPreviewMarker(null)}>Close</button>
-                        </div>
-                    </div>
-                )}
-            </main>
-        </div>
+                    )
+                }
+            </main >
+        </div >
     );
 };
 

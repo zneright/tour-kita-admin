@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase"; // adjust if your path differs
+import { db } from "../firebase";
 import HelpSidebar from "../components/HelpSidebar";
 import "./LegalPages.css";
 

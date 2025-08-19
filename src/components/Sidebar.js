@@ -15,6 +15,32 @@ import {
     FaFileAlt
 } from 'react-icons/fa';
 
+const groupedNav = [
+    {
+        title: 'Insights',
+        items: [
+            { to: '/dashboard', icon: FaTachometerAlt, label: 'Dashboard' },
+            { to: '/analysis-report', icon: FaChartBar, label: 'Reports' }
+        ]
+    },
+    {
+        title: 'Management',
+        items: [
+            { to: '/user-management', icon: FaUsers, label: 'Users' },
+            { to: '/feedback', icon: FaComments, label: 'Feedback' },
+            { to: '/notification-management', icon: FaBell, label: 'Notifications' },
+            { to: '/markers-management', icon: FaMapMarkerAlt, label: 'Markers' }
+        ]
+    },
+    {
+        title: 'Tools',
+        items: [
+            { to: '/ar-management', icon: FaCamera, label: 'AR Tools' },
+            { to: '/content-management', icon: FaFileAlt, label: 'Content' }
+        ]
+    }
+];
+
 const Sidebar = () => {
     const navigate = useNavigate();
 
@@ -32,38 +58,17 @@ const Sidebar = () => {
                 </div>
 
                 <nav className="nav-links">
-                    <NavLink to="/dashboard" className="nav-link">
-                        <FaTachometerAlt className="nav-icon" />
-                        Dashboard
-                    </NavLink>
-                    <NavLink to="/user-management" className="nav-link">
-                        <FaUsers className="nav-icon" />
-                        User Management
-                    </NavLink>
-                    <NavLink to="/feedback" className="nav-link">
-                        <FaComments className="nav-icon" />
-                        Feedback & Review
-                    </NavLink>
-                    <NavLink to="/notification-management" className="nav-link">
-                        <FaBell className="nav-icon" />
-                        Notification Management
-                    </NavLink>
-                    <NavLink to="/markers-management" className="nav-link">
-                        <FaMapMarkerAlt className="nav-icon" />
-                        Markers Management
-                    </NavLink>
-                    <NavLink to="/ar-management" className="nav-link">
-                        <FaCamera className="nav-icon" />
-                        AR Management
-                    </NavLink>
-                    <NavLink to="/content-management" className="nav-link">
-                        <FaFileAlt className="nav-icon" />
-                        Content Management
-                    </NavLink>
-                    <NavLink to="/analysis-report" className="nav-link">
-                        <FaChartBar className="nav-icon" />
-                        Analysis & Reports
-                    </NavLink>
+                    {groupedNav.map((section) => (
+                        <div key={section.title} className="nav-section">
+                            <div className="nav-section-title">{section.title}</div>
+                            {section.items.map(({ to, icon: Icon, label }) => (
+                                <NavLink key={to} to={to} className="nav-link">
+                                    <Icon className="nav-icon" />
+                                    {label}
+                                </NavLink>
+                            ))}
+                        </div>
+                    ))}
                 </nav>
 
                 <button onClick={handleLogout} className="logout-button">

@@ -66,58 +66,99 @@
     color: #AB886D;
 }
 
-.ar-upload-modal {
-    background: #ffffff;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-    max-width: 500px;
-    margin: 2rem auto;
+/* Backdrop modal overlay */
+.upload-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
 }
 
-.ar-upload-form label {
+/* Modal content box */
+.upload-form {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: fadeInScale 0.3s ease-in-out;
+}
+
+/* Animation for smooth entrance */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.upload-form h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    text-align: center;
+    color: #333;
+}
+
+.upload-form label {
     display: block;
     margin-bottom: 1rem;
     font-weight: 500;
     color: #333;
 }
 
-.ar-upload-form input,
-.ar-upload-form textarea {
+.upload-form input,
+.upload-form textarea {
     width: 100%;
     padding: 0.6rem;
     margin-top: 0.3rem;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 0.95rem;
+    box-sizing: border-box;
 }
 
-.ar-form-actions {
+/* Submit and Cancel button styles */
+.arform-actions {
     display: flex;
     justify-content: space-between;
-    gap: 1rem;
     margin-top: 1.5rem;
+    gap: 1rem;
 }
 
-.ar-form-actions button {
+.arform-actions button {
+    flex: 1;
     padding: 0.6rem 1.2rem;
     border: none;
     border-radius: 6px;
     font-size: 0.95rem;
     cursor: pointer;
     font-weight: 500;
+    transition: background-color 0.2s ease;
 }
 
-.ar-form-actions button[type="submit"] {
+.arform-actions button[type="submit"] {
     background-color: #22c55e;
     color: white;
 }
 
-.ar-form-actions button[type="button"] {
+.arform-actions button[type="button"] {
     background-color: #dc3545;
     color: white;
 }
 
-.ar-form-actions button:hover {
+.arform-actions button:hover {
     opacity: 0.95;
+
 }

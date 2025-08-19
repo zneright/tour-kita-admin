@@ -128,3 +128,16 @@
     transform: scale(1.05);
     opacity: 1;
 }
+
+.nav-section {
+    margin-bottom: 24px;
+}
+
+.nav-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #9a7d5c;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    padding-left: 4px;
+}

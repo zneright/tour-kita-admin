@@ -1,48 +1,85 @@
-/* Layout Wrapper */
 .content-management-wrapper {
-    max-width: 900px;
+    max-width: 700px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 2rem 6rem;
 }
 
-/* Page Title */
+.content-area {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.dashboard-section {
+    background: #f3f4f6;
+    min-height: 100vh;
+    padding-top: 4rem;
+}
+
+
 .page-title {
-    font-size: 2rem;
+    font-size: 2.25rem;
     font-weight: 700;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
     text-align: center;
+    color: #111827;
+    letter-spacing: -0.5px;
+}
+
+.paper-section {
+    background: #fefefe url("https://www.transparenttextures.com/patterns/natural-paper.png") repeat;
+    background-size: cover;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.04),
+        inset 0 0 8px rgba(0, 0, 0, 0.01);
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+
+
+.paper-section:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 6px 14px rgba(0, 0, 0, 0.1),
+        0 3px 6px rgba(0, 0, 0, 0.05),
+        inset 0 0 10px rgba(0, 0, 0, 0.01);
+}
+
+.paper-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.05), transparent);
+    border-radius: 6px 6px 0 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+.paper-section h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
     color: #1f2937;
 }
 
-/* Paper Section */
-.paper-section {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.paper-section:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.paper-section h2 {
-    margin-top: 0;
-    font-size: 1.25rem;
-    color: #333;
-}
-
 .paper-preview {
-    font-size: 0.95rem;
-    color: #555;
-    margin: 1rem 0;
-    line-height: 1.6;
+    font-size: 1rem;
+    color: #374151;
+    line-height: 1.8;
+    white-space: pre-line;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-/* Buttons */
 .edit-btn,
 .add-btn,
 .save-btn,
@@ -59,7 +96,7 @@
 .edit-btn,
 .add-btn {
     background-color: #493628;
-    color: white;
+    color: #fff;
 }
 
 .edit-btn:hover,
@@ -69,7 +106,7 @@
 
 .save-btn {
     background-color: #16a34a;
-    color: white;
+    color: #fff;
 }
 
 .save-btn:hover {
@@ -78,7 +115,7 @@
 
 .cancel-btn {
     background-color: #6b7280;
-    color: white;
+    color: #fff;
 }
 
 .cancel-btn:hover {
@@ -86,12 +123,12 @@
 }
 
 .remove-btn {
-    background: #dc3545;
-    color: white;
+    background-color: #dc3545;
+    color: #fff;
 }
 
 .remove-btn:hover {
-    background: #b52d3b;
+    background-color: #b52d3b;
 }
 
 /* FAQ Display Block */
@@ -109,10 +146,7 @@
 /* Modal */
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
@@ -122,7 +156,7 @@
 }
 
 .modal-content {
-    background: white;
+    background: #fff;
     padding: 2rem;
     width: 100%;
     max-width: 700px;
@@ -132,7 +166,6 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-/* Modal Action Buttons */
 .modal-actions {
     display: flex;
     justify-content: flex-end;
@@ -165,7 +198,7 @@
 
 .faq-number {
     background: #4a90e2;
-    color: white;
+    color: #fff;
     padding: 0.3rem 0.6rem;
     border-radius: 5px;
     font-size: 0.85rem;
@@ -185,9 +218,9 @@
     font-size: 1rem;
     border-radius: 6px;
     border: 1px solid #d1d5db;
-    margin-bottom: 0.75rem;
-    background-color: white;
+    background-color: #fff;
     color: #111827;
+    margin-bottom: 0.75rem;
 }
 
 .faq-textarea {
@@ -228,12 +261,12 @@
     border: 1px solid #ccc;
     border-radius: 6px;
     resize: vertical;
-    background-color: white;
+    background-color: #fff;
     color: #111827;
     width: calc(100% - 2rem);
 }
 
-/* Responsive Adjustments */
+/* Responsive */
 @media (max-width: 600px) {
     .modal-content {
         max-width: 95%;

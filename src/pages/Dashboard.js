@@ -24,7 +24,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         const fetchRatings = async () => {
-            const feedbackSnapshot = await getDocs(collection(db, 'feedbacks')); // ✅ updated collection name
+            const feedbackSnapshot = await getDocs(collection(db, 'feedbacks'));
             const ratingsMap = {};
 
             feedbackSnapshot.forEach(doc => {

@@ -133,7 +133,7 @@ const ContentManagement = () => {
     return (
         <div className="dashboard-main">
             <Sidebar />
-            <div className="dashboard-section">
+            <div className="content-area">
                 <div className="ar-header">
                     <h2>Content Management</h2>
                 </div>

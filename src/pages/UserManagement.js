@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './UserManagement.css';
 import Sidebar from '../components/Sidebar';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, doc, getDocs, getDoc, setDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 
 const UserManagement = () => {
@@ -61,13 +61,48 @@ const UserManagement = () => {
         fetchUsers();
     }, []);
 
-    const handleArchive = (userId, reason) => {
-        alert(`🚫 User ID: ${userId} has been archived.\nReason: ${reason}`);
-        const updatedUsers = users.map(user =>
-            user.id === userId ? { ...user, status: 'archived' } : user
-        );
-        setUsers(updatedUsers);
+    const handleArchive = async (userId, reason) => {
+        if (!reason) return;
+
+        try {
+            // 1. Get user data
+            const userRef = doc(db, 'users', userId);
+            const userSnap = await getDoc(userRef);
+
+            if (!userSnap.exists()) {
+                alert('User not found.');
+                return;
+            }
+
+            const userData = userSnap.data();
+
+            // 2. Archive to new collection
+            const archivedUserRef = doc(db, 'archived_users', userId);
+            await setDoc(archivedUserRef, {
+                ...userData,
+                email: userData.email || '',
+                uid: userId,
+                archivedAt: serverTimestamp(),
+                archiveReason: reason,
+            });
+
+            // 3. Delete user from users collection
+            await deleteDoc(userRef);
+
+            // 4. Update local state
+            const updatedUsers = users.map(user =>
+                user.id === userId ? { ...user, status: 'archived' } : user
+            );
+            setUsers(updatedUsers);
+
+            alert(`✅ User ${userData.email || userId} has been archived.`);
+
+        } catch (error) {
+            console.error('Error archiving user:', error);
+            alert('Error archiving user. See console for details.');
+        }
     };
+
 
     const handleWarnAndArchive = (userId) => {
         const reason = prompt(`Enter a reason to archive User ID: ${userId}`);
@@ -75,6 +110,7 @@ const UserManagement = () => {
             handleArchive(userId, reason);
         }
     };
+
 
     const filterUsers = () => {
         return users.filter(user => {
