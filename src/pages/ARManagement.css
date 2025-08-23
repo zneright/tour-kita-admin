@@ -12,7 +12,6 @@
     margin-bottom: 1rem;
 }
 
-
 .ar-top-controls button {
     background-color: #493628;
     color: white;
@@ -66,7 +65,6 @@
     color: #AB886D;
 }
 
-/* Backdrop modal overlay */
 .upload-modal {
     position: fixed;
     top: 0;
@@ -80,7 +78,6 @@
     z-index: 999;
 }
 
-/* Modal content box */
 .upload-form {
     background: #fff;
     padding: 2rem;
@@ -91,7 +88,6 @@
     animation: fadeInScale 0.3s ease-in-out;
 }
 
-/* Animation for smooth entrance */
 @keyframes fadeInScale {
     from {
         opacity: 0;
@@ -129,7 +125,6 @@
     box-sizing: border-box;
 }
 
-/* Submit and Cancel button styles */
 .arform-actions {
     display: flex;
     justify-content: space-between;
@@ -160,5 +155,4 @@
 
 .arform-actions button:hover {
     opacity: 0.95;
-
 }

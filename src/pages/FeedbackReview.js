@@ -95,14 +95,19 @@ const FeedbackReview = () => {
     };
 
     const filteredFeedback = feedbackList.filter(item =>
-        ((isFeatureTab && item.feedbackType === 'App Feedback') ||
-            (!isFeatureTab && item.feedbackType === 'Location Feedback')) &&
+        (
+            (isFeatureTab && item.feedbackType === 'App Feedback') ||
+            (!isFeatureTab && item.feedbackType === 'Location Feedback')
+        ) &&
         (
             item.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             (item.location || item.feature)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.comment?.toLowerCase().includes(searchTerm.toLowerCase())
+            item.comment?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.createdAt?.toDate?.().toLocaleString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.rating?.toString().includes(searchTerm)
         )
     );
+
 
     const renderStars = (rating) => '★'.repeat(rating) + '☆'.repeat(5 - rating);
 
@@ -170,26 +175,27 @@ const FeedbackReview = () => {
                     )}
                 </div>
 
-                <div className="filter-toggle">
+                <div className="mtab-buttons">
                     <button
-                        className={activeTab === 'Location Feedback' ? 'active' : ''}
+                        className={`mtab ${activeTab === 'Location Feedback' ? 'active' : ''}`}
                         onClick={() => handleTabClick('Location Feedback')}
                     >
                         Location Feedback
                     </button>
                     <button
-                        className={activeTab === 'Feature Feedback' ? 'active' : ''}
+                        className={`mtab ${activeTab === 'Feature Feedback' ? 'active' : ''}`}
                         onClick={() => handleTabClick('Feature Feedback')}
                     >
                         Feature Feedback
                     </button>
                 </div>
 
+
                 <div className="main-content">
                     <input
                         type="text"
                         className="search-bar"
-                        placeholder="Search by email, feature/location, or message..."
+                        placeholder="Search by email, feature/location,message or date..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -200,7 +206,7 @@ const FeedbackReview = () => {
                                 <th>Email</th>
                                 <th>{isFeatureTab ? 'App Feature' : 'Location'}</th>
                                 <th>Feedback</th>
-                                <th>Image</th> {/* Add this line */}
+                                <th>Image</th>
                                 <th>Rating</th>
                                 <th>Time</th>
                                 <th>Action</th>
@@ -229,14 +235,6 @@ const FeedbackReview = () => {
                                                 '—'
                                             )}
                                         </td>
-                                        {showImageModal && (
-                                            <div className="modal-overlay" onClick={() => setShowImageModal(false)}>
-                                                <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>
-                                                    <img src={imagePreview} alt="Full Feedback" className="modal-full-image" />
-                                                    <button className="close-btn" onClick={() => setShowImageModal(false)}>×</button>
-                                                </div>
-                                            </div>
-                                        )}
 
                                         <td>{renderStars(entry.rating || 0)}</td>
                                         <td>{formatTimestamp(entry.createdAt)}</td>
@@ -251,12 +249,13 @@ const FeedbackReview = () => {
                                             >
                                                 Send Message
                                             </button>
+
                                         </td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
+                                    <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>
                                         No feedback found.
                                     </td>
                                 </tr>
@@ -284,6 +283,7 @@ const FeedbackReview = () => {
                                     </button>
                                     <button className="cancel-btn" onClick={() => setIsModalOpen(false)} disabled={isSending}>
                                         Cancel
+
                                     </button>
                                 </div>
                             </div>

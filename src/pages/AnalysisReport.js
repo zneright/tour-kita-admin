@@ -1,10 +1,10 @@
-// ... [imports remain unchanged]
+// AnalysisReport.js
 import React, { useState, useEffect, useMemo } from 'react';
 import Sidebar from '../components/Sidebar';
 import './AnalysisReport.css';
 import {
     LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
-    PieChart, Pie, Cell, BarChart, Bar, CartesianGrid
+    PieChart, Pie, Cell, BarChart, Bar,
 } from 'recharts';
 import { FaUsers, FaMapMarkerAlt, FaStar } from 'react-icons/fa';
 import moment from 'moment';
@@ -26,7 +26,7 @@ const AnalysisReport = () => {
     const [ratingFilter, setRatingFilter] = useState('top');
     const [activeFeedbackTab, setActiveFeedbackTab] = useState('location');
 
-
+    // 🔹 Fetch data
     useEffect(() => {
         const fetchData = async () => {
             const userSnapshot = await getDocs(collection(db, 'users'));
@@ -50,26 +50,23 @@ const AnalysisReport = () => {
             const feedbackList = feedbackSnapshot.docs.map(doc => doc.data());
             setFeedbacks(feedbackList);
 
+            // 🔹 Average rating
             const ratings = feedbackList.map(f => f.rating).filter(r => typeof r === 'number');
             const avg = ratings.length ? (ratings.reduce((sum, r) => sum + r, 0) / ratings.length) : 0;
             setAverageRating(parseFloat(avg.toFixed(1)));
 
+            // 🔹 Top-rated location
             const locationRatings = {};
             feedbackList.forEach(fb => {
-                const loc = fb.location;
-                const rating = fb.rating;
-                if (loc && typeof rating === 'number') {
-                    if (!locationRatings[loc]) {
-                        locationRatings[loc] = { total: 0, count: 0 };
-                    }
-                    locationRatings[loc].total += rating;
-                    locationRatings[loc].count += 1;
+                if (fb.location && typeof fb.rating === 'number') {
+                    if (!locationRatings[fb.location]) locationRatings[fb.location] = { total: 0, count: 0 };
+                    locationRatings[fb.location].total += fb.rating;
+                    locationRatings[fb.location].count += 1;
                 }
             });
 
             let topLocation = null;
             let maxAvg = 0;
-
             for (const [loc, { total, count }] of Object.entries(locationRatings)) {
                 const avgRating = total / count;
                 if (avgRating > maxAvg) {
@@ -77,7 +74,6 @@ const AnalysisReport = () => {
                     topLocation = { name: loc, rating: avgRating };
                 }
             }
-
             setTopRatedLocation(topLocation);
         };
 
@@ -86,6 +82,7 @@ const AnalysisReport = () => {
 
     const guestUsers = users.filter(user => user.status === 'guest');
 
+    // 🔹 User filtering
     const filteredUsers = useMemo(() => {
         return users.filter(user => {
             if (user.status !== 'registered') return false;
@@ -95,15 +92,40 @@ const AnalysisReport = () => {
         });
     }, [selectedYear, userType, filter, users]);
 
-    const sortedFeedbacks = useMemo(() => {
-        const filtered = feedbacks.filter(f => f.rating);
-        return [...filtered].sort((a, b) => ratingFilter === 'top' ? b.rating - a.rating : a.rating - b.rating);
-    }, [feedbacks, ratingFilter]);
+    // 🔹 Feedback grouping helper
+    const getGroupedFeedback = (typeKey, labelKey) => {
+        const relevant = feedbacks.filter(f => f.feedbackType === typeKey && typeof f.rating === 'number');
+        const grouped = {};
 
-    const displayFeedbacks = showAll ? sortedFeedbacks : sortedFeedbacks.slice(0, 10);
+        relevant.forEach(fb => {
+            const key = fb[labelKey] || 'N/A';
+            if (!grouped[key]) grouped[key] = [];
+            grouped[key].push(fb.rating);
+        });
+
+        let result = Object.entries(grouped).map(([key, ratings]) => {
+            const avg = ratings.reduce((sum, r) => sum + r, 0) / ratings.length;
+            return {
+                name: key,
+                average: parseFloat(avg.toFixed(1)),
+                count: ratings.length
+            };
+        });
+
+        result = result.sort((a, b) =>
+            ratingFilter === 'top' ? b.average - a.average : a.average - b.average
+        );
+
+        return showAll ? result : result.slice(0, 5);
+    };
+
+    const locationFeedbacks = getGroupedFeedback('Location Feedback', 'location');
+    const appFeedbacks = getGroupedFeedback('App Feedback', 'feature');
+
     const locationCount = feedbacks.filter(f => f.feedbackType === 'Location Feedback').length;
     const appCount = feedbacks.filter(f => f.feedbackType === 'App Feedback').length;
 
+    // 🔹 User activity chart data
     const getUserActivityData = useMemo(() => {
         const activity = {};
         filteredUsers.forEach(user => {
@@ -164,6 +186,7 @@ const AnalysisReport = () => {
                     <h2>Analysis & Reports</h2>
                 </div>
 
+                {/* 🔹 Cards */}
                 <div className="cards-container">
                     <div className="card brown">
                         <FaStar size={22} color="#F39C12" />
@@ -190,6 +213,8 @@ const AnalysisReport = () => {
                         </p>
                     </div>
                 </div>
+
+                {/* 🔹 Feedback Section */}
                 <div className="chart-container">
                     <h3>Feedback Overview</h3>
 
@@ -216,83 +241,31 @@ const AnalysisReport = () => {
                             </button>
                         </div>
                     </div>
+
                     {activeFeedbackTab === 'location' && (
                         <>
                             <h4>Location Feedbacks ({locationCount})</h4>
-                            {(() => {
-                                const locationFeedbacks = feedbacks
-                                    .filter(f => f.feedbackType === 'Location Feedback' && typeof f.rating === 'number');
-
-                                const grouped = {};
-                                locationFeedbacks.forEach(fb => {
-                                    const loc = fb.location || 'N/A';
-                                    if (!grouped[loc]) grouped[loc] = [];
-                                    grouped[loc].push(fb.rating);
-                                });
-
-                                let locationRatings = Object.entries(grouped).map(([location, ratings]) => {
-                                    const avg = ratings.reduce((sum, r) => sum + r, 0) / ratings.length;
-                                    return {
-                                        location,
-                                        average: parseFloat(avg.toFixed(1)),
-                                        count: ratings.length
-                                    };
-                                });
-
-                                locationRatings = locationRatings.sort((a, b) =>
-                                    ratingFilter === 'top' ? b.average - a.average : a.average - b.average
-                                );
-
-                                const toShow = showAll ? locationRatings : locationRatings.slice(0, 5);
-
-                                return toShow.map((loc, idx) => (
-                                    <div key={`loc-${idx}`} className="feedback-card">
-                                        <strong>{loc.location}</strong> — Rating: {loc.average}⭐ ({loc.count} rating{loc.count > 1 ? 's' : ''})
-                                    </div>
-                                ));
-                            })()}
+                            {locationFeedbacks.map((loc, idx) => (
+                                <div key={`loc-${idx}`} className="feedback-card">
+                                    <strong>{loc.name}</strong> — Rating: {loc.average}⭐ ({loc.count} rating{loc.count > 1 ? 's' : ''})
+                                </div>
+                            ))}
                         </>
                     )}
 
                     {activeFeedbackTab === 'app' && (
                         <>
                             <h4>App Feedbacks ({appCount})</h4>
-                            {(() => {
-                                const appFeedbacks = feedbacks
-                                    .filter(f => f.feedbackType === 'App Feedback' && typeof f.rating === 'number');
-
-                                const grouped = {};
-                                appFeedbacks.forEach(fb => {
-                                    const key = fb.feature || 'General';
-                                    if (!grouped[key]) grouped[key] = [];
-                                    grouped[key].push(fb.rating);
-                                });
-
-                                let featureRatings = Object.entries(grouped).map(([feature, ratings]) => {
-                                    const avg = ratings.reduce((sum, r) => sum + r, 0) / ratings.length;
-                                    return {
-                                        feature,
-                                        average: parseFloat(avg.toFixed(1)),
-                                        count: ratings.length
-                                    };
-                                });
-
-                                featureRatings = featureRatings.sort((a, b) =>
-                                    ratingFilter === 'top' ? b.average - a.average : a.average - b.average
-                                );
-
-                                const toShow = showAll ? featureRatings : featureRatings.slice(0, 5);
-
-                                return toShow.map((f, idx) => (
-                                    <div key={`app-${idx}`} className="feedback-card">
-                                        <strong>{f.feature}</strong> — Rating: {f.average}⭐ ({f.count} rating{f.count > 1 ? 's' : ''})
-                                    </div>
-                                ));
-                            })()}
+                            {appFeedbacks.map((f, idx) => (
+                                <div key={`app-${idx}`} className="feedback-card">
+                                    <strong>{f.name}</strong> — Rating: {f.average}⭐ ({f.count} rating{f.count > 1 ? 's' : ''})
+                                </div>
+                            ))}
                         </>
                     )}
-
                 </div>
+
+                {/* 🔹 Filters */}
                 <div className="filter-container mt-8">
                     <div className="chart-filters">
                         <div className="filter-group">
@@ -326,6 +299,7 @@ const AnalysisReport = () => {
                     </div>
                 </div>
 
+                {/* 🔹 Registration Trends */}
                 <div className="chart-container">
                     <h3>Registration Trends</h3>
                     <ResponsiveContainer width="100%" height={300}>
@@ -338,6 +312,7 @@ const AnalysisReport = () => {
                     </ResponsiveContainer>
                 </div>
 
+                {/* 🔹 Gender & User Type */}
                 <div className="pie-charts-flex">
                     <div className="chart-container">
                         <h3>Gender Distribution</h3>
@@ -367,6 +342,7 @@ const AnalysisReport = () => {
                     </div>
                 </div>
 
+                {/* 🔹 Age Groups */}
                 <div className="chart-container" style={{ marginTop: '2rem' }}>
                     <h3>Age Group Distribution</h3>
                     <ResponsiveContainer width="100%" height={300}>

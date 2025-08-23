@@ -3,7 +3,7 @@ import "./MarkerFormModal.css";
 import {
     getDocs,
     collection,
-    addDoc
+    addDoc, doc, updateDoc
 } from "firebase/firestore";
 import { db } from "../firebase";
 import axios from "axios";
@@ -11,13 +11,12 @@ import axios from "axios";
 const CLOUDINARY_UPLOAD_PRESET = "Events image";
 const CLOUDINARY_CLOUD_NAME = "dupjdmjha";
 
-const EventFormModal = ({ isOpen, formData, setFormData, onCancel }) => {
-    const [loadingLocations, setLoadingLocations] = useState(false); // ✅ New loading state for fetching
-    const [submitting, setSubmitting] = useState(false); // ✅ Saving state
+const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) => {
+    const [loadingLocations, setLoadingLocations] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
     const [locations, setLocations] = useState([]);
     const [imageFile, setImageFile] = useState(null);
-    const [uploading, setUploading] = useState(false); // ✅ Image upload state
-
+    const [uploading, setUploading] = useState(false);
     useEffect(() => {
         const fetchMarkers = async () => {
             setLoadingLocations(true);
@@ -82,29 +81,59 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel }) => {
                     imageUrl = uploadedUrl;
                 }
             }
+            if (formData.id) {
+                const eventRef = doc(db, "events", formData.id);
+                await updateDoc(eventRef, {
+                    title: formData.title,
+                    date: formData.date,
+                    time: formData.time?.slice(0, 5),
+                    endTime: formData.endTime?.slice(0, 5),
+                    openToPublic: !!formData.openToPublic,
+                    locationId: formData.locationId,
+                    description: formData.description,
+                    imageUrl: imageUrl,
+                    updatedAt: new Date()
+                });
 
-            await addDoc(collection(db, "events"), {
-                title: formData.title,
-                date: formData.date,
-                time: formData.time,
-                endTime: formData.endTime,
-                openToPublic: formData.openToPublic || false,
-                locationId: formData.locationId,
-                description: formData.description,
-                imageUrl: imageUrl,
-                createdAt: new Date()
-            });
+                if (onUpdate) {
+                    onUpdate({
+                        ...formData,
+                        imageUrl,
+                        updatedAt: new Date()
+                    });
+                }
+            } else {
+                const docRef = await addDoc(collection(db, "events"), {
+                    title: formData.title,
+                    date: formData.date,
+                    time: formData.time?.slice(0, 5),
+                    endTime: formData.endTime?.slice(0, 5),
+                    openToPublic: !!formData.openToPublic,
+                    locationId: formData.locationId,
+                    description: formData.description,
+                    imageUrl: imageUrl,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                });
 
-            setFormData({
-                title: "",
-                description: "",
-                date: "",
-                time: "",
-                endTime: "",
-                openToPublic: false,
-                locationId: "",
-                imageUrl: ""
-            });
+                if (onUpdate) {
+                    onUpdate();
+                }
+
+            }
+
+            if (!formData.id) {
+                setFormData({
+                    title: "",
+                    description: "",
+                    date: "",
+                    time: "",
+                    endTime: "",
+                    openToPublic: false,
+                    locationId: "",
+                    imageUrl: ""
+                });
+            }
 
             setImageFile(null);
             onCancel();
@@ -113,8 +142,8 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel }) => {
         } finally {
             setSubmitting(false);
         }
-    };
 
+    };
     if (!isOpen) return null;
 
     const isDisabled = loadingLocations || uploading || submitting;
@@ -122,9 +151,13 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel }) => {
     return (
         <div className="modal-overlay" onClick={onCancel}>
             <div className="modal-content" onClick={e => e.stopPropagation()}>
-                <h2>{loadingLocations ? "Loading Form..." : "Add New Event"}</h2>
+                <h2>
+                    {loadingLocations ? "Loading Form..." :
+                        formData?.id || formData?.eventId ? "Edit Event" : "Add New Event"}
+                </h2>
+
+
                 <form onSubmit={handleSubmit} className="marker-form">
-                    {/* Location */}
                     <div className="field-group full-width">
                         <label htmlFor="locationId">Select Location:</label>
                         <select
@@ -144,7 +177,6 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel }) => {
                         </select>
                     </div>
 
-                    {/* Title */}
                     <div className="field-group full-width">
                         <label htmlFor="title">Event Title:</label>
                         <input
@@ -158,7 +190,6 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel }) => {
                         />
                     </div>
 
-                    {/* Description */}
                     <div className="field-group full-width">
                         <label htmlFor="description">Description:</label>
                         <textarea
@@ -172,7 +203,6 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel }) => {
                         />
                     </div>
 
-                    {/* Date */}
                     <div className="field-group">
                         <label htmlFor="date">Date:</label>
                         <input
@@ -186,35 +216,33 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel }) => {
                         />
                     </div>
 
-                    {/* Time */}
                     <div className="field-group">
                         <label htmlFor="time">Start Time:</label>
                         <input
                             type="time"
                             name="time"
                             id="time"
-                            value={formData.time}
+                            value={formData.time.slice(0, 5)}
                             onChange={handleChange}
                             disabled={isDisabled}
                             required
                         />
+
                     </div>
 
-                    {/* End Time */}
                     <div className="field-group">
                         <label htmlFor="endTime">End Time:</label>
                         <input
                             type="time"
                             name="endTime"
                             id="endTime"
-                            value={formData.endTime || ""}
+                            value={formData.endTime.slice(0, 5)}
                             onChange={handleChange}
                             disabled={isDisabled}
                             required
                         />
                     </div>
 
-                    {/* Public Event */}
                     <div className="field-group">
                         <label>
                             <input
@@ -228,7 +256,6 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel }) => {
                         </label>
                     </div>
 
-                    {/* Image Upload */}
                     <div className="field-group full-width">
                         <label>Upload Image (optional):</label>
                         <input
@@ -253,6 +280,7 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel }) => {
                             type="submit"
                             className="save-button"
                             disabled={isDisabled}
+
                         >
                             {loadingLocations
                                 ? "Loading..."
@@ -261,12 +289,14 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel }) => {
                                     : submitting
                                         ? "Saving..."
                                         : "Save Event"}
+
                         </button>
                         <button
                             type="button"
                             className="cancel-butn"
                             onClick={onCancel}
                             disabled={isDisabled}
+
                         >
                             Cancel
                         </button>

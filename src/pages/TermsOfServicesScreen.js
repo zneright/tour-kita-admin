@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import HelpSidebar from "../components/HelpSidebar";
 import "./LegalPages.css";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase"; // adjust path if needed
+import { db } from "../firebase";
 
 const TermsOfServiceScreen = () => {
     const [termsList, setTermsList] = useState([]);

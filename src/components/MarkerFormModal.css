@@ -142,7 +142,6 @@ textarea {
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    /* align all buttons to the right */
     align-items: center;
     margin-top: 24px;
     flex-wrap: wrap;
@@ -152,7 +151,6 @@ textarea {
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    /* align all buttons to the right */
     align-items: center;
     margin-top: 24px;
     flex-wrap: wrap;
@@ -170,22 +168,18 @@ textarea {
     color: white;
 }
 
-/* ✅ Shared style for Next, Back, Save/Update */
 .form-actions .next-button,
 .form-actions .back-button,
 .form-actions .save-button {
     background-color: #8b5e3c;
-    /* light brown */
 }
 
 .form-actions .next-button:hover,
 .form-actions .back-button:hover,
 .form-actions .save-button:hover {
     background-color: #4e2a1e;
-    /* dark brown */
 }
 
-/* ❌ Cancel stays red */
 .form-actions .cancel-butn {
     background-color: #b8503c;
 }

@@ -48,19 +48,15 @@ const MarkersManagement = () => {
         date: '',
         time: ''
     });
-    const [selectedTab, setSelectedTab] = useState("markers");
-    const [events, setEvents] = useState([]); // Fetched from Firestore
+    const [events, setEvents] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [editingEvent, setEditingEvent] = useState(null);
+
     const handleEventSave = (eventData) => {
-        // logic to save or update an event in Firestore
     };
 
-    const handleEventDelete = (eventId) => {
-        // logic to delete event from Firestore
-    };
 
-    const [activeTab, setActiveTab] = useState('markers'); // default tab
+    const [activeTab, setActiveTab] = useState('markers');
 
 
 
@@ -73,7 +69,6 @@ const MarkersManagement = () => {
         }));
         setMarkers(markersData);
     };
-    fetchMarkers();
     useEffect(() => {
         fetchMarkers();
     }, []);
@@ -116,7 +111,7 @@ const MarkersManagement = () => {
             const docRef = doc(db, "markers", String(newMarkerData.id));
             await setDoc(docRef, newMarkerData);
 
-            await fetchMarkers(); // 🔁 refresh data after save
+            await fetchMarkers();
 
             setPopup({ message: isEditing ? 'Marker updated successfully!' : 'Marker added successfully!', status: 'success' });
 
@@ -163,8 +158,10 @@ const MarkersManagement = () => {
     };
 
     const filteredMarkers = markers.filter(marker =>
-        marker.name.toLowerCase().includes(search.toLowerCase())
+        marker.name.toLowerCase().includes(search.toLowerCase()) ||
+        marker.category?.toLowerCase().includes(search.toLowerCase())
     );
+
 
     const handleAddMarkerClick = () => {
         setForm(getEmptyForm());
@@ -205,7 +202,7 @@ const MarkersManagement = () => {
                         <div className="top-controls">
                             <input
                                 type="text"
-                                placeholder="Search markers..."
+                                placeholder="Search markers or category..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
@@ -238,7 +235,7 @@ const MarkersManagement = () => {
                         <div className="top-controls">
                             <h3>Event Schedule</h3>
                             <button onClick={() => {
-                                setSelectedDate(new Date()); // ✅ Ensure selectedDate is set
+                                setSelectedDate(new Date());
                                 setEditingEvent(null);
                                 setIsEventModalOpen(true);
                             }}>
@@ -268,6 +265,7 @@ const MarkersManagement = () => {
                                 setIsEventModalOpen(false);
                                 setEditingEvent(null);
                                 setEventForm({ title: '', description: '', date: '', time: '' });
+
                             }}
                             onCancel={() => {
                                 setIsEventModalOpen(false);
@@ -288,6 +286,7 @@ const MarkersManagement = () => {
                             onCancel={() => setIsModalOpen(false)}
                             loading={loading}
                             isEditing={isEditing}
+
                         />
                     )
                 }

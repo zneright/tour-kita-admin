@@ -1,4 +1,3 @@
-// components/HelpSidebar.js
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./HelpSidebar.css";
@@ -14,7 +13,7 @@ const HelpSidebar = () => {
     ];
 
     return (
-        <div className="help-sidebar"> {/* ✅ Fixed class name */}
+        <div className="help-sidebar">
             <h3 className="sidebar-title">Help & Info</h3>
             <ul className="sidebar-links">
                 {links.map((link) => (

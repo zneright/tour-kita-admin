@@ -72,7 +72,6 @@ const NotificationManagement = () => {
         try {
             const res = await axios.post(
                 'https://api.cloudinary.com/v1_1/dupjdmjha/image/upload',
-                // ✅ Replace with your cloud name
                 formData
             );
             return res.data.secure_url;
@@ -86,6 +85,10 @@ const NotificationManagement = () => {
         e.preventDefault();
         if (!title.trim() || !message.trim()) {
             alert('Please fill out both the title and message.');
+            return;
+        }
+        if (schedule === 'later' && (!scheduledDate || !scheduledTime)) {
+            alert('Please choose both date and time for scheduled notifications.');
             return;
         }
 
@@ -160,15 +163,26 @@ const NotificationManagement = () => {
         alerts: '⚠️',
     };
 
-    const filteredNotifications = notifications.filter(n =>
-        n.title?.toLowerCase().includes(searchTermNotif.toLowerCase()) ||
-        n.message?.toLowerCase().includes(searchTermNotif.toLowerCase())
-    );
+    const filteredNotifications = notifications.filter(n => {
+        const notifDateStr = n.timestamp?.toDate?.().toLocaleString() || '';
+        const search = searchTermNotif.toLowerCase();
+        return (
+            n.title?.toLowerCase().includes(search) ||
+            n.message?.toLowerCase().includes(search) ||
+            notifDateStr.toLowerCase().includes(search)
+        );
+    });
 
-    const filteredReplies = adminReplies.filter(r =>
-        r.message?.toLowerCase().includes(searchTermReply.toLowerCase()) ||
-        r.to?.toLowerCase().includes(searchTermReply.toLowerCase())
-    );
+
+    const filteredReplies = adminReplies.filter(r => {
+        const sentDateStr = r.sentAt?.toDate?.().toLocaleString() || '';
+        const search = searchTermReply.toLowerCase();
+        return (
+            r.message?.toLowerCase().includes(search) ||
+            r.to?.toLowerCase().includes(search) ||
+            sentDateStr.toLowerCase().includes(search)
+        );
+    });
 
     return (
         <div className="dashboard-wrapper">
@@ -269,9 +283,10 @@ const NotificationManagement = () => {
                                             <div className="icon-placeholder">💬</div>
                                         </div>
                                         <div className="notif-details">
-                                            <strong>To: {reply.to}</strong>
+                                            <strong>{reply.to ? `To: ${reply.to}` : 'Reply Sent'}</strong>
                                             <p>{reply.message}</p>
                                             <small>{sentDate}</small>
+
                                         </div>
                                         <button className="delete-btn" onClick={() => handleDeleteReply(reply.id)}>
                                             Delete

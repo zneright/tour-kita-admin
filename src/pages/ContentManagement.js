@@ -1,17 +1,51 @@
 import React, { useEffect, useState } from "react";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "../firebase"; // adjust path
-import "./ContentManagement.css"; // for custom paper stles 
-import { serverTimestamp } from "firebase/firestore";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebase";
+import "./ContentManagement.css";
 import Sidebar from "../components/Sidebar";
+const SkeletonFaq = () => (
+    <div className="skeleton-faq">
+        <div className="skeleton skeleton-faq-title"></div>
+        <div className="skeleton-faq-item">
+            <div className="skeleton-faq-q"></div>
+            <div className="skeleton-faq-a"></div>
+        </div>
+        <div className="skeleton-faq-item">
+            <div className="skeleton-faq-q"></div>
+            <div className="skeleton-faq-a"></div>
+        </div>
+        <div className="skeleton-faq-item">
+            <div className="skeleton-faq-q"></div>
+            <div className="skeleton-faq-a"></div>
+        </div>
+        <div className="skeleton-faq-item">
+            <div className="skeleton-faq-q"></div>
+            <div className="skeleton-faq-a"></div>
+        </div>
+    </div>
+);
+
+const SkeletonCard = () => (
+    <div className="skeleton-card">
+        <div className="skeleton skeleton-title"></div>
+        <div>
+            <div className="skeleton skeleton-line"></div>
+            <div className="skeleton skeleton-line medium"></div>
+            <div className="skeleton skeleton-line"></div>
+            <div className="skeleton skeleton-line short"></div>
+            <div className="skeleton skeleton-line"></div>
+        </div>
+        <div className="skeleton skeleton-line short" style={{ height: 36, width: 360, borderRadius: 8 }}></div>
+    </div>
+);
+
 const ContentManagement = () => {
     const [terms, setTerms] = useState("");
     const [privacy, setPrivacy] = useState("");
     const [faqs, setFaqs] = useState([]);
-    const [modalType, setModalType] = useState(""); // "terms", "privacy", or "faqs"
+    const [modalType, setModalType] = useState("");
     const [loading, setLoading] = useState(true);
 
-    const [tempContent, setTempContent] = useState("");
     const [tempFaqs, setTempFaqs] = useState([]);
 
     const [actionLoading, setActionLoading] = useState(false);
@@ -19,29 +53,26 @@ const ContentManagement = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const [termsDoc, privacyDoc, faqDoc] = await Promise.all([
-                getDoc(doc(db, "services", "latest")),
-                getDoc(doc(db, "privacy", "latest")),
-                getDoc(doc(db, "faq", "latest")),
-            ]);
+            try {
+                const [termsDoc, privacyDoc, faqDoc] = await Promise.all([
+                    getDoc(doc(db, "services", "latest")),
+                    getDoc(doc(db, "privacy", "latest")),
+                    getDoc(doc(db, "faq", "latest")),
+                ]);
 
-            if (termsDoc.exists()) {
-                setTerms(termsDoc.data().content || []);
+                if (termsDoc.exists()) setTerms(termsDoc.data().content || []);
+                if (privacyDoc.exists()) setPrivacy(privacyDoc.data().content || []);
+                if (faqDoc.exists()) setFaqs(faqDoc.data().items || []);
+            } catch (err) {
+                console.error("Failed to fetch content:", err);
+            } finally {
+                setLoading(false);
             }
-
-            if (privacyDoc.exists()) {
-                setPrivacy(privacyDoc.data().content || []);
-            }
-
-            if (faqDoc.exists()) {
-                setFaqs(faqDoc.data().items || []);
-            }
-
-            setLoading(false);
         };
 
         fetchData();
     }, []);
+
 
     const openModal = (type) => {
         setModalType(type);
@@ -53,7 +84,6 @@ const ContentManagement = () => {
 
     const closeModal = () => {
         setModalType("");
-        setTempContent("");
         setTempFaqs([]);
     };
 
@@ -137,32 +167,56 @@ const ContentManagement = () => {
                 <div className="ar-header">
                     <h2>Content Management</h2>
                 </div>
-                <div className="paper-section">
-                    <h2>Terms of Service</h2>
-                    <p className="paper-preview">
-                        {terms.length > 0 ? terms[0].slice(0, 300) + "..." : "No content yet."}
-                    </p>
-                    <button onClick={() => openModal("terms")} className="edit-btn">Edit</button>
-                </div>
-
-                <div className="paper-section">
-                    <h2>Privacy Policy</h2>
-                    <p className="paper-preview">
-                        {privacy.length > 0 ? privacy[0].slice(0, 300) + "..." : "No content yet."}
-                    </p>
-                    <button onClick={() => openModal("privacy")} className="edit-btn">Edit</button>
-                </div>
-
-                <div className="paper-section">
-                    <h2>FAQs</h2>
-                    {faqs.map((faq, idx) => (
-                        <div key={idx} className="faq-item">
-                            <strong>Q:</strong> {faq.question}<br />
-                            <strong>A:</strong> {faq.answer}
+                {loading ? (
+                    <div className="preview-sections">
+                        <SkeletonCard />
+                        <SkeletonCard />
+                        <SkeletonFaq />
+                    </div>
+                ) : (
+                    <div className="preview-sections">
+                        <div className="paper-section">
+                            <h2>Terms of Service</h2>
+                            <div className="paper-preview">
+                                {terms.length > 0 ? terms.join("\n\n") : "No content yet."}
+                            </div>
+                            <button onClick={() => openModal("terms")} className="edit-btn" disabled={loading || actionLoading}>
+                                Edit
+                            </button>
                         </div>
-                    ))}
-                    <button onClick={() => openModal("faqs")} className="edit-btn">Edit</button>
-                </div>
+
+                        <div className="paper-section">
+                            <h2>Privacy Policy</h2>
+                            <div className="paper-preview">
+                                {privacy.length > 0 ? privacy.join("\n\n") : "No content yet."}
+                            </div>
+                            <button onClick={() => openModal("privacy")} className="edit-btn" disabled={loading || actionLoading}>
+                                Edit
+                            </button>
+                        </div>
+
+                        <div className="paper-section">
+                            <h2>FAQs</h2>
+                            <div className="faq-preview">
+                                {faqs.length > 0 ? (
+                                    faqs.map((faq, idx) => (
+                                        <div key={idx} className="faq-preview-item">
+                                            <strong>Q:</strong> {faq.question}<br />
+                                            <strong>A:</strong> {faq.answer}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p>No FAQs yet.</p>
+                                )}
+                            </div>
+                            <button onClick={() => openModal("faqs")} className="edit-btn" disabled={loading || actionLoading}>
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+
 
                 {modalType && (
                     <div className="modal-overlay">

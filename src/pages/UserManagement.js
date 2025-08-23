@@ -65,7 +65,6 @@ const UserManagement = () => {
         if (!reason) return;
 
         try {
-            // 1. Get user data
             const userRef = doc(db, 'users', userId);
             const userSnap = await getDoc(userRef);
 
@@ -76,7 +75,6 @@ const UserManagement = () => {
 
             const userData = userSnap.data();
 
-            // 2. Archive to new collection
             const archivedUserRef = doc(db, 'archived_users', userId);
             await setDoc(archivedUserRef, {
                 ...userData,
@@ -86,10 +84,8 @@ const UserManagement = () => {
                 archiveReason: reason,
             });
 
-            // 3. Delete user from users collection
             await deleteDoc(userRef);
 
-            // 4. Update local state
             const updatedUsers = users.map(user =>
                 user.id === userId ? { ...user, status: 'archived' } : user
             );
@@ -186,11 +182,18 @@ const UserManagement = () => {
                         </div>
                     </div>
 
-                    <div className="tab-bar">
-                        <button onClick={() => setViewFilter('all')} className={viewFilter === 'all' ? 'tab active' : 'tab'}>All Users</button>
-                        <button onClick={() => setViewFilter('registered')} className={viewFilter === 'registered' ? 'tab active' : 'tab'}>Registered</button>
-                        <button onClick={() => setViewFilter('archived')} className={viewFilter === 'archived' ? 'tab active' : 'tab'}>Archived</button>
+                    <div className="tab-bar markers-tabs">
+                        {['all', 'registered', 'archived'].map(tab => (
+                            <button
+                                key={tab}
+                                className={`mtab ${viewFilter === tab ? 'active' : ''}`}
+                                onClick={() => setViewFilter(tab)}
+                            >
+                                {tab === 'all' ? 'All Users' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                            </button>
+                        ))}
                     </div>
+
 
                     <input
                         type="text"

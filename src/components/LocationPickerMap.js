@@ -69,8 +69,6 @@ const LocationPickerMap = ({ onLocationSelect }) => {
         });
 
         return () => map.remove();
-        // DO NOT include `onLocationSelect` in the dependency array
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <div style={{ height: '300px', width: '100%', marginTop: '10px' }} ref={mapContainerRef}></div>

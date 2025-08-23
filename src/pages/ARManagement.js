@@ -14,7 +14,6 @@ const ARManagement = () => {
         videoFiles: [],
     });
 
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
@@ -37,39 +36,43 @@ const ARManagement = () => {
         e.preventDefault();
         console.log("Submitting:", formData);
         setShowUploadForm(false);
-        setFormData({ name: "", description: "", image: null, model: null });
+        setFormData({
+            name: "",
+            description: "",
+            image: null,
+            model: null,
+            audioFiles: [],
+            videoFiles: [],
+        });
     };
 
     return (
         <div className="dashboard-main">
             <Sidebar />
             <div className="dashboard-section">
-
                 <div className="ar-header">
                     <h2>AR Asset Management</h2>
                 </div>
+
                 <div className="ar-top-controls">
                     <button onClick={handleAddMarkerClick}>
                         <FiPlusCircle style={{ marginRight: "6px" }} />
                         Add New AR Assets
                     </button>
                 </div>
+
                 {!showUploadForm && (
-                    <>
-                        <div className="ar-grid">
-                            {[...Array(6)].map((_, idx) => (
-                                <div className="ar-card" key={idx}>
-                                    <div className="ar-icon">
-                                        <FiBox size={48} />
-                                    </div>
-                                    <h3>AR Content #{idx + 1}</h3>
-                                    <p>Preview or description placeholder</p>
+                    <div className="ar-grid">
+                        {[...Array(6)].map((_, idx) => (
+                            <div className="ar-card" key={idx}>
+                                <div className="ar-icon">
+                                    <FiBox size={48} />
                                 </div>
-                            ))}
-                        </div>
-
-
-                    </>
+                                <h3>AR Content #{idx + 1}</h3>
+                                <p>Preview or description placeholder</p>
+                            </div>
+                        ))}
+                    </div>
                 )}
 
                 {showUploadForm && (
@@ -120,6 +123,7 @@ const ARManagement = () => {
                                     required
                                 />
                             </label>
+
                             <label>
                                 Audio Files:
                                 <input
@@ -142,10 +146,14 @@ const ARManagement = () => {
                                 />
                             </label>
 
-
-                            <div className="form-actions">
+                            <div className="arform-actions">
                                 <button type="submit">Submit</button>
-                                <button type="button" onClick={() => setShowUploadForm(false)}>Cancel</button>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowUploadForm(false)}
+                                >
+                                    Cancel
+                                </button>
                             </div>
                         </form>
                     </div>

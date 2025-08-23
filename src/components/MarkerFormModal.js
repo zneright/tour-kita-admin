@@ -11,7 +11,7 @@ const MarkerFormModal = ({ onCancel, loading, form, setForm, isEditing }) => {
     const [uploading, setUploading] = useState(false);
     const [saving, setSaving] = useState(false);
 
-    const [errors, setErrors] = useState({});
+    const [setErrors] = useState({});
     const [popup, setPopup] = useState({ type: '', message: '' });
 
     const modalRef = useRef(null);
@@ -76,7 +76,6 @@ const MarkerFormModal = ({ onCancel, loading, form, setForm, isEditing }) => {
                 setErrors(newErrors);
                 setPopup({ type: 'error', message: 'Please fill all required fields.' });
 
-                // Scroll to top of modal
                 if (modalRef.current) {
                     modalRef.current.scrollTo({ top: 0, behavior: 'smooth' });
                 }

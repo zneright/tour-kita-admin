@@ -71,12 +71,6 @@
 }
 
 .header-link:hover {
-    color: #0056b3;
-    text-decoration: underline;
-}
-
-
-.header-link:hover {
     color: #111;
 }
 
@@ -115,6 +109,26 @@
     transition: opacity 1s ease-in-out;
 }
 
+.hero-overlay {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    text-align: center;
+    z-index: 10;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.hero-overlay h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.hero-overlay p {
+    font-size: 1.2rem;
+}
+
 .download-banner {
     position: absolute;
     bottom: 40px;
@@ -145,6 +159,7 @@
 .download-buttons {
     display: flex;
     justify-content: center;
+    gap: 10px;
 }
 
 .download-btn.android {
@@ -162,28 +177,6 @@
     background-color: #015fa4;
     transform: translateY(-2px);
 }
-
-.partnership-section {
-    text-align: center;
-    margin: 3rem 1rem;
-    background: #f9f9f9;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.intramuros-logo {
-    height: 80px;
-    margin: 1rem 0;
-}
-
-
-.partner-name {
-    margin-top: 5px;
-    font-size: 18px;
-    font-weight: bold;
-}
-
 
 .info-slides-section {
     background-color: #ddeeff;
@@ -216,22 +209,17 @@
     transform: translateY(-5px);
 }
 
-
 .info-card.ar {
     background: linear-gradient(135deg, #1f3a93, #00c6ff);
-    /* Royal Blue to Soft Cyan */
 }
 
 .info-card.nav {
     background: linear-gradient(135deg, #0f2027, #2c5364);
-    /* Deep Slate to Navy Teal */
 }
 
 .info-card.guide {
     background: linear-gradient(135deg, #d38312, #a83279);
-    /* Gold Bronze to Cultural Maroon */
 }
-
 
 .info-card h4 {
     font-size: 1.4rem;
@@ -245,81 +233,24 @@
     color: #ffffff;
 }
 
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translate(-50%, 60px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translate(-50%, 0);
-    }
-}
-
-@media (max-width: 768px) {
-    .home-header {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 16px 20px;
-    }
-
-    .header-right {
-        width: 100%;
-        justify-content: flex-start;
-        gap: 10px;
-        margin-top: 10px;
-    }
-
-    .header-button {
-        width: 100%;
-        text-align: center;
-    }
-
-    .download-banner h2 {
-        font-size: 24px;
-    }
-
-    .download-banner p {
-        font-size: 14px;
-    }
-
-    .info-slides {
-        flex-direction: column;
-        align-items: center;
-    }
-}
-
-.hero-overlay {
-    position: absolute;
-    top: 25%;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #fff;
+.partnership-section {
     text-align: center;
-    z-index: 10;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    margin: 3rem 1rem;
+    background: #f9f9f9;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.hero-overlay h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
+.intramuros-logo {
+    height: 80px;
+    margin: 1rem 0;
 }
 
-.hero-overlay p {
-    font-size: 1.2rem;
-}
-
-
-@media (max-width: 480px) {
-    .header-title {
-        font-size: 18px;
-    }
-
-    .download-btn.android {
-        padding: 10px 20px;
-        font-size: 14px;
-    }
+.partner-name {
+    margin-top: 5px;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .footer {
@@ -441,4 +372,84 @@
     font-size: 0.95rem;
     color: #444;
     line-height: 1.5;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 60px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+@media (max-width: 768px) {
+    .home-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px 20px;
+    }
+
+    .header-right {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .header-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .download-banner h2 {
+        font-size: 24px;
+    }
+
+    .download-banner p {
+        font-size: 14px;
+    }
+
+    .carousel-wrapper {
+        height: 50vh;
+    }
+
+    .hero-overlay h1 {
+        font-size: 2rem;
+    }
+
+    .hero-overlay p {
+        font-size: 1rem;
+    }
+
+    .tourkita-steps-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-title {
+        font-size: 18px;
+    }
+
+    .download-btn.android {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    .hero-overlay h1 {
+        font-size: 1.6rem;
+    }
+
+    .hero-overlay p {
+        font-size: 0.95rem;
+    }
+
+    .download-banner {
+        padding: 20px 15px;
+    }
 }
