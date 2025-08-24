@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/tourkita/static/css/main.dc91f59d.css",
-    "main.js": "/tourkita/static/js/main.3597a1ca.js",
-    "static/js/453.39a88d92.chunk.js": "/tourkita/static/js/453.39a88d92.chunk.js",
-    "static/media/carousel1.jpg": "/tourkita/static/media/carousel1.8424fa8dbe3f861abbcd.jpg",
-    "static/media/carousel2.jpg": "/tourkita/static/media/carousel2.c1d2eb2ef0a2385c252c.jpg",
-    "static/media/carousel3.jpg": "/tourkita/static/media/carousel3.0f6ae9f20c97d926ab83.jpg",
-    "static/media/TourKitaCropped.jpg": "/tourkita/static/media/TourKitaCropped.da93bb302223e3efab3a.jpg",
-    "static/media/TourkitaLogo.jpg": "/tourkita/static/media/TourkitaLogo.a9323b3e51217e123776.jpg",
-    "index.html": "/tourkita/index.html",
-    "main.dc91f59d.css.map": "/tourkita/static/css/main.dc91f59d.css.map",
-    "main.3597a1ca.js.map": "/tourkita/static/js/main.3597a1ca.js.map",
-    "453.39a88d92.chunk.js.map": "/tourkita/static/js/453.39a88d92.chunk.js.map"
+    "main.css": "/tour-kita-admin/static/css/main.dc91f59d.css",
+    "main.js": "/tour-kita-admin/static/js/main.c3fbe9e9.js",
+    "static/js/453.39a88d92.chunk.js": "/tour-kita-admin/static/js/453.39a88d92.chunk.js",
+    "static/media/carousel1.jpg": "/tour-kita-admin/static/media/carousel1.8424fa8dbe3f861abbcd.jpg",
+    "static/media/carousel2.jpg": "/tour-kita-admin/static/media/carousel2.c1d2eb2ef0a2385c252c.jpg",
+    "static/media/carousel3.jpg": "/tour-kita-admin/static/media/carousel3.0f6ae9f20c97d926ab83.jpg",
+    "static/media/TourKitaCropped.jpg": "/tour-kita-admin/static/media/TourKitaCropped.da93bb302223e3efab3a.jpg",
+    "static/media/TourkitaLogo.jpg": "/tour-kita-admin/static/media/TourkitaLogo.a9323b3e51217e123776.jpg",
+    "index.html": "/tour-kita-admin/index.html",
+    "main.dc91f59d.css.map": "/tour-kita-admin/static/css/main.dc91f59d.css.map",
+    "main.c3fbe9e9.js.map": "/tour-kita-admin/static/js/main.c3fbe9e9.js.map",
+    "453.39a88d92.chunk.js.map": "/tour-kita-admin/static/js/453.39a88d92.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.dc91f59d.css",
-    "static/js/main.3597a1ca.js"
+    "static/js/main.c3fbe9e9.js"
   ]
 }
