@@ -4,7 +4,6 @@ import './HomePage.css';
 import logo from '../assets/TourKitaCropped.jpg';
 import Carousel from '../components/Carousel';
 
-
 const HomePage = () => {
     const navigate = useNavigate();
 
@@ -51,11 +50,12 @@ const HomePage = () => {
                         <p>Get directions to landmarks and explore hidden gems around Intramuros.</p>
                     </div>
                     <div className="info-card guide">
-                        <h4> Interactive Guides</h4>
+                        <h4>Interactive Guides</h4>
                         <p>Tap on pins to learn about places, restaurants, events, and more.</p>
                     </div>
                 </div>
             </section>
+
             <section className="how-tourkita-works">
                 <h2 className="tourkita-steps-title">How TourKita Works</h2>
                 <div className="tourkita-steps-container">
@@ -83,10 +83,8 @@ const HomePage = () => {
                         <h4>Activate AR Camera</h4>
                         <p>Use your phone's AR view to see the past come alive in real time.</p>
                     </div>
-
                 </div>
             </section>
-
 
             <section className="partnership-section">
                 <h3>In Partnership With</h3>
@@ -96,9 +94,9 @@ const HomePage = () => {
                     className="intramuros-logo"
                 />
                 <p className="partner-name">Intramuros Administration</p>
-                <div></div>
                 <p>TourKita works closely with the Intramuros Administration to bring you verified, culturally rich content and real-time historical experiences.</p>
             </section>
+
             <footer className="footer">
                 <div className="footer-content">
                     <div className="footer-left">
@@ -112,9 +110,7 @@ const HomePage = () => {
                     </div>
                 </div>
             </footer>
-
         </div>
-
     );
 };
 

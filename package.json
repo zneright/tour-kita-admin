@@ -11,7 +11,6 @@
     "axios": "^1.10.0",
     "firebase": "^11.6.0",
     "firebase-admin": "^13.4.0",
-    "gh-pages": "^6.3.0",
     "leaflet": "^1.9.4",
     "mapbox-gl": "^3.13.0",
     "mapbox-gl-geocoder": "^2.0.1",
@@ -30,7 +29,7 @@
     "recharts": "^2.15.3",
     "web-vitals": "^2.1.4"
   },
-  "homepage": "https://zneright.io/tourkita",
+  "homepage": ".",
   "scripts": {
     "start": "react-scripts start",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 react-scripts build",
@@ -63,6 +62,7 @@
     "autoprefixer": "^10.4.21",
     "babel-jest": "^30.0.5",
     "cross-env": "^10.0.0",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.4"
   }

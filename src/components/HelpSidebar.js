@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./HelpSidebar.css";
 
 const HelpSidebar = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const [isOpen, setIsOpen] = useState(true);
 
     const links = [
         { path: "/terms", label: "Terms of Service" },
@@ -13,26 +14,35 @@ const HelpSidebar = () => {
     ];
 
     return (
-        <div className="help-sidebar">
-            <h3 className="sidebar-title">Help & Info</h3>
-            <ul className="sidebar-links">
-                {links.map((link) => (
-                    <li
-                        key={link.path}
-                        className={`sidebar-link ${location.pathname === link.path ? "active" : ""}`}
-                        onClick={() => navigate(link.path)}
-                    >
-                        {link.label}
-                    </li>
-                ))}
-            </ul>
+        <>
             <button
-                className="back-home-button"
-                onClick={() => navigate("/")}
+                className="toggle-sidebar-btn"
+                onClick={() => setIsOpen(!isOpen)}
             >
-                ← Back to Home
+                {isOpen ? "← Hide Help" : "→ Show Help"}
             </button>
-        </div>
+
+            <div className={`help-sidebar ${isOpen ? "open" : "closed"}`}>
+                <h3 className="sidebar-title">Help & Info</h3>
+                <ul className="sidebar-links">
+                    {links.map((link) => (
+                        <li
+                            key={link.path}
+                            className={`sidebar-link ${location.pathname === link.path ? "active" : ""}`}
+                            onClick={() => navigate(link.path)}
+                        >
+                            {link.label}
+                        </li>
+                    ))}
+                </ul>
+                <button
+                    className="back-home-button"
+                    onClick={() => navigate("/")}
+                >
+                    ← Back to Home
+                </button>
+            </div>
+        </>
     );
 };
 
