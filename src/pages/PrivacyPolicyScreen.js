@@ -4,6 +4,17 @@ import { db } from "../firebase";
 import HelpSidebar from "../components/HelpSidebar";
 import "./LegalPages.css";
 
+const SkeletonTerms = () => (
+    <div className="skeleton-terms">
+        <div className="skeleton skeleton-title"></div>
+        <div className="skeleton skeleton-line"></div>
+        <div className="skeleton skeleton-line medium"></div>
+        <div className="skeleton skeleton-line short"></div>
+        <div className="skeleton skeleton-line"></div>
+        <div className="skeleton skeleton-line medium"></div>
+    </div>
+);
+
 const TermsOfServiceScreen = () => {
     const [termsContent, setTermsContent] = useState([]);
     const [lastUpdated, setLastUpdated] = useState("");
@@ -36,7 +47,7 @@ const TermsOfServiceScreen = () => {
             <div className="legal-content">
                 <h2>Terms of Service</h2>
                 {loading ? (
-                    <p>Loading...</p>
+                    <SkeletonTerms />
                 ) : (
                     <>
                         <p>

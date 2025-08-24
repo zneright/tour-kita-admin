@@ -91,7 +91,7 @@
 }
 
 .carousel-wrapper {
-    position: relative;
+    position: absolute;
     min-height: 60vh;
     overflow: hidden;
     background-color: #e6f0ff;
@@ -111,18 +111,19 @@
 }
 
 .hero-overlay {
-    position: relative;
-    top: 0;
-    left: 0;
-    transform: none;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
     padding: 40px 20px;
     color: #fff;
     z-index: 10;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     max-width: 90%;
-    margin: 0 auto;
+    pointer-events: none;
 }
+
 
 .hero-overlay h1 {
     font-size: 2.2rem;
@@ -135,7 +136,7 @@
 
 .download-banner {
     position: relative;
-    margin: 20px auto 40px auto;
+    bottom: 20px;
     max-width: 90%;
     background: rgba(255, 255, 255, 0.95);
     color: #1f1f1f;
@@ -194,16 +195,25 @@
 }
 
 .info-slides {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 5rem;
+    row-gap: 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
     padding: 2rem;
 }
 
+.info-card:nth-child(3) {
+    grid-column: 1 / span 2;
+    justify-self: center;
+}
+
+
 .info-card {
     width: 100%;
-    max-width: 300px;
+    max-width: 450px;
     margin: 0 auto;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -441,17 +451,31 @@
         padding: 8px 16px;
     }
 
-    .info-slides {
-        flex-direction: column;
-        padding: 1rem;
-        gap: 20px;
+    @media (max-width: 768px) {
+        .info-slides {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: auto;
+            row-gap: 1.5rem;
+            padding: 1rem;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .info-card {
+            width: 100%;
+            max-width: 100%;
+            padding: 16px;
+            box-sizing: border-box;
+            margin: 0 auto;
+        }
+
+        .info-card:nth-child(3) {
+            grid-column: 1;
+            justify-self: center;
+        }
     }
 
-    .info-card {
-        max-width: 320px;
-        width: 90%;
-        margin: 0 auto;
-    }
 
     .footer-content {
         flex-direction: column;

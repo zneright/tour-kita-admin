@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import "./HelpSidebar.css";
 
 const HelpSidebar = () => {
@@ -14,22 +15,12 @@ const HelpSidebar = () => {
     ];
 
     useEffect(() => {
-        if (location.pathname !== "/") {
-            setIsOpen(false);
-        } else {
-            setIsOpen(true);
-        }
+        if (location.pathname !== "/") setIsOpen(false);
+        else setIsOpen(true);
     }, [location.pathname]);
 
     return (
         <>
-            <button
-                className="toggle-sidebar-btn"
-                onClick={() => setIsOpen(!isOpen)}
-            >
-                {isOpen ? "← Hide Help" : "→ Show Help"}
-            </button>
-
             <div className={`help-sidebar ${isOpen ? "open" : "closed"}`}>
                 <h3 className="sidebar-title">Help & Info</h3>
                 <ul className="sidebar-links">
@@ -51,6 +42,12 @@ const HelpSidebar = () => {
                     ← Back to Home
                 </button>
             </div>
+            <button
+                className={`toggle-sidebar-btn ${isOpen ? "open-btn" : "closed-btn"}`}
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                {isOpen ? <FaChevronLeft /> : <FaChevronRight />}
+            </button>
         </>
     );
 };

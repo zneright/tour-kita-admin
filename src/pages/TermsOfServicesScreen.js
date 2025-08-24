@@ -4,6 +4,17 @@ import "./LegalPages.css";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
+const SkeletonTerms = () => (
+    <div className="skeleton-terms">
+        <div className="skeleton skeleton-title"></div>
+        <div className="skeleton skeleton-line"></div>
+        <div className="skeleton skeleton-line medium"></div>
+        <div className="skeleton skeleton-line short"></div>
+        <div className="skeleton skeleton-line"></div>
+        <div className="skeleton skeleton-line medium"></div>
+    </div>
+);
+
 const TermsOfServiceScreen = () => {
     const [termsList, setTermsList] = useState([]);
     const [lastUpdated, setLastUpdated] = useState(null);
@@ -36,7 +47,7 @@ const TermsOfServiceScreen = () => {
             <div className="legal-content">
                 <h2>Terms of Service</h2>
                 {loading ? (
-                    <p>Loading...</p>
+                    <SkeletonTerms />
                 ) : (
                     <>
                         <p>Welcome to TourKita! By using our app, you agree to the following terms:</p>

@@ -1,12 +1,15 @@
 .legal-wrapper {
     display: flex;
     min-height: 100vh;
+    justify-content: center;
 }
 
 .legal-content {
     flex: 1;
-    padding: 2rem;
+    max-width: 900px;
+    padding: 2rem 3rem;
     background-color: #f9f9f9;
+    text-align: justify;
 }
 
 .legal-content h2 {
@@ -39,7 +42,7 @@
 
 @media (max-width: 768px) {
     .legal-content {
-        padding: 2rem;
+        padding: 2rem 1.5rem;
     }
 
     .legal-content h2 {
@@ -48,7 +51,8 @@
 }
 
 .last-updated {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     color: #888;
     margin-top: 1rem;
+    font-style: italic;
 }
