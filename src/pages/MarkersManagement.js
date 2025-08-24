@@ -40,7 +40,7 @@ const MarkersManagement = () => {
     const [popup, setPopup] = useState({ message: '', status: '' });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const [previewMarker, setPreviewMarker] = useState(null);
+    const [setPreviewMarker] = useState(null);
     const [isEventModalOpen, setIsEventModalOpen] = useState(false);
     const [eventForm, setEventForm] = useState({
         title: '',
@@ -48,26 +48,26 @@ const MarkersManagement = () => {
         date: '',
         time: ''
     });
-    const [events, setEvents] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    const [editingEvent, setEditingEvent] = useState(null);
+    const [events] = useState([]);
+    const [setSelectedDate] = useState(new Date());
+    const [setEditingEvent] = useState(null);
+    const [loadingMarkers, setLoadingMarkers] = useState(true);
 
     const handleEventSave = (eventData) => {
     };
 
-
     const [activeTab, setActiveTab] = useState('markers');
 
 
-
-
     const fetchMarkers = async () => {
+        setLoadingMarkers(true);
         const querySnapshot = await getDocs(collection(db, 'markers'));
         const markersData = querySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
         }));
         setMarkers(markersData);
+        setLoadingMarkers(false);
     };
     useEffect(() => {
         fetchMarkers();
@@ -169,6 +169,22 @@ const MarkersManagement = () => {
         setIsEditing(false);
         setIsModalOpen(true);
     };
+    const SkeletonMarkerCard = () => (
+        <div className="marker-card skeleton-card">
+            <div className="skeleton skeleton-image"></div>
+            <div className="skeleton skeleton-title"></div>
+            <div className="skeleton skeleton-line short"></div>
+            <div className="skeleton skeleton-line medium"></div>
+        </div>
+    );
+
+    const SkeletonMarkerList = ({ count = 6 }) => (
+        <>
+            {Array.from({ length: count }).map((_, i) => (
+                <SkeletonMarkerCard key={i} />
+            ))}
+        </>
+    );
 
     return (
         <div className="dashboard-wrapper">
@@ -210,23 +226,28 @@ const MarkersManagement = () => {
                         </div>
 
                         <div className="markers-list">
-                            {filteredMarkers.map(marker => (
-                                <div key={marker.id} className="marker-card">
-                                    <img
-                                        src={marker.image}
-                                        alt={marker.name}
-                                        onClick={() => setPreviewMarker(marker)}
-                                        style={{ cursor: 'pointer' }}
-                                    />
-                                    <h4>{marker.name}</h4>
-                                    <p>{marker.category}</p>
-                                    <div className="card-actions">
-                                        <button onClick={() => handleEdit(marker)}>Edit</button>
-                                        <button onClick={() => handleDelete(marker.id)}>Delete</button>
+                            {loadingMarkers ? (
+                                <SkeletonMarkerList count={10} />
+                            ) : (
+                                filteredMarkers.map(marker => (
+                                    <div key={marker.id} className="marker-card">
+                                        <img
+                                            src={marker.image}
+                                            alt={marker.name}
+                                            onClick={() => setPreviewMarker(marker)}
+                                            style={{ cursor: 'pointer' }}
+                                        />
+                                        <h4>{marker.name}</h4>
+                                        <p>{marker.category}</p>
+                                        <div className="card-actions">
+                                            <button onClick={() => handleEdit(marker)}>Edit</button>
+                                            <button onClick={() => handleDelete(marker.id)}>Delete</button>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))
+                            )}
                         </div>
+
                     </>
                 )}
 
@@ -291,7 +312,7 @@ const MarkersManagement = () => {
                     )
                 }
 
-
+                z
             </main >
         </div >
     );

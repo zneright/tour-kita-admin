@@ -9,9 +9,11 @@ const UserManagement = () => {
     const [viewFilter, setViewFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('all');
     const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchUsers = async () => {
+            setLoading(true);
             try {
                 const usersSnapshot = await getDocs(collection(db, 'users'));
                 const registeredUsers = usersSnapshot.docs.map(doc => {
@@ -55,6 +57,8 @@ const UserManagement = () => {
                 setUsers(allUsers);
             } catch (error) {
                 console.error('Error fetching users and guests:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -158,29 +162,37 @@ const UserManagement = () => {
 
 
                     <div className="summary-row">
-                        <div className="user-count-summary">
-                            <div className="count-box"><span className="label">All Users</span><span className="count">{totalUsers}</span></div>
-                            <div className="count-box"><span className="label">Registered</span><span className="count">{registeredCount}</span></div>
-                            <div className="count-box"><span className="label">Guests</span><span className="count">{guestCount}</span></div>
-                            <div className="count-box"><span className="label">Archived</span><span className="count">{archivedCount}</span></div>
-                        </div>
+                        {loading ? (
+                            <div className="user-count-summary">
+                                {[1, 2, 3, 4].map(i => (
+                                    <div key={i} className="count-box skeleton"></div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="user-count-summary">
+                                <div className="count-box"><span className="label">All Users</span><span className="count">{totalUsers}</span></div>
+                                <div className="count-box"><span className="label">Registered</span><span className="count">{registeredCount}</span></div>
+                                <div className="count-box"><span className="label">Guests</span><span className="count">{guestCount}</span></div>
+                                <div className="count-box"><span className="label">Archived</span><span className="count">{archivedCount}</span></div>
+                            </div>
+                        )}
 
                         <div className="online-status-summary">
                             <h3>User Online Status</h3>
-                            <div className="status-filter">
-                                <label>Filter by:</label>
-                                <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                                    <option value="all">All</option>
-                                    <option value="guest">Guests</option>
-                                    <option value="registered">Registered</option>
-                                </select>
-                            </div>
-                            <div className="status-counts">
-                                <div className="count-box"><span className="label">Online</span><span className="count">{onlineCount}</span></div>
-                                <div className="count-box"><span className="label">Offline</span><span className="count">{offlineCount}</span></div>
-                            </div>
+                            {loading ? (
+                                <div className="status-counts">
+                                    <div className="count-box skeleton"></div>
+                                    <div className="count-box skeleton"></div>
+                                </div>
+                            ) : (
+                                <div className="status-counts">
+                                    <div className="count-box"><span className="label">Online</span><span className="count">{onlineCount}</span></div>
+                                    <div className="count-box"><span className="label">Offline</span><span className="count">{offlineCount}</span></div>
+                                </div>
+                            )}
                         </div>
                     </div>
+
 
                     <div className="tab-bar markers-tabs">
                         {['all', 'registered', 'archived'].map(tab => (
@@ -221,37 +233,47 @@ const UserManagement = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredUsers.length > 0 ? (
-                                    filteredUsers.map((user) => (
-                                        <tr key={user.id}>
-                                            <td>{user.id}</td>
-                                            <td>{user.email || '—'}</td>
-                                            <td>{user.name || '—'}</td>
-                                            <td>{user.age > 0 ? user.age : 'N/A'}</td>
-                                            <td>{user.gender || '—'}</td>
-                                            <td>{user.contactNumber || '—'}</td>
-                                            <td>{user.status.charAt(0).toUpperCase() + user.status.slice(1)}</td>
-                                            <td>
-                                                <span style={{ color: getStatusColor(user.activestatus) }}>
-                                                    {user.activestatus ? ' Online' : 'Offline'}
-                                                </span>
-                                            </td>
-                                            <td>{user.status === 'registered' ? user.userType || 'N/A' : '—'}</td>
-                                            <td>{user.registeredDate || 'N/A'}</td>
-                                            <td>
-                                                {user.status === 'registered' && (
-                                                    <button className="archive-btn" onClick={() => handleWarnAndArchive(user.id)}>Archive</button>
-                                                )}
-                                                {user.status === 'archived' && (
-                                                    <button className="archived-btn" disabled>Archived</button>
-                                                )}
-                                            </td>
+                                {loading ? (
+                                    [...Array(5)].map((_, i) => (
+                                        <tr key={i}>
+                                            {[...Array(11)].map((_, j) => (
+                                                <td key={j}><div className="skeleton skeleton-line"></div></td>
+                                            ))}
                                         </tr>
                                     ))
                                 ) : (
-                                    <tr>
-                                        <td colSpan="11" className="no-data">No users found.</td>
-                                    </tr>
+                                    filteredUsers.length > 0 ? (
+                                        filteredUsers.map((user) => (
+                                            <tr key={user.id}>
+                                                <td>{user.id}</td>
+                                                <td>{user.email || '—'}</td>
+                                                <td>{user.name || '—'}</td>
+                                                <td>{user.age > 0 ? user.age : 'N/A'}</td>
+                                                <td>{user.gender || '—'}</td>
+                                                <td>{user.contactNumber || '—'}</td>
+                                                <td>{user.status.charAt(0).toUpperCase() + user.status.slice(1)}</td>
+                                                <td>
+                                                    <span style={{ color: getStatusColor(user.activestatus) }}>
+                                                        {user.activestatus ? ' Online' : 'Offline'}
+                                                    </span>
+                                                </td>
+                                                <td>{user.status === 'registered' ? user.userType || 'N/A' : '—'}</td>
+                                                <td>{user.registeredDate || 'N/A'}</td>
+                                                <td>
+                                                    {user.status === 'registered' && (
+                                                        <button className="archive-btn" onClick={() => handleWarnAndArchive(user.id)}>Archive</button>
+                                                    )}
+                                                    {user.status === 'archived' && (
+                                                        <button className="archived-btn" disabled>Archived</button>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="11" className="no-data">No users found.</td>
+                                        </tr>
+                                    )
                                 )}
                             </tbody>
                         </table>

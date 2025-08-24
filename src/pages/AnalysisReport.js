@@ -22,59 +22,62 @@ const AnalysisReport = () => {
     const [selectedYear, setSelectedYear] = useState(currentYear);
     const [filter, setFilter] = useState('Monthly');
     const [userType, setUserType] = useState('All');
-    const [showAll, setShowAll] = useState(false);
-    const [ratingFilter, setRatingFilter] = useState('top');
-    const [activeFeedbackTab, setActiveFeedbackTab] = useState('location');
+    const [showAll] = useState(false);
+    const [ratingFilter] = useState('top');
+    const [activeFeedbackTab] = useState('location');
+    const [loading, setLoading] = useState(true);
 
-    // 🔹 Fetch data
     useEffect(() => {
         const fetchData = async () => {
-            const userSnapshot = await getDocs(collection(db, 'users'));
-            const userList = userSnapshot.docs.map(doc => {
-                const data = doc.data();
-                return {
-                    id: data.uid,
-                    name: `${data.firstName || ''} ${data.middleInitial || ''} ${data.lastName || ''}`.trim(),
-                    age: data.age || 0,
-                    gender: data.gender || '',
-                    contactNumber: data.contactNumber || '',
-                    email: data.email || '',
-                    userType: (data.userType || '').toLowerCase(),
-                    registeredDate: data.createdAt || '',
-                    status: 'registered'
-                };
-            });
-            setUsers(userList);
+            setLoading(true);
+            try {
+                const userSnapshot = await getDocs(collection(db, 'users'));
+                const userList = userSnapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        id: data.uid,
+                        name: `${data.firstName || ''} ${data.middleInitial || ''} ${data.lastName || ''}`.trim(),
+                        age: data.age || 0,
+                        gender: data.gender || '',
+                        contactNumber: data.contactNumber || '',
+                        email: data.email || '',
+                        userType: (data.userType || '').toLowerCase(),
+                        registeredDate: data.createdAt || '',
+                        status: 'registered'
+                    };
+                });
+                setUsers(userList);
 
-            const feedbackSnapshot = await getDocs(collection(db, 'feedbacks'));
-            const feedbackList = feedbackSnapshot.docs.map(doc => doc.data());
-            setFeedbacks(feedbackList);
+                const feedbackSnapshot = await getDocs(collection(db, 'feedbacks'));
+                const feedbackList = feedbackSnapshot.docs.map(doc => doc.data());
+                setFeedbacks(feedbackList);
 
-            // 🔹 Average rating
-            const ratings = feedbackList.map(f => f.rating).filter(r => typeof r === 'number');
-            const avg = ratings.length ? (ratings.reduce((sum, r) => sum + r, 0) / ratings.length) : 0;
-            setAverageRating(parseFloat(avg.toFixed(1)));
+                const ratings = feedbackList.map(f => f.rating).filter(r => typeof r === 'number');
+                const avg = ratings.length ? (ratings.reduce((sum, r) => sum + r, 0) / ratings.length) : 0;
+                setAverageRating(parseFloat(avg.toFixed(1)));
 
-            // 🔹 Top-rated location
-            const locationRatings = {};
-            feedbackList.forEach(fb => {
-                if (fb.location && typeof fb.rating === 'number') {
-                    if (!locationRatings[fb.location]) locationRatings[fb.location] = { total: 0, count: 0 };
-                    locationRatings[fb.location].total += fb.rating;
-                    locationRatings[fb.location].count += 1;
+                const locationRatings = {};
+                feedbackList.forEach(fb => {
+                    if (fb.location && typeof fb.rating === 'number') {
+                        if (!locationRatings[fb.location]) locationRatings[fb.location] = { total: 0, count: 0 };
+                        locationRatings[fb.location].total += fb.rating;
+                        locationRatings[fb.location].count += 1;
+                    }
+                });
+
+                let topLocation = null;
+                let maxAvg = 0;
+                for (const [loc, { total, count }] of Object.entries(locationRatings)) {
+                    const avgRating = total / count;
+                    if (avgRating > maxAvg) {
+                        maxAvg = avgRating;
+                        topLocation = { name: loc, rating: avgRating };
+                    }
                 }
-            });
-
-            let topLocation = null;
-            let maxAvg = 0;
-            for (const [loc, { total, count }] of Object.entries(locationRatings)) {
-                const avgRating = total / count;
-                if (avgRating > maxAvg) {
-                    maxAvg = avgRating;
-                    topLocation = { name: loc, rating: avgRating };
-                }
+                setTopRatedLocation(topLocation);
+            } finally {
+                setLoading(false);
             }
-            setTopRatedLocation(topLocation);
         };
 
         fetchData();
@@ -186,86 +189,89 @@ const AnalysisReport = () => {
                     <h2>Analysis & Reports</h2>
                 </div>
 
-                {/* 🔹 Cards */}
                 <div className="cards-container">
-                    <div className="card brown">
-                        <FaStar size={22} color="#F39C12" />
-                        <h2>Average Rating</h2>
-                        <p className="big-number">{averageRating.toFixed(1)} </p>
-                    </div>
-                    <div className="card brown">
-                        <FaUsers size={22} color="#3498DB" />
-                        <h2>Registered Users</h2>
-                        <p className="big-number">{filteredUsers.length.toLocaleString()}</p>
-                    </div>
-                    <div className="card brown">
-                        <FaUsers size={22} color="#E74C3C" />
-                        <h2>Guest Users</h2>
-                        <p className="big-number">{guestUsers.length.toLocaleString()}</p>
-                    </div>
-                    <div className="card brown">
-                        <FaMapMarkerAlt size={22} color="#9B59B6" />
-                        <h2>Top Destination</h2>
-                        <p className="big-number">
-                            {topRatedLocation
-                                ? `${topRatedLocation.name} (${topRatedLocation.rating.toFixed(1)})`
-                                : 'N/A'}
-                        </p>
-                    </div>
+                    {loading ? (
+                        <>
+                            {[1, 2, 3, 4].map((i) => (
+                                <div key={i} className="card brown">
+                                    <div className="skeleton skeleton-icon"></div>
+                                    <div className="skeleton skeleton-title"></div>
+                                    <div className="skeleton skeleton-line short"></div>
+                                </div>
+                            ))}
+                        </>
+                    ) : (
+                        <>
+                            <div className="card brown">
+                                <FaStar size={22} color="#F39C12" />
+                                <h2>Average Rating</h2>
+                                <p className="big-number">{averageRating.toFixed(1)}</p>
+                            </div>
+                            <div className="card brown">
+                                <FaUsers size={22} color="#3498DB" />
+                                <h2>Registered Users</h2>
+                                <p className="big-number">{filteredUsers.length.toLocaleString()}</p>
+                            </div>
+                            <div className="card brown">
+                                <FaUsers size={22} color="#E74C3C" />
+                                <h2>Guest Users</h2>
+                                <p className="big-number">{guestUsers.length.toLocaleString()}</p>
+                            </div>
+                            <div className="card brown">
+                                <FaMapMarkerAlt size={22} color="#9B59B6" />
+                                <h2>Top Destination</h2>
+                                <p className="big-number">
+                                    {topRatedLocation
+                                        ? `${topRatedLocation.name} (${topRatedLocation.rating.toFixed(1)})`
+                                        : "N/A"}
+                                </p>
+                            </div>
+                        </>
+                    )}
                 </div>
 
-                {/* 🔹 Feedback Section */}
+
                 <div className="chart-container">
                     <h3>Feedback Overview</h3>
 
-                    <div className="feedback-tab-header">
-                        <div className="feedback-tabs">
-                            <button
-                                className={activeFeedbackTab === 'location' ? 'active' : ''}
-                                onClick={() => setActiveFeedbackTab('location')}
-                            >
-                                Location Feedback
-                            </button>
-                            <button
-                                className={activeFeedbackTab === 'app' ? 'active' : ''}
-                                onClick={() => setActiveFeedbackTab('app')}
-                            >
-                                App Feedback
-                            </button>
+                    {loading ? (
+                        <div className="skeleton-faq">
+                            <div className="skeleton skeleton-faq-title"></div>
+                            <div className="skeleton-faq-item">
+                                <div className="skeleton skeleton-faq-q"></div>
+                                <div className="skeleton skeleton-faq-a"></div>
+                            </div>
+                            <div className="skeleton-faq-item">
+                                <div className="skeleton skeleton-faq-q"></div>
+                                <div className="skeleton skeleton-faq-a"></div>
+                            </div>
                         </div>
-                        <div className="feedback-controls">
-                            <button onClick={() => setRatingFilter('top')} disabled={ratingFilter === 'top'}>Top Rated</button>
-                            <button onClick={() => setRatingFilter('low')} disabled={ratingFilter === 'low'}>Low Rated</button>
-                            <button onClick={() => setShowAll(!showAll)}>
-                                {showAll ? 'Show Top 5' : 'Show All'}
-                            </button>
-                        </div>
-                    </div>
-
-                    {activeFeedbackTab === 'location' && (
+                    ) : (
                         <>
-                            <h4>Location Feedbacks ({locationCount})</h4>
-                            {locationFeedbacks.map((loc, idx) => (
-                                <div key={`loc-${idx}`} className="feedback-card">
-                                    <strong>{loc.name}</strong> — Rating: {loc.average}⭐ ({loc.count} rating{loc.count > 1 ? 's' : ''})
-                                </div>
-                            ))}
-                        </>
-                    )}
-
-                    {activeFeedbackTab === 'app' && (
-                        <>
-                            <h4>App Feedbacks ({appCount})</h4>
-                            {appFeedbacks.map((f, idx) => (
-                                <div key={`app-${idx}`} className="feedback-card">
-                                    <strong>{f.name}</strong> — Rating: {f.average}⭐ ({f.count} rating{f.count > 1 ? 's' : ''})
-                                </div>
-                            ))}
+                            {activeFeedbackTab === 'location' && (
+                                <>
+                                    <h4>Location Feedbacks ({locationCount})</h4>
+                                    {locationFeedbacks.map((loc, idx) => (
+                                        <div key={`loc-${idx}`} className="feedback-card">
+                                            <strong>{loc.name}</strong> — Rating: {loc.average}⭐ ({loc.count})
+                                        </div>
+                                    ))}
+                                </>
+                            )}
+                            {activeFeedbackTab === 'app' && (
+                                <>
+                                    <h4>App Feedbacks ({appCount})</h4>
+                                    {appFeedbacks.map((f, idx) => (
+                                        <div key={`app-${idx}`} className="feedback-card">
+                                            <strong>{f.name}</strong> — Rating: {f.average}⭐ ({f.count})
+                                        </div>
+                                    ))}
+                                </>
+                            )}
                         </>
                     )}
                 </div>
 
-                {/* 🔹 Filters */}
                 <div className="filter-container mt-8">
                     <div className="chart-filters">
                         <div className="filter-group">
@@ -299,20 +305,23 @@ const AnalysisReport = () => {
                     </div>
                 </div>
 
-                {/* 🔹 Registration Trends */}
                 <div className="chart-container">
                     <h3>Registration Trends</h3>
-                    <ResponsiveContainer width="100%" height={300}>
-                        <LineChart data={getUserActivityData}>
-                            <XAxis dataKey="name" />
-                            <YAxis />
-                            <Tooltip />
-                            <Line type="monotone" dataKey="users" stroke="#82ca9d" />
-                        </LineChart>
-                    </ResponsiveContainer>
+                    {loading ? (
+                        <div className="skeleton" style={{ height: '300px', borderRadius: '10px' }}></div>
+                    ) : (
+                        <ResponsiveContainer width="100%" height={300}>
+                            <LineChart data={getUserActivityData}>
+                                <XAxis dataKey="name" />
+                                <YAxis />
+                                <Tooltip />
+                                <Line type="monotone" dataKey="users" stroke="#82ca9d" />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    )}
                 </div>
 
-                {/* 🔹 Gender & User Type */}
+
                 <div className="pie-charts-flex">
                     <div className="chart-container">
                         <h3>Gender Distribution</h3>
@@ -342,7 +351,6 @@ const AnalysisReport = () => {
                     </div>
                 </div>
 
-                {/* 🔹 Age Groups */}
                 <div className="chart-container" style={{ marginTop: '2rem' }}>
                     <h3>Age Group Distribution</h3>
                     <ResponsiveContainer width="100%" height={300}>

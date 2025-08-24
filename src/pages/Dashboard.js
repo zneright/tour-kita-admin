@@ -21,9 +21,11 @@ const Dashboard = () => {
     const activeUsers = nonArchivedUsers.filter(user => user.activestatus);
     const activeRegistered = activeUsers.filter(user => user.status === 'registered');
     const activeGuests = activeUsers.filter(user => user.status === 'guest');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchRatings = async () => {
+            setLoading(true);
             const feedbackSnapshot = await getDocs(collection(db, 'feedbacks'));
             const ratingsMap = {};
 
@@ -64,6 +66,7 @@ const Dashboard = () => {
                 .slice(0, 5);
 
             setTopRatedDestinations(topByRating);
+            setLoading(false);
         };
 
         fetchRatings();
@@ -74,6 +77,21 @@ const Dashboard = () => {
         if (value < 0) return { color: 'red' };
         return { color: '#999' };
     };
+    const SkeletonCard = () => (
+        <div className="card brown skeleton-card">
+            <div className="skeleton skeleton-line short"></div>
+            <div className="skeleton skeleton-title"></div>
+            <div className="skeleton skeleton-line tiny"></div>
+        </div>
+    );
+
+
+    const SkeletonChart = () => (
+        <div className="chart-container skeleton-chart">
+            <div className="skeleton skeleton-title" style={{ width: '40%', height: '20 px', marginBottom: '1rem' }}></div>
+            <div className="skeleton skeleton-rect"></div>
+        </div>
+    );
 
     return (
         <div className="dashboard-wrapper">
@@ -85,48 +103,69 @@ const Dashboard = () => {
 
 
                 <div className="cards-container">
-                    <div className="card brown">
-                        <p>Online All Users</p>
-                        <h2>{activeUsers.length}</h2>
-                        <span style={getPercentageColor(15.03)}>+15.03%</span>
-                    </div>
-                    <div className="card brown">
-                        <p>Online Registered Users</p>
-                        <h2>{activeRegistered.length}</h2>
-                        <span style={getPercentageColor(11.01)}>+11.01%</span>
-                    </div>
-                    <div className="card brown">
-                        <p>Online Guests Users</p>
-                        <h2>{activeGuests.length}</h2>
-                        <span style={getPercentageColor(-6.08)}>-6.08%</span>
-                    </div>
+                    {loading ? (
+                        <>
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="card brown">
+                                    <div className="skeleton skeleton-icon"></div>
+                                    <div className="skeleton skeleton-title"></div>
+                                    <div className="skeleton skeleton-line short"></div>
+                                </div>
+                            ))}
+                        </>
+                    ) : (
+
+
+                        <>
+                            <div className="card brown">
+                                <p>Online All Users</p>
+                                <h2>{activeUsers.length}</h2>
+                                <span style={getPercentageColor(15.03)}>+15.03%</span>
+                            </div>
+                            <div className="card brown">
+                                <p>Online Registered Users</p>
+                                <h2>{activeRegistered.length}</h2>
+                                <span style={getPercentageColor(11.01)}>+11.01%</span>
+                            </div>
+                            <div className="card brown">
+                                <p>Online Guests Users</p>
+                                <h2>{activeGuests.length}</h2>
+                                <span style={getPercentageColor(-6.08)}>-6.08%</span>
+                            </div>
+                        </>
+                    )}
                 </div>
 
-                <div className="chart-container" style={{ marginTop: '2rem' }}>
-                    <h2>Top Rated Sites - Based on User Feedback</h2>
-                    <ResponsiveContainer width="100%" height={350}>
-                        <BarChart
-                            data={topRatedDestinations}
-                            layout="vertical"
-                            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                        >
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis type="number" domain={[0, 5]} />
-                            <YAxis type="category" dataKey="site" />
-                            <Tooltip
-                                formatter={(value, name) => {
-                                    if (name === 'rating') return [`${value} / 5`, 'Average Rating'];
-                                    if (name === 'feedbackCount') return [value, 'Total Feedback'];
-                                    return value;
-                                }}
-                            />
-                            <Bar dataKey="rating" fill="#AB886D" barSize={30} />
-                        </BarChart>
-                    </ResponsiveContainer>
-                    <p style={{ marginTop: '1rem', fontStyle: 'italic' }}>
-                        * Only locations with feedback are shown. Some locations may have feedback without ratings.
-                    </p>
-                </div>
+                {loading ? (
+                    <SkeletonChart />
+                ) : (
+                    <div className="chart-container" style={{ marginTop: '2rem' }}>
+                        <h2>Top Rated Sites - Based on User Feedback</h2>
+                        <ResponsiveContainer width="100%" height={350}>
+                            <BarChart
+                                data={topRatedDestinations}
+                                layout="vertical"
+                                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis type="number" domain={[0, 5]} />
+                                <YAxis type="category" dataKey="site" />
+                                <Tooltip
+                                    formatter={(value, name) => {
+                                        if (name === 'rating') return [`${value} / 5`, 'Average Rating'];
+                                        if (name === 'feedbackCount') return [value, 'Total Feedback'];
+                                        return value;
+                                    }}
+                                />
+                                <Bar dataKey="rating" fill="#AB886D" barSize={30} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                        <p style={{ marginTop: '1rem', fontStyle: 'italic' }}>
+                            * Only locations with feedback are shown. Some locations may have feedback without ratings.
+                        </p>
+                    </div>
+                )}
+
             </main >
         </div >
     );

@@ -23,9 +23,9 @@ const FeedbackReview = () => {
 
     const isFeatureTab = activeTab === 'Feature Feedback';
 
-    const [imagePreview, setImagePreview] = useState(null);
-    const [showImageModal, setShowImageModal] = useState(false);
-
+    const [setImagePreview] = useState(null);
+    const [setShowImageModal] = useState(false);
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         const fetchFeedback = async () => {
             try {
@@ -36,6 +36,8 @@ const FeedbackReview = () => {
                 calculateStats(feedback, activeTab);
             } catch (error) {
                 console.error('Error fetching feedback:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -141,39 +143,55 @@ const FeedbackReview = () => {
             <Sidebar />
             <div className="dashboard-main">
                 <div className="dashboard-header">
+
                     <h2>Feedback Overview</h2>
                 </div>
 
                 <div className="cards-container">
-                    <div className="card brown">
-                        <p>Average Rating ({isFeatureTab ? 'Feature' : 'Location'})</p>
-                        <h2 style={{ color: 'green' }}>{averageRating}</h2>
-                    </div>
-
-                    {!isFeatureTab ? (
+                    {loading ? (
                         <>
-                            <div className="card brown">
-                                <p>Most Loved Location</p>
-                                <h2>{mostLovedLocation}</h2>
-                            </div>
-                            <div className="card brown">
-                                <p>Area of Concern</p>
-                                <h2>{areaOfConcern}</h2>
-                            </div>
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="card brown">
+                                    <div className="skeleton skeleton-icon"></div>
+                                    <div className="skeleton skeleton-title"></div>
+                                    <div className="skeleton skeleton-line short"></div>
+                                </div>
+                            ))}
                         </>
                     ) : (
                         <>
                             <div className="card brown">
-                                <p>Most Loved Feature</p>
-                                <h2>{mostLovedFeature}</h2>
+                                <p>Average Rating ({isFeatureTab ? 'Feature' : 'Location'})</p>
+                                <h2 style={{ color: 'green' }}>{averageRating}</h2>
                             </div>
-                            <div className="card brown">
-                                <p>Area of Concern (Feature)</p>
-                                <h2>{areaOfConcernFeature}</h2>
-                            </div>
+                            {!isFeatureTab ? (
+                                <>
+                                    <div className="card brown">
+                                        <p>Most Loved Location</p>
+                                        <h2>{mostLovedLocation}</h2>
+                                    </div>
+                                    <div className="card brown">
+                                        <p>Area of Concern</p>
+                                        <h2>{areaOfConcern}</h2>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="card brown">
+                                        <p>Most Loved Feature</p>
+                                        <h2>{mostLovedFeature}</h2>
+                                    </div>
+                                    <div className="card brown">
+                                        <p>Area of Concern (Feature)</p>
+                                        <h2>{areaOfConcernFeature}</h2>
+                                    </div>
+                                </>
+                            )}
                         </>
                     )}
                 </div>
+
+
 
                 <div className="mtab-buttons">
                     <button
@@ -214,7 +232,23 @@ const FeedbackReview = () => {
                         </thead>
 
                         <tbody>
-                            {filteredFeedback.length > 0 ? (
+                            {loading ? (
+                                // Skeleton Loader Rows
+                                <>
+                                    {[...Array(5)].map((_, i) => (
+                                        <tr key={i}>
+                                            <td colSpan="7">
+                                                <div className="skeleton-card">
+                                                    <div className="skeleton skeleton-title"></div>
+                                                    <div className="skeleton skeleton-line medium"></div>
+                                                    <div className="skeleton skeleton-line"></div>
+                                                    <div className="skeleton skeleton-line short"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </>
+                            ) : filteredFeedback.length > 0 ? (
                                 filteredFeedback.map((entry) => (
                                     <tr key={entry.id}>
                                         <td>{entry.email}</td>
@@ -235,7 +269,6 @@ const FeedbackReview = () => {
                                                 '—'
                                             )}
                                         </td>
-
                                         <td>{renderStars(entry.rating || 0)}</td>
                                         <td>{formatTimestamp(entry.createdAt)}</td>
                                         <td>
@@ -249,7 +282,6 @@ const FeedbackReview = () => {
                                             >
                                                 Send Message
                                             </button>
-
                                         </td>
                                     </tr>
                                 ))
@@ -261,6 +293,7 @@ const FeedbackReview = () => {
                                 </tr>
                             )}
                         </tbody>
+
                     </table>
 
                     {isModalOpen && (

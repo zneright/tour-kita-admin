@@ -27,6 +27,9 @@ function formatTime12Hour(time24) {
     return `${hour}:${minute} ${ampm}`;
 }
 
+
+
+
 const getDateKey = (date) => date ? formatLocalDate(date) : null;
 const EventCalendar = ({ onDateSelect }) => {
 
@@ -58,6 +61,7 @@ const EventCalendar = ({ onDateSelect }) => {
 
     const startDayOfWeek = startOfMonth.getDay();
     const totalDays = endOfMonth.getDate();
+    const [loading, setLoading] = useState(true);
 
     const isToday = (date) =>
         date &&
@@ -81,6 +85,7 @@ const EventCalendar = ({ onDateSelect }) => {
     });
 
     const fetchEvents = async () => {
+        setLoading(true);
         const eventSnap = await getDocs(collection(db, "events"));
         const markerSnap = await getDocs(collection(db, "markers"));
 
@@ -112,6 +117,7 @@ const EventCalendar = ({ onDateSelect }) => {
 
 
         setEvents(fetchedEvents);
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -136,53 +142,58 @@ const EventCalendar = ({ onDateSelect }) => {
                 ))}
             </div>
 
-            <div className="calendar-grid">
-                {calendarDates.map((date, index) => {
-                    const key = getDateKey(date);
-                    const dayEvents = date ? eventsByDate[key] || [] : [];
+            {loading ? (
+                <div style={{ textAlign: "center", padding: "2rem", fontSize: "1.2rem", color: "#555" }}>
+                    Loading events...
+                </div>
+            ) : (
+                <div className="calendar-grid">
+                    {calendarDates.map((date, index) => {
+                        const key = getDateKey(date);
+                        const dayEvents = date ? eventsByDate[key] || [] : [];
 
-                    return (
-                        <div
-                            key={index}
-                            className={`calendar-cell ${date ? "" : "empty-cell"}`}
-                            onClick={() => {
-                                if (date && onDateSelect) onDateSelect(date);
-                            }}
-                        >
-                            {date && (
-                                <div className={`calendar-date ${isToday(date) ? "today" : ""}`}>
-                                    {date.getDate()}
-                                </div>
-                            )}
+                        return (
+                            <div
+                                key={index}
+                                className={`calendar-cell ${date ? "" : "empty-cell"}`}
+                                onClick={() => {
+                                    if (date && onDateSelect) onDateSelect(date);
+                                }}
+                            >
+                                {date && (
+                                    <div className={`calendar-date ${isToday(date) ? "today" : ""}`}>
+                                        {date.getDate()}
+                                    </div>
+                                )}
 
+                                {dayEvents.map((event, i) => (
+                                    <div
+                                        key={i}
+                                        className="calendar-event"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setSelectedEvent(event);
+                                        }}
+                                    >
+                                        <div className="event-title">{event.title}</div>
+                                        <div className="event-time">{event.time}</div>
+                                        <div className="event-location">{event.locationName}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
 
-                            {dayEvents.map((event, i) => (
-
-                                <div
-                                    key={i}
-                                    className="calendar-event"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setSelectedEvent(event);
-                                    }}
-                                >
-                                    <div className="event-title">{event.title}</div>
-                                    <div className="event-time">{event.time}</div>
-                                    <div className="event-location">{event.locationName}</div>
-                                </div>
-                            ))}
-
-
-                        </div>
-                    );
-                })}
-            </div>
 
             {selectedEvent && (
                 <EventsModal
                     event={selectedEvent}
-                    onClose={() => setSelectedEvent(null)}
-                    onUpdate={fetchEvents}
+                    onClose={() => {
+                        fetchEvents();
+                        setSelectedEvent(null);
+                    }}
                 />
             )}
         </div>

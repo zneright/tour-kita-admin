@@ -35,10 +35,12 @@ const NotificationManagement = () => {
     const [imagePreview, setImagePreview] = useState('');
 
     const [modalImageUrl, setModalImageUrl] = useState(null);
-
+    const [loadingNotifs, setLoadingNotifs] = useState(true);
+    const [loadingReplies, setLoadingReplies] = useState(true);
 
     useEffect(() => {
         const fetchNotifications = async () => {
+            setLoadingNotifs(true);
             const querySnapshot = await getDocs(collection(db, 'notifications'));
             const fetched = querySnapshot.docs.map(doc => ({
                 id: doc.id,
@@ -46,9 +48,11 @@ const NotificationManagement = () => {
             }));
             fetched.sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate());
             setNotifications(fetched);
+            setLoadingNotifs(false);
         };
 
         const fetchAdminReplies = async () => {
+            setLoadingReplies(true);
             const snapshot = await getDocs(collection(db, 'adminMessages'));
             const replies = snapshot.docs.map(doc => ({
                 id: doc.id,
@@ -56,6 +60,7 @@ const NotificationManagement = () => {
             }));
             replies.sort((a, b) => b.sentAt.toDate() - a.sentAt.toDate());
             setAdminReplies(replies);
+            setLoadingReplies(false);
         };
 
         fetchNotifications();
@@ -183,6 +188,22 @@ const NotificationManagement = () => {
             sentDateStr.toLowerCase().includes(search)
         );
     });
+    const SkeletonCard = () => (
+        <li className="notification-item skeleton-card">
+            <div className="skeleton skeleton-title"></div>
+            <div className="skeleton skeleton-line"></div>
+            <div className="skeleton skeleton-line medium"></div>
+            <div className="skeleton skeleton-line short"></div>
+        </li>
+    );
+
+    const SkeletonList = ({ count = 3 }) => (
+        <>
+            {Array.from({ length: count }).map((_, i) => (
+                <SkeletonCard key={i} />
+            ))}
+        </>
+    );
 
     return (
         <div className="dashboard-wrapper">
@@ -221,37 +242,40 @@ const NotificationManagement = () => {
                             onChange={(e) => setSearchTermNotif(e.target.value)}
                         />
                         <ul className="notification-list">
-                            {filteredNotifications.map((notif) => {
-                                const dateSent = notif.timestamp?.toDate?.().toLocaleString?.() || 'Unknown Date';
-                                const icon = categoryIcons[notif.category] || '📢';
-                                return (
-                                    <li key={notif.id} className="notification-item">
-                                        <div className="notif-image">
-                                            {notif.imageUrl ? (
-                                                <img
-                                                    src={notif.imageUrl}
-                                                    alt="notification"
-                                                    className="notif-thumbnail"
-                                                    onClick={() => setModalImageUrl(notif.imageUrl)}
-                                                />
-                                            ) : (
-                                                <div className="icon-placeholder">{icon}</div>
-                                            )}
-                                        </div>
-
-                                        <div className="notif-details">
-                                            <strong>{notif.title}</strong>
-                                            <p>{notif.message}</p>
-                                            <small>{dateSent}</small>
-
-                                        </div>
-                                        <button className="delete-btn" onClick={() => handleDelete(notif.id)}>
-                                            Delete
-                                        </button>
-                                    </li>
-                                );
-                            })}
+                            {loadingNotifs ? (
+                                <SkeletonList count={4} />
+                            ) : (
+                                filteredNotifications.map((notif) => {
+                                    const dateSent = notif.timestamp?.toDate?.().toLocaleString?.() || 'Unknown Date';
+                                    const icon = categoryIcons[notif.category] || '📢';
+                                    return (
+                                        <li key={notif.id} className="notification-item">
+                                            <div className="notif-image">
+                                                {notif.imageUrl ? (
+                                                    <img
+                                                        src={notif.imageUrl}
+                                                        alt="notification"
+                                                        className="notif-thumbnail"
+                                                        onClick={() => setModalImageUrl(notif.imageUrl)}
+                                                    />
+                                                ) : (
+                                                    <div className="icon-placeholder">{icon}</div>
+                                                )}
+                                            </div>
+                                            <div className="notif-details">
+                                                <strong>{notif.title}</strong>
+                                                <p>{notif.message}</p>
+                                                <small>{dateSent}</small>
+                                            </div>
+                                            <button className="delete-btn" onClick={() => handleDelete(notif.id)}>
+                                                Delete
+                                            </button>
+                                        </li>
+                                    );
+                                })
+                            )}
                         </ul>
+
                         {modalImageUrl && (
                             <div className="modal-overlay" onClick={() => setModalImageUrl(null)}>
                                 <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -275,26 +299,30 @@ const NotificationManagement = () => {
                             onChange={(e) => setSearchTermReply(e.target.value)}
                         />
                         <ul className="notification-list">
-                            {filteredReplies.map((reply) => {
-                                const sentDate = reply.sentAt?.toDate?.().toLocaleString?.() || 'Unknown Date';
-                                return (
-                                    <li key={reply.id} className="notification-item">
-                                        <div className="notif-image">
-                                            <div className="icon-placeholder">💬</div>
-                                        </div>
-                                        <div className="notif-details">
-                                            <strong>{reply.to ? `To: ${reply.to}` : 'Reply Sent'}</strong>
-                                            <p>{reply.message}</p>
-                                            <small>{sentDate}</small>
-
-                                        </div>
-                                        <button className="delete-btn" onClick={() => handleDeleteReply(reply.id)}>
-                                            Delete
-                                        </button>
-                                    </li>
-                                );
-                            })}
+                            {loadingReplies ? (
+                                <SkeletonList count={3} />
+                            ) : (
+                                filteredReplies.map((reply) => {
+                                    const sentDate = reply.sentAt?.toDate?.().toLocaleString?.() || 'Unknown Date';
+                                    return (
+                                        <li key={reply.id} className="notification-item">
+                                            <div className="notif-image">
+                                                <div className="icon-placeholder">💬</div>
+                                            </div>
+                                            <div className="notif-details">
+                                                <strong>{reply.to ? `To: ${reply.to}` : 'Reply Sent'}</strong>
+                                                <p>{reply.message}</p>
+                                                <small>{sentDate}</small>
+                                            </div>
+                                            <button className="delete-btn" onClick={() => handleDeleteReply(reply.id)}>
+                                                Delete
+                                            </button>
+                                        </li>
+                                    );
+                                })
+                            )}
                         </ul>
+
                     </div>
                 )}
 
