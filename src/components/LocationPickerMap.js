@@ -23,8 +23,7 @@ const LocationPickerMap = ({ onLocationSelect }) => {
     const markerRef = useRef(null);
 
     useEffect(() => {
-        if (!mapContainerRef.current || mapRef.current) return; // init only once
-
+        if (!mapContainerRef.current || mapRef.current) return;
         const map = new mapboxgl.Map({
             container: mapContainerRef.current,
             style: 'mapbox://styles/mapbox/streets-v11',
@@ -33,7 +32,7 @@ const LocationPickerMap = ({ onLocationSelect }) => {
             maxBounds: INTRAMUROS_BOUNDS,
         });
 
-        mapRef.current = map; // store reference
+        mapRef.current = map;
 
         const geocoder = new MapboxGeocoder({
             accessToken: mapboxgl.accessToken,
@@ -59,19 +58,16 @@ const LocationPickerMap = ({ onLocationSelect }) => {
             const data = await response.json();
             const address = data.features?.[0]?.place_name || 'Unknown location';
 
-            // Remove previous marker
             if (markerRef.current) markerRef.current.remove();
 
-            // Add new marker
             markerRef.current = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
 
-            // Callback
             if (typeof onLocationSelect === 'function') {
                 onLocationSelect({ lng, lat, address });
             }
         });
 
-    }, []);
+    },);
 
     return (
         <div style={{ height: '300px', width: '100%', marginTop: '10px' }} ref={mapContainerRef}></div>

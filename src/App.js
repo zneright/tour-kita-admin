@@ -9,7 +9,7 @@ import AnalysisReport from './pages/AnalysisReport';
 import Login from './pages/LoginPage';
 import MarkersManagement from './pages/MarkersManagement';
 import HomePage from './pages/HomePage';
-import ARManagement from './pages/ARManagement';
+import ARManagement from './pages/ArManagement';
 import ContentManagement from './pages/ContentManagement';
 import FAQScreen from './pages/FAQScreen';
 import TermsOfServiceScreen from './pages/TermsOfServicesScreen';

@@ -3,7 +3,7 @@ import "./ARManagement.css";
 import { FiBox, FiPlusCircle } from "react-icons/fi";
 import Sidebar from "../components/Sidebar";
 
-const ARManagement = () => {
+const ArManagement = () => {
     const [showUploadForm, setShowUploadForm] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
@@ -163,4 +163,4 @@ const ARManagement = () => {
     );
 };
 
-export default ARManagement;
+export default ArManagement;

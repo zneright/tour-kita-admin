@@ -72,18 +72,12 @@ const Dashboard = () => {
         fetchRatings();
     }, []);
 
-    const getPercentageColor = (value: number) => {
+    const getPercentageColor = (value) => {
         if (value > 0) return { color: 'green' };
         if (value < 0) return { color: 'red' };
         return { color: '#999' };
     };
-    const SkeletonCard = () => (
-        <div className="card brown skeleton-card">
-            <div className="skeleton skeleton-line short"></div>
-            <div className="skeleton skeleton-title"></div>
-            <div className="skeleton skeleton-line tiny"></div>
-        </div>
-    );
+
 
 
     const SkeletonChart = () => (

@@ -7,7 +7,7 @@ import { db } from '../firebase';
 const UserManagement = () => {
     const [search, setSearch] = useState('');
     const [viewFilter, setViewFilter] = useState('all');
-    const [statusFilter, setStatusFilter] = useState('all');
+    const [statusFilter] = useState('all');
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 

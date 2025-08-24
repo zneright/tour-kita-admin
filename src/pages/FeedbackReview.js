@@ -42,7 +42,7 @@ const FeedbackReview = () => {
         };
 
         fetchFeedback();
-    }, []);
+    },);
 
     useEffect(() => {
         calculateStats(feedbackList, activeTab);

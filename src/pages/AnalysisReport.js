@@ -128,7 +128,6 @@ const AnalysisReport = () => {
     const locationCount = feedbacks.filter(f => f.feedbackType === 'Location Feedback').length;
     const appCount = feedbacks.filter(f => f.feedbackType === 'App Feedback').length;
 
-    // 🔹 User activity chart data
     const getUserActivityData = useMemo(() => {
         const activity = {};
         filteredUsers.forEach(user => {
@@ -143,11 +142,17 @@ const AnalysisReport = () => {
         const getKeys = () => {
             if (filter === 'Monthly') return moment.monthsShort();
             if (filter === 'Quarterly') return ['Q1', 'Q2', 'Q3', 'Q4'];
-            return [...new Set(users.map(user => moment(user.registeredDate).year()))].sort().map(String);
+            return [...new Set(filteredUsers.map(user => moment(user.registeredDate).year()))]
+                .sort()
+                .map(String);
         };
 
-        return getKeys().map(name => ({ name, users: activity[name] || 0 }));
-    }, [filter, selectedYear, filteredUsers, users]);
+        return getKeys().map(name => ({
+            name,
+            users: activity[name] || 0
+        }));
+    }, [filteredUsers, filter]);
+
 
     const genderData = useMemo(() => {
         const male = filteredUsers.filter(u => u.gender?.toLowerCase() === 'male').length;
