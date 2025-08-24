@@ -136,42 +136,6 @@ const MarkerFormModal = ({ onCancel, loading, form, setForm, isEditing }) => {
                             <label htmlFor="name">Name*</label>
                             <input type="text" id="name" name="name" value={form.name} onChange={handleInputChange} required />
                         </div>
-
-                        <div className="field-group full-width">
-                            <label htmlFor="image">Upload Image</label>
-                            <input id="image" type="file" onChange={handleImageChange} accept="image/*" />
-                            {uploading && <p>Uploading image...</p>}
-                            {previewImage && (
-                                <div className="image-preview">
-                                    <img src={previewImage} alt="Preview" style={{ width: '100%', marginTop: '10px' }} />
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="field-group full-width">
-                            <label htmlFor="image Url">Or Paste Image URL</label>
-                            <input
-                                type="url"
-                                id="image"
-                                placeholder="https://example.com/image.jpg"
-                                value={form.image}
-                                onChange={(e) => {
-                                    setForm((prev) => ({ ...prev, image: e.target.value }));
-                                    setPreviewImage(e.target.value);
-                                }}
-                            />
-                        </div>
-
-                        <div className="field-group full-width">
-                            <label htmlFor="address">Address*</label>
-                            <input type="text" id="address" name="address" value={form.address} onChange={handleInputChange} required />
-                            <LocationPickerMap
-                                onLocationSelect={({ lat, lng, address }) =>
-                                    setForm((prev) => ({ ...prev, latitude: lat.toString(), longitude: lng.toString(), address }))
-                                }
-                            />
-                        </div>
-
                         <div className="field-group full-width">
                             <label htmlFor="description">Description</label>
                             <textarea
@@ -184,31 +148,59 @@ const MarkerFormModal = ({ onCancel, loading, form, setForm, isEditing }) => {
                             />
                         </div>
 
-                        <div className="field-group full-width">
-                            <label htmlFor="category">Category*</label>
-                            <select id="category" name="category" value={form.category} onChange={handleInputChange} required>
-                                <option value="">Select Category</option>
-                                <option value="Historical">Historical</option>
-                                <option value="Food">Food</option>
-                                <option value="Museum">Museum</option>
-                                <option value="Park">Park</option>
-                                <option value="School">School</option>
-                                <option value="Government">Government Facilities</option>
-                            </select>
+
+                        <div className="marker-form full-width" style={{ gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+
+                            <div className="field-group">
+                                <label htmlFor="image">Upload Image</label>
+                                <input type="file" onChange={handleImageChange} accept="image/*" />
+                            </div>
+
+                            <div className="field-group">
+                                <label htmlFor="imageUrl">Or Paste Image URL</label>
+                                <input
+                                    type="url"
+                                    value={form.image}
+                                    onChange={(e) => {
+                                        setForm(prev => ({ ...prev, image: e.target.value }));
+                                        setPreviewImage(e.target.value);
+                                    }}
+                                />
+                            </div>
+
+                            {previewImage && (
+                                <div className="image-preview">
+                                    <img src={previewImage} alt="Preview" />
+                                </div>
+                            )}
                         </div>
 
-                        <div className="field-group">
-                            <label htmlFor="entranceFee">Entrance Fee</label>
-                            <input
-                                type="text"
-                                id="entranceFee"
-                                name="entranceFee"
-                                value={form.entranceFee}
-                                onChange={handleInputChange}
-                                placeholder="e.g., 100 PHP or Free"
-                            />
-                        </div>
+                        <div className="marker-form full-width" style={{ gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                            <div className="field-group">
+                                <label htmlFor="category">Category*</label>
+                                <select id="category" name="category" value={form.category} onChange={handleInputChange} required>
+                                    <option value="">Select Category</option>
+                                    <option value="Historical">Historical</option>
+                                    <option value="Food">Food</option>
+                                    <option value="Museum">Museum</option>
+                                    <option value="Park">Park</option>
+                                    <option value="School">School</option>
+                                    <option value="Government">Government Facilities</option>
+                                </select>
+                            </div>
 
+                            <div className="field-group">
+                                <label htmlFor="entranceFee">Entrance Fee</label>
+                                <input
+                                    type="text"
+                                    id="entranceFee"
+                                    name="entranceFee"
+                                    value={form.entranceFee}
+                                    onChange={handleInputChange}
+                                    placeholder="e.g., 100 PHP or Free"
+                                />
+                            </div>
+                        </div>
                         <div className="checkbox-row full-width">
                             <label className="checkbox-group">
                                 <input type="checkbox" name="accessibleRestroom" checked={form.accessibleRestroom} onChange={handleInputChange} />
@@ -219,6 +211,17 @@ const MarkerFormModal = ({ onCancel, loading, form, setForm, isEditing }) => {
                                 AR Supported
                             </label>
                         </div>
+                        <div className="field-group full-width">
+                            <label htmlFor="address">Address*</label>
+                            <input type="text" id="address" name="address" value={form.address} onChange={handleInputChange} required />
+                            <LocationPickerMap
+                                onLocationSelect={({ lat, lng, address }) =>
+                                    setForm((prev) => ({ ...prev, latitude: lat.toString(), longitude: lng.toString(), address }))
+                                }
+                            />
+                        </div>
+
+
                     </form>
                 )}
 

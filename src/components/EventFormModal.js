@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./MarkerFormModal.css";
 import {
     getDocs,
-    collection,
-    addDoc, doc, updateDoc
+    collection, doc, updateDoc
 } from "firebase/firestore";
 import { db } from "../firebase";
 import axios from "axios";
@@ -102,24 +101,6 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) =
                         updatedAt: new Date()
                     });
                 }
-            } else {
-                const docRef = await addDoc(collection(db, "events"), {
-                    title: formData.title,
-                    date: formData.date,
-                    time: formData.time?.slice(0, 5),
-                    endTime: formData.endTime?.slice(0, 5),
-                    openToPublic: !!formData.openToPublic,
-                    locationId: formData.locationId,
-                    description: formData.description,
-                    imageUrl: imageUrl,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                });
-
-                if (onUpdate) {
-                    onUpdate();
-                }
-
             }
 
             if (!formData.id) {
@@ -222,12 +203,11 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) =
                             type="time"
                             name="time"
                             id="time"
-                            value={formData.time.slice(0, 5)}
+                            value={formData.time?.slice(0, 5) || ""}
                             onChange={handleChange}
                             disabled={isDisabled}
                             required
                         />
-
                     </div>
 
                     <div className="field-group">
@@ -236,7 +216,7 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) =
                             type="time"
                             name="endTime"
                             id="endTime"
-                            value={formData.endTime.slice(0, 5)}
+                            value={formData.endTime?.slice(0, 5)}
                             onChange={handleChange}
                             disabled={isDisabled}
                             required

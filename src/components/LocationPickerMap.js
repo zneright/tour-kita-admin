@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import 'mapbox-gl/dist/mapbox-gl.css'
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoiem5lcmlnaHQiLCJhIjoiY21kZzFlaXd2MDM3NjJrczcwemVpMDlxOSJ9.EsDK4EfxFiml0EqsPS-F6g';
 
@@ -19,9 +19,11 @@ const isInsideIntramuros = (lng, lat) => {
 
 const LocationPickerMap = ({ onLocationSelect }) => {
     const mapContainerRef = useRef(null);
+    const mapRef = useRef(null);
+    const markerRef = useRef(null);
 
     useEffect(() => {
-        if (!mapContainerRef.current) return;
+        if (!mapContainerRef.current || mapRef.current) return; // init only once
 
         const map = new mapboxgl.Map({
             container: mapContainerRef.current,
@@ -31,20 +33,17 @@ const LocationPickerMap = ({ onLocationSelect }) => {
             maxBounds: INTRAMUROS_BOUNDS,
         });
 
+        mapRef.current = map; // store reference
+
         const geocoder = new MapboxGeocoder({
             accessToken: mapboxgl.accessToken,
             mapboxgl,
             placeholder: 'Search within Intramuros...',
             bbox: [...INTRAMUROS_BOUNDS[0], ...INTRAMUROS_BOUNDS[1]],
-            proximity: {
-                longitude: 120.9788,
-                latitude: 14.5925,
-            },
+            proximity: { longitude: 120.9788, latitude: 14.5925 },
         });
 
         map.addControl(geocoder);
-
-        let marker;
 
         map.on('click', async (e) => {
             const { lng, lat } = e.lngLat;
@@ -60,16 +59,20 @@ const LocationPickerMap = ({ onLocationSelect }) => {
             const data = await response.json();
             const address = data.features?.[0]?.place_name || 'Unknown location';
 
-            if (marker) marker.remove();
-            marker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
+            // Remove previous marker
+            if (markerRef.current) markerRef.current.remove();
 
+            // Add new marker
+            markerRef.current = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
+
+            // Callback
             if (typeof onLocationSelect === 'function') {
                 onLocationSelect({ lng, lat, address });
             }
         });
 
-        return () => map.remove();
     }, []);
+
     return (
         <div style={{ height: '300px', width: '100%', marginTop: '10px' }} ref={mapContainerRef}></div>
     );

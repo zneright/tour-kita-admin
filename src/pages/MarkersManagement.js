@@ -292,17 +292,6 @@ const MarkersManagement = () => {
                 }
 
 
-                {
-                    previewMarker && (
-                        <div className="image-preview-popup" onClick={() => setPreviewMarker(null)}>
-                            <div className="image-popup-content" onClick={(e) => e.stopPropagation()}>
-                                <img src={previewMarker.image} alt={previewMarker.name} />
-                                <h3>{previewMarker.name}</h3>
-                                <button onClick={() => setPreviewMarker(null)}>Close</button>
-                            </div>
-                        </div>
-                    )
-                }
             </main >
         </div >
     );

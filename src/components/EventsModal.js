@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./EventsModal.css";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import { format, parse } from "date-fns";
+import { format, } from "date-fns";
 
 import EventFormModal from "./EventFormModal";
 
 const EventModal = ({ event, onClose, onUpdate }) => {
-    const [showImagePreview, setShowImagePreview] = useState(false);
+    const [setShowImagePreview] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState(event);
 
@@ -48,7 +48,6 @@ const EventModal = ({ event, onClose, onUpdate }) => {
         }
     };
 
-    const lastUpdated = event.updatedAt || event.createdAt;
 
     return (
         <div className="event-modal-backdrop" onClick={onClose}>

@@ -9,18 +9,22 @@
     align-items: center;
     justify-content: center;
     z-index: 999;
+    padding: 10px;
 }
 
 .modal-content {
     background: #fefaf6;
     padding: 2rem;
     width: 850px;
-    max-width: 95%;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(60, 40, 20, 0.2);
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 12px 35px rgba(60, 40, 20, 0.25);
     position: relative;
     max-height: 90vh;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .modal-close {
@@ -36,7 +40,7 @@
 
 h2 {
     margin: 0 0 1rem;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     text-align: center;
     color: #4e2a1e;
 }
@@ -45,31 +49,28 @@ h2 {
     display: flex;
     justify-content: center;
     margin-bottom: 1.5rem;
-    gap: 10px;
+    gap: 12px;
 }
 
 .tab {
     background: #eaddcf;
-    padding: 10px 20px;
-    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
     cursor: pointer;
-    border-radius: 6px;
     font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
     color: #4b2e2e;
+    transition: background 0.3s, color 0.3s;
 }
 
 .tab.active {
     background: #8b5e3c;
-    color: white;
+    color: #fff;
 }
 
 .marker-form {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 18px;
 }
 
 .marker-form .full-width {
@@ -79,10 +80,10 @@ h2 {
 .field-group {
     display: flex;
     flex-direction: column;
+    gap: 6px;
 }
 
 .field-group label {
-    margin-bottom: 5px;
     font-weight: 600;
     color: #4e2a1e;
 }
@@ -90,12 +91,20 @@ h2 {
 .field-group input,
 .field-group select,
 .field-group textarea {
-    padding: 10px;
-    border-radius: 6px;
+    padding: 10px 12px;
+    border-radius: 8px;
     border: 1px solid #c1a78a;
     font-size: 0.95rem;
     background: #fff7f0;
     color: #3b2a1a;
+    transition: border 0.2s;
+}
+
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus {
+    border-color: #8b5e3c;
+    outline: none;
 }
 
 textarea {
@@ -105,24 +114,24 @@ textarea {
 
 .checkbox-row {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
+    gap: 12px;
 }
 
 .checkbox-group {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
     font-weight: 500;
     color: #3b2a1a;
 }
 
 .dropzone {
     border: 2px dashed #c1a78a;
-    padding: 20px;
+    padding: 18px;
     text-align: center;
     cursor: pointer;
-    border-radius: 6px;
+    border-radius: 8px;
     background: #f8f2ea;
     color: #5e3f2c;
 }
@@ -189,15 +198,12 @@ textarea {
 }
 
 
-
 .map-toggle-btn {
     margin-top: 8px;
     background-color: #7a4f32;
     color: white;
-    padding: 6px 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
+    padding: 6px 12px;
+    border-radius: 6px;
 }
 
 .marker-description {
@@ -211,7 +217,6 @@ textarea {
 .marker-description h4 {
     margin: 0 0 6px;
     font-size: 1.1rem;
-    color: #222;
 }
 
 .marker-description p {
@@ -220,8 +225,14 @@ textarea {
     line-height: 1.5;
 }
 
-.marker-modal {
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: 1rem;
+.image-preview {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.image-preview img {
+    max-width: 60%;
+    border-radius: 8px;
+    display: inline-block;
 }
