@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./HelpSidebar.css";
 
@@ -12,6 +12,14 @@ const HelpSidebar = () => {
         { path: "/privacy", label: "Privacy Policy" },
         { path: "/faqs", label: "FAQs" },
     ];
+
+    useEffect(() => {
+        if (location.pathname !== "/") {
+            setIsOpen(false);
+        } else {
+            setIsOpen(true);
+        }
+    }, [location.pathname]);
 
     return (
         <>
@@ -28,7 +36,8 @@ const HelpSidebar = () => {
                     {links.map((link) => (
                         <li
                             key={link.path}
-                            className={`sidebar-link ${location.pathname === link.path ? "active" : ""}`}
+                            className={`sidebar-link ${location.pathname === link.path ? "active" : ""
+                                }`}
                             onClick={() => navigate(link.path)}
                         >
                             {link.label}
