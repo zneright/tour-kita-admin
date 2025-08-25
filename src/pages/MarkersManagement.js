@@ -40,7 +40,6 @@ const MarkersManagement = () => {
     const [popup, setPopup] = useState({ message: '', status: '' });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const [setPreviewMarker] = useState(null);
     const [isEventModalOpen, setIsEventModalOpen] = useState(false);
     const [eventForm, setEventForm] = useState({
         title: '',
@@ -49,8 +48,10 @@ const MarkersManagement = () => {
         time: ''
     });
     const [events] = useState([]);
-    const [setSelectedDate] = useState(new Date());
-    const [setEditingEvent] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [editingEvent, setEditingEvent] = useState(null);
+    const [previewMarker, setPreviewMarker] = useState(null);
+
     const [loadingMarkers, setLoadingMarkers] = useState(true);
 
     const handleEventSave = (eventData) => {

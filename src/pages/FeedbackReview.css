@@ -166,15 +166,17 @@
 }
 
 .cancel-btn {
-    background: transparent;
-    color: #493628;
-    border: 1px solid #493628;
+    background-color: #f44336;
+    /* bright red */
+    color: white;
+    border: 1px solid #d32f2f;
+    /* slightly darker red border */
 }
 
 .cancel-btn:hover {
-    background: #f1eae6;
-    color: #2c1d13;
-    border-color: #2c1d13;
+    background-color: #d32f2f;
+    color: white;
+    border-color: #b71c1c;
 }
 
 .feedback-image {

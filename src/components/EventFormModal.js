@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./MarkerFormModal.css";
-import {
-    getDocs,
-    collection, doc, updateDoc
-} from "firebase/firestore";
+import { getDocs, collection, doc, updateDoc, addDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import axios from "axios";
 
@@ -16,6 +13,15 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) =
     const [locations, setLocations] = useState([]);
     const [imageFile, setImageFile] = useState(null);
     const [uploading, setUploading] = useState(false);
+    const formatTime = (time) => {
+        if (!time) return "—";
+        let [h, m] = time.split(":").map(Number);
+        const ampm = h >= 12 ? "PM" : "AM";
+        h = h % 12 || 12;
+        return `${h}:${m.toString().padStart(2, "0")} ${ampm}`;
+    };
+
+
     useEffect(() => {
         const fetchMarkers = async () => {
             setLoadingLocations(true);
@@ -76,55 +82,47 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) =
 
             if (imageFile) {
                 const uploadedUrl = await handleImageUpload();
-                if (uploadedUrl) {
-                    imageUrl = uploadedUrl;
-                }
+                if (uploadedUrl) imageUrl = uploadedUrl;
             }
+
+            const eventData = {
+                title: formData.title,
+                date: formData.date,
+                eventStartTime: formData.eventStartTime,
+                eventEndTime: formData.eventEndTime,
+                openToPublic: !!formData.openToPublic,
+                locationId: formData.locationId,
+                description: formData.description,
+                imageUrl: imageUrl,
+                updatedAt: new Date()
+            };
+
+
+
             if (formData.id) {
                 const eventRef = doc(db, "events", formData.id);
-                await updateDoc(eventRef, {
-                    title: formData.title,
-                    date: formData.date,
-                    time: formData.time?.slice(0, 5),
-                    endTime: formData.endTime?.slice(0, 5),
-                    openToPublic: !!formData.openToPublic,
-                    locationId: formData.locationId,
-                    description: formData.description,
-                    imageUrl: imageUrl,
-                    updatedAt: new Date()
+                await updateDoc(eventRef, eventData);
+                if (onUpdate) onUpdate({ ...formData, ...eventData, updatedAt: new Date() });
+            } else {
+                const newEventRef = await addDoc(collection(db, "events"), {
+                    ...eventData,
+                    createdAt: new Date()
                 });
-
-                if (onUpdate) {
-                    onUpdate({
-                        ...formData,
-                        imageUrl,
-                        updatedAt: new Date()
-                    });
-                }
-            }
-
-            if (!formData.id) {
-                setFormData({
-                    title: "",
-                    description: "",
-                    date: "",
-                    time: "",
-                    endTime: "",
-                    openToPublic: false,
-                    locationId: "",
-                    imageUrl: ""
-                });
+                if (onUpdate) onUpdate({ ...formData, id: newEventRef.id, ...eventData, createdAt: new Date() });
             }
 
             setImageFile(null);
             onCancel();
+
         } catch (error) {
             console.error("Error saving event:", error);
         } finally {
             setSubmitting(false);
         }
-
     };
+
+
+
     if (!isOpen) return null;
 
     const isDisabled = loadingLocations || uploading || submitting;
@@ -133,10 +131,12 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) =
         <div className="modal-overlay" onClick={onCancel}>
             <div className="modal-content" onClick={e => e.stopPropagation()}>
                 <h2>
-                    {loadingLocations ? "Loading Form..." :
-                        formData?.id || formData?.eventId ? "Edit Event" : "Add New Event"}
+                    {loadingLocations
+                        ? "Loading Form..."
+                        : formData?.id
+                            ? "Edit Event"
+                            : "Add New Event"}
                 </h2>
-
 
                 <form onSubmit={handleSubmit} className="marker-form">
                     <div className="field-group full-width">
@@ -190,7 +190,7 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) =
                             type="date"
                             name="date"
                             id="date"
-                            value={formData.date}
+                            value={formData.date || ""}
                             onChange={handleChange}
                             disabled={isDisabled}
                             required
@@ -198,30 +198,28 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) =
                     </div>
 
                     <div className="field-group">
-                        <label htmlFor="time">Start Time:</label>
+                        <label htmlFor="eventStartTime">Start Time:</label>
                         <input
                             type="time"
-                            name="time"
-                            id="time"
-                            value={formData.time?.slice(0, 5) || ""}
+                            name="eventStartTime"
+                            value={formData.eventStartTime?.slice(0, 5) || ""}
                             onChange={handleChange}
-                            disabled={isDisabled}
                             required
                         />
                     </div>
 
                     <div className="field-group">
-                        <label htmlFor="endTime">End Time:</label>
+                        <label htmlFor="eventEndTime">End Time:</label>
                         <input
                             type="time"
-                            name="endTime"
-                            id="endTime"
-                            value={formData.endTime?.slice(0, 5)}
+                            name="eventEndTime"
+                            value={formData.eventEndTime?.slice(0, 5) || ""}
                             onChange={handleChange}
-                            disabled={isDisabled}
                             required
                         />
                     </div>
+
+
 
                     <div className="field-group">
                         <label>
@@ -241,7 +239,7 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) =
                         <input
                             type="file"
                             accept="image/*"
-                            onChange={(e) => setImageFile(e.target.files[0])}
+                            onChange={e => setImageFile(e.target.files[0])}
                             disabled={isDisabled}
                         />
                         <small>Or paste a direct image URL below:</small>
@@ -258,9 +256,8 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) =
                     <div className="form-actions full-width">
                         <button
                             type="submit"
-                            className="save-button"
+                            className="save-btn"
                             disabled={isDisabled}
-
                         >
                             {loadingLocations
                                 ? "Loading..."
@@ -268,19 +265,21 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) =
                                     ? "Uploading..."
                                     : submitting
                                         ? "Saving..."
-                                        : "Save Event"}
-
+                                        : formData?.id
+                                            ? "Update Event"
+                                            : "Save Event"}
                         </button>
+
                         <button
                             type="button"
-                            className="cancel-butn"
+                            className="cancel-btn"
                             onClick={onCancel}
                             disabled={isDisabled}
-
                         >
                             Cancel
                         </button>
                     </div>
+
                 </form>
             </div>
         </div>

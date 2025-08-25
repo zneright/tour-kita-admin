@@ -238,27 +238,40 @@ const MarkerFormModal = ({ onCancel, loading, form, setForm, isEditing }) => {
 
                 <div className="form-actions full-width">
                     {activeTab === 'details' && (
-                        <button type="button" className="next-button" onClick={() => setActiveTab('hours')}>
+                        <button
+                            type="button"
+                            className="next-btn save-btn"
+                            onClick={() => setActiveTab('hours')}
+                        >
                             Next
                         </button>
                     )}
                     {activeTab === 'hours' && (
-                        <button type="button" className="back-button" onClick={() => setActiveTab('details')}>
+                        <button
+                            type="button"
+                            className="back-btn cancel-btn"
+                            onClick={() => setActiveTab('details')}
+                        >
                             Back
                         </button>
                     )}
                     <button
                         type="button"
-                        className="save-button"
+                        className="save-btn"
                         onClick={handleSubmit}
                         disabled={saving || uploading}
                     >
                         {saving || uploading ? 'Saving...' : isEditing ? 'Update Marker' : 'Save Marker'}
                     </button>
-                    <button type="button" className="cancel-butn" onClick={onCancel}>
+                    <button
+                        type="button"
+                        className="cancel-btn"
+                        onClick={onCancel}
+                    >
                         Cancel
                     </button>
                 </div>
+
 
             </div>
         </div>
