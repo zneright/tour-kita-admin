@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import './MarkersManagement.css';
-import { doc, setDoc, getDocs, collection, deleteDoc } from 'firebase/firestore';
+import { doc, addDoc, setDoc, getDocs, collection, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import MarkerFormModal from '../components/MarkerFormModal';
 import EventFormModal from "../components/EventFormModal";
@@ -31,6 +31,7 @@ const getEmptyForm = () => ({
     }
 });
 
+
 const MarkersManagement = () => {
     const [markers, setMarkers] = useState([]);
     const [form, setForm] = useState(getEmptyForm());
@@ -47,17 +48,70 @@ const MarkersManagement = () => {
         date: '',
         time: ''
     });
-    const [events] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [editingEvent, setEditingEvent] = useState(null);
     const [previewMarker, setPreviewMarker] = useState(null);
 
     const [loadingMarkers, setLoadingMarkers] = useState(true);
 
-    const handleEventSave = (eventData) => {
+    const handleEventSave = async (eventData, onUpdate) => {
+        try {
+            const eventRef = eventData.id
+                ? doc(db, "events", eventData.id)
+                : collection(db, "events");
+
+            if (eventData.id) {
+                await setDoc(doc(db, "events", eventData.id), eventData, { merge: true });
+            } else {
+                await addDoc(collection(db, "events"), eventData);
+            }
+
+            if (onUpdate) onUpdate();
+        } catch (err) {
+            console.error("Error saving event:", err);
+        }
     };
 
+
     const [activeTab, setActiveTab] = useState('markers');
+    const [events, setEvents] = useState([]);
+    const [loadingEvents, setLoadingEvents] = useState(false);
+
+    const fetchEvents = async () => {
+        setLoadingEvents(true);
+        try {
+            const eventSnap = await getDocs(collection(db, "events"));
+            const markerSnap = await getDocs(collection(db, "markers"));
+
+            const markerMap = {};
+            markerSnap.forEach((doc) => {
+                markerMap[doc.id] = doc.data().name || "Unknown";
+            });
+
+            const fetchedEvents = eventSnap.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    id: doc.id,
+                    ...data,
+                    title: data.title,
+                    date: data.date?.toDate ? data.date.toDate() : new Date(data.date),
+                    time: data.time,
+                    locationName: markerMap[data.locationId] || "Unknown Location",
+                    imageUrl: data.imageUrl || "",
+                };
+            });
+
+            setEvents(fetchedEvents);
+        } catch (err) {
+            console.error("Error fetching events:", err);
+        } finally {
+            setLoadingEvents(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchEvents();
+    }, []);
 
 
     const fetchMarkers = async () => {
@@ -283,17 +337,39 @@ const MarkersManagement = () => {
                             setFormData={setEventForm}
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                handleEventSave(eventForm);
-                                setIsEventModalOpen(false);
-                                setEditingEvent(null);
-                                setEventForm({ title: '', description: '', date: '', time: '' });
-
+                                handleEventSave(eventForm, () => {
+                                    fetchEvents();
+                                    setEventForm({
+                                        title: '',
+                                        description: '',
+                                        date: '',
+                                        eventStartTime: '',
+                                        eventEndTime: '',
+                                        locationId: '',
+                                        openToPublic: false,
+                                        imageUrl: ''
+                                    });
+                                    setEditingEvent(null);
+                                    setIsEventModalOpen(false);
+                                });
                             }}
+
                             onCancel={() => {
-                                setIsEventModalOpen(false);
+                                setEventForm({
+                                    title: '',
+                                    description: '',
+                                    date: '',
+                                    eventStartTime: '',
+                                    eventEndTime: '',
+                                    locationId: '',
+                                    openToPublic: false,
+                                    imageUrl: ''
+                                });
                                 setEditingEvent(null);
+                                setIsEventModalOpen(false);
                             }}
                         />
+
 
                     </>
                 )}

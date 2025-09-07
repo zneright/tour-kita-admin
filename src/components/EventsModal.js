@@ -11,7 +11,32 @@ const EventModal = ({ event, onClose, onUpdate }) => {
     const [formData, setFormData] = useState(event);
     const [showPreview, setShowPreview] = useState(false);
 
-    useEffect(() => setFormData(event), [event]);
+    useEffect(() => {
+        if (!event) return;
+        setFormData({
+            ...event,
+            eventStartTime: convert12To24(event.eventStartTime),
+            eventEndTime: convert12To24(event.eventEndTime),
+        });
+    }, [event]);
+
+    const convert12To24 = (time12h) => {
+        if (!time12h) return "";
+        const [time, modifier] = time12h.split(" ");
+        let [hours, minutes] = time.split(":").map(Number);
+
+        if (modifier === "PM" && hours !== 12) hours += 12;
+        if (modifier === "AM" && hours === 12) hours = 0;
+
+        return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+    };
+    const formatTime12Hour = (time24) => {
+        if (!time24) return "";
+        let [hours, minutes] = time24.split(":").map(Number);
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12;
+        return `${hours}:${minutes.toString().padStart(2, "0")} ${ampm}`;
+    };
 
     const handleDelete = async () => {
         try {
@@ -23,14 +48,6 @@ const EventModal = ({ event, onClose, onUpdate }) => {
         }
     };
 
-    const formatTime = (time) => {
-        if (!time) return "—";
-        const [h, m] = time.split(":").map(Number);
-        if (isNaN(h) || isNaN(m)) return "—";
-        const ampm = h >= 12 ? "PM" : "AM";
-        const hours12 = h % 12 || 12;
-        return `${hours12}:${m.toString().padStart(2, "0")} ${ampm}`;
-    };
 
 
 
@@ -61,11 +78,6 @@ const EventModal = ({ event, onClose, onUpdate }) => {
                     />
                 ) : (
                     <div className="modal-content">
-                        {formData.imageUrl && (
-                            <div className="image-wrapper" onClick={() => setShowPreview(true)}>
-                                <img src={formData.imageUrl} alt={formData.title} className="event-image" />
-                            </div>
-                        )}
 
                         <div className="event-header">
                             <h2>{formData.title}</h2>
@@ -74,12 +86,25 @@ const EventModal = ({ event, onClose, onUpdate }) => {
                             </span>
                         </div>
 
+                        <div>
+                            {formData.imageUrl && (
+                                <div className="image-wrapper" onClick={() => setShowPreview(true)}>
+                                    <img
+                                        src={formData.imageUrl}
+                                        alt={formData.title}
+                                        className="event-image"
+                                    />
+                                </div>
+                            )}
+
+                        </div>
+
                         <div className="event-info-cards">
                             <div className="info-card"><FaCalendarAlt /> {formData.date}</div>
                             <div className="info-card">
-                                <FaClock /> {formatTime(formData.eventStartTime)} - {formatTime(formData.eventEndTime)}
+                                <FaClock /> {formatTime12Hour(formData.eventStartTime)} - {formatTime12Hour(formData.eventEndTime)}
                             </div>
-                            <div className="info-card"><FaMapMarkerAlt /> {formData.locationName}</div>
+                            <div className="info-card"><FaMapMarkerAlt /> {formData.address}</div>
                         </div>
 
                         <div className="event-description">

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { db } from "../firebase";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { collection, addDoc, Timestamp, doc, updateDoc } from "firebase/firestore";
+
 import "./NotificationModal.css";
 
 const NotificationModal = ({ isOpen, onClose, onSaved, editingData }) => {
@@ -44,7 +45,6 @@ const NotificationModal = ({ isOpen, onClose, onSaved, editingData }) => {
 
 
     const handleImageUpload = async () => {
-        // If user selected a file, upload to Cloudinary
         if (imageFile) {
             const formData = new FormData();
             formData.append("file", imageFile);
@@ -82,14 +82,14 @@ const NotificationModal = ({ isOpen, onClose, onSaved, editingData }) => {
             const imageUrl = await handleImageUpload();
 
             if (editingData) {
-                await db.collection("notifications").doc(editingData.id).update({
+                const notifRef = doc(db, "notifications", editingData.id);
+                await updateDoc(notifRef, {
                     title,
                     message,
                     category,
                     audience,
                     imageUrl: imageUrl || "",
                     timestamp: Timestamp.now(),
-
                 });
                 alert("Notification updated successfully!");
             } else {
@@ -100,10 +100,10 @@ const NotificationModal = ({ isOpen, onClose, onSaved, editingData }) => {
                     audience,
                     imageUrl: imageUrl || "",
                     timestamp: Timestamp.now(),
-
                 });
                 alert(`Notification sent to ${audience}`);
             }
+
 
             setTitle("");
             setMessage("");

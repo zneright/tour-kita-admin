@@ -11,7 +11,8 @@ const MarkerFormModal = ({ onCancel, loading, form, setForm, isEditing }) => {
     const [uploading, setUploading] = useState(false);
     const [saving, setSaving] = useState(false);
 
-    const [setErrors] = useState({});
+    const [errors, setErrors] = useState({});
+
     const [popup, setPopup] = useState({ type: '', message: '' });
 
     const modalRef = useRef(null);

@@ -20,6 +20,20 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) =
         h = h % 12 || 12;
         return `${h}:${m.toString().padStart(2, "0")} ${ampm}`;
     };
+    const resetForm = () => {
+        setFormData({
+            id: null,
+            title: "",
+            description: "",
+            date: "",
+            eventStartTime: "",
+            eventEndTime: "",
+            openToPublic: false,
+            locationId: "",
+            imageUrl: ""
+        });
+        setImageFile(null);
+    };
 
 
     useEffect(() => {
@@ -88,15 +102,14 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) =
             const eventData = {
                 title: formData.title,
                 date: formData.date,
-                eventStartTime: formData.eventStartTime,
-                eventEndTime: formData.eventEndTime,
+                eventStartTime: formatTime(formData.eventStartTime),
+                eventEndTime: formatTime(formData.eventEndTime),
                 openToPublic: !!formData.openToPublic,
                 locationId: formData.locationId,
                 description: formData.description,
                 imageUrl: imageUrl,
                 updatedAt: new Date()
             };
-
 
 
             if (formData.id) {
@@ -112,7 +125,9 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) =
             }
 
             setImageFile(null);
+            resetForm();
             onCancel();
+
 
         } catch (error) {
             console.error("Error saving event:", error);
@@ -215,10 +230,10 @@ const EventFormModal = ({ isOpen, formData, setFormData, onCancel, onUpdate }) =
                             name="eventEndTime"
                             value={formData.eventEndTime?.slice(0, 5) || ""}
                             onChange={handleChange}
+                            disabled={isDisabled}
                             required
                         />
                     </div>
-
 
 
                     <div className="field-group">

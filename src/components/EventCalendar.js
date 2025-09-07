@@ -109,7 +109,7 @@ const EventCalendar = ({ onDateSelect }) => {
                             : new Date(data.date)
                 ),
                 time: formatTime12Hour(data.time),
-                locationName: markerMap[data.locationId] || "Unknown Location",
+                address: markerMap[data.locationId] || "Unknown Location",
                 imageUrl: data.imageUrl || "",
 
             });
@@ -176,8 +176,8 @@ const EventCalendar = ({ onDateSelect }) => {
                                         }}
                                     >
                                         <div className="event-title">{event.title}</div>
-                                        <div className="event-time">{event.time}</div>
-                                        <div className="event-location">{event.locationName}</div>
+                                        <div className="event-time">{event.eventStartTime}</div>
+                                        <div className="event-location">{event.address}</div>
                                     </div>
                                 ))}
                             </div>

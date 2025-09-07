@@ -35,14 +35,17 @@
     border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
+    margin-bottom: 1rem;
 }
 
 .event-image {
     width: 100%;
-    height: auto;
     max-height: 300px;
     object-fit: cover;
-    transition: transform 0.3s;
+    /* fills the area nicely */
+    border-radius: 16px;
+    transition: transform 0.3s ease;
+    display: block;
 }
 
 .event-image:hover {
@@ -65,6 +68,7 @@
     max-height: 95%;
     object-fit: contain;
     border-radius: 16px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
 }
 
 .event-header {
