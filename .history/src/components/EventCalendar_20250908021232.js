@@ -175,63 +175,35 @@ const EventCalendar = ({ onDateSelect }) => {
                         const key = getDateKey(date);
                         const dayEvents = date ? eventsByDate[key] || [] : [];
 
-                        // Sort events by start time (earliest first)
-                        const sortedEvents = dayEvents.sort((a, b) => {
-                            const [aHour, aMin] = a.eventStartTime.split(":").map(Number);
-                            const [bHour, bMin] = b.eventStartTime.split(":").map(Number);
-                            return aHour - bHour || aMin - bMin;
-                        });
+                {sortedEvents.map((event, i) => {
+    // Alternate colors: even index = light, odd index = darker
+    const bgColor = i % 2 === 0 ? "#FFEFD5" : "#FFDAB9"; // Light peach / Peach
+    return (
+        <div
+            key={i}
+            className="calendar-event"
+            style={{
+                backgroundColor: bgColor,
+                padding: "4px",
+                borderRadius: "4px",
+                marginBottom: "2px",
+                cursor: "pointer",
+            }}
+            onClick={(e) => {
+                e.stopPropagation();
+                setSelectedEvent(event);
+            }}
+        >
+            <div className="event-title">{event.title}</div>
+            <div className="event-time">
+                {event.eventStartTime} - {event.eventEndTime}
+            </div>
+            <div className="event-location">{event.address}</div>
+        </div>
+    );
+})}
 
-                        return (
-                            <div
-                                key={index}
-                                className={`calendar-cell ${date ? "" : "empty-cell"}`}
-                                onClick={() => {
-                                    if (date && onDateSelect) onDateSelect(date);
-                                }}
-                            >
-                                {date && (
-                                    <div className={`calendar-date ${isToday(date) ? "today" : ""}`}>
-                                        {date.getDate()}
-                                    </div>
-                                )}
 
-                                {sortedEvents.map((event, i) => {
-                                    const bgColor = i % 2 === 0 ? "#493628" : "rgba(241, 191, 155, 1)";
-                                    const textColor = i % 2 === 0 ? "#fff" : "#000";
-
-                                    return (
-                                        <div
-                                            key={i}
-                                            className="calendar-event"
-                                            style={{
-                                                backgroundColor: bgColor,
-                                                color: textColor,
-                                                padding: "2px 4px",
-                                                borderRadius: "4px",
-                                                marginBottom: "2px",
-                                                cursor: "pointer",
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                            }}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setSelectedEvent(event);
-                                            }}
-                                        >
-                                            <div className="event-title">{event.title}</div>
-                                            <div className="event-time">
-                                                {event.eventStartTime} - {event.eventEndTime}
-                                            </div>
-                                            <div className="event-location">{event.address}</div>
-                                        </div>
-                                    );
-                                })}
-
-                            </div>
-                        );
-                    })}
                 </div>
             )}
 
@@ -242,6 +214,7 @@ const EventCalendar = ({ onDateSelect }) => {
                     onUpdate={() => fetchEvents()}
                 />
             )}
+
         </div>
     );
 };

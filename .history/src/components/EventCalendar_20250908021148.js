@@ -197,24 +197,13 @@ const EventCalendar = ({ onDateSelect }) => {
                                 )}
 
                                 {sortedEvents.map((event, i) => {
-                                    const bgColor = i % 2 === 0 ? "#493628" : "rgba(241, 191, 155, 1)";
-                                    const textColor = i % 2 === 0 ? "#fff" : "#000";
-
+                                    // Alternate colors: even index = color1, odd index = color2
+                                    const bgColor = i % 2 === 0 ? "#FFEFD5" : "#FFDAB9"; // Light peach / darker peach
                                     return (
                                         <div
                                             key={i}
                                             className="calendar-event"
-                                            style={{
-                                                backgroundColor: bgColor,
-                                                color: textColor,
-                                                padding: "2px 4px",
-                                                borderRadius: "4px",
-                                                marginBottom: "2px",
-                                                cursor: "pointer",
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                            }}
+                                            style={{ backgroundColor: bgColor, padding: "4px", borderRadius: "4px", marginBottom: "2px", cursor: "pointer" }}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 setSelectedEvent(event);
@@ -232,6 +221,7 @@ const EventCalendar = ({ onDateSelect }) => {
                             </div>
                         );
                     })}
+
                 </div>
             )}
 
@@ -242,6 +232,7 @@ const EventCalendar = ({ onDateSelect }) => {
                     onUpdate={() => fetchEvents()}
                 />
             )}
+
         </div>
     );
 };

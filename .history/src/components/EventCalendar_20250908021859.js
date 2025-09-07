@@ -197,8 +197,9 @@ const EventCalendar = ({ onDateSelect }) => {
                                 )}
 
                                 {sortedEvents.map((event, i) => {
-                                    const bgColor = i % 2 === 0 ? "#493628" : "rgba(241, 191, 155, 1)";
-                                    const textColor = i % 2 === 0 ? "#fff" : "#000";
+                                    // Alternate colors: dark and lighter brown
+                                    const bgColor = i % 2 === 0 ? "#493628" : "#6b4f3b"; // dark or light brown
+                                    const textColor = i % 2 === 0 ? "#fff" : "#000"; // white on dark, black on light
 
                                     return (
                                         <div

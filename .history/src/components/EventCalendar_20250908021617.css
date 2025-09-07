@@ -60,6 +60,7 @@
 
 .calendar-cell {
     height: 120px;
+    /* fixed height */
     border: 1px solid #f0e8e0;
     padding: 4px;
     cursor: pointer;

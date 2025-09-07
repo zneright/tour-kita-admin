@@ -196,42 +196,26 @@ const EventCalendar = ({ onDateSelect }) => {
                                     </div>
                                 )}
 
-                                {sortedEvents.map((event, i) => {
-                                    const bgColor = i % 2 === 0 ? "#493628" : "rgba(241, 191, 155, 1)";
-                                    const textColor = i % 2 === 0 ? "#fff" : "#000";
-
-                                    return (
-                                        <div
-                                            key={i}
-                                            className="calendar-event"
-                                            style={{
-                                                backgroundColor: bgColor,
-                                                color: textColor,
-                                                padding: "2px 4px",
-                                                borderRadius: "4px",
-                                                marginBottom: "2px",
-                                                cursor: "pointer",
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                            }}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setSelectedEvent(event);
-                                            }}
-                                        >
-                                            <div className="event-title">{event.title}</div>
-                                            <div className="event-time">
-                                                {event.eventStartTime} - {event.eventEndTime}
-                                            </div>
-                                            <div className="event-location">{event.address}</div>
+                                {sortedEvents.map((event, i) => (
+                                    <div
+                                        key={i}
+                                        className="calendar-event"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setSelectedEvent(event);
+                                        }}
+                                    >
+                                        <div className="event-title">{event.title}</div>
+                                        <div className="event-time">
+                                            {event.eventStartTime} - {event.eventEndTime}
                                         </div>
-                                    );
-                                })}
-
+                                        <div className="event-location">{event.address}</div>
+                                    </div>
+                                ))}
                             </div>
                         );
                     })}
+
                 </div>
             )}
 
@@ -242,6 +226,7 @@ const EventCalendar = ({ onDateSelect }) => {
                     onUpdate={() => fetchEvents()}
                 />
             )}
+
         </div>
     );
 };
