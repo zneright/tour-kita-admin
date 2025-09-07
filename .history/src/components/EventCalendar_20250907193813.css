@@ -1,0 +1,126 @@
+.calendar {
+    width: 100%;
+    background: #f5f3f0;
+    border: 1px solid #e0d7d0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.calendar-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f1eae3;
+    border-bottom: 1px solid #e0d7d0;
+}
+
+.calendar-navigation h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #493628;
+}
+
+.calendar-navigation button {
+    background-color: #493628;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s ease;
+}
+
+.calendar-navigation button:hover {
+    background-color: #3b2c1f;
+}
+
+.calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: #f1eae3;
+    font-weight: bold;
+    padding: 0.6rem 0;
+    text-align: center;
+    color: #493628;
+    border-bottom: 1px solid #e0d7d0;
+}
+
+.calendar-header-cell {
+    padding: 0.5rem;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: #fffdfc;
+}
+
+.calendar-cell {
+    height: 120px;
+    /* fixed height */
+    border: 1px solid #f0e8e0;
+    padding: 4px;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* ensures events don't overflow */
+}
+
+.calendar-cell:hover {
+    background-color: #f8f3ef;
+}
+
+.empty-cell {
+    background: #f9f5f2;
+    cursor: default;
+}
+
+.calendar-date {
+    font-weight: bold;
+    font-size: 14px;
+    color: #493628;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+}
+
+.calendar-date.today {
+    background-color: #493628;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+}
+
+.calendar-event {
+    background-color: #493628;
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.calendar-event:hover {
+    background-color: #3b2c1f;
+}
+
+/* Optional: show +X if too many events for the cell */
+.calendar-cell .more-events {
+    font-size: 10px;
+    color: #493628;
+    margin-top: 2px;
+}

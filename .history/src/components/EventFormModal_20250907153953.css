@@ -1,0 +1,120 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 1000vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 1000px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+    animation: slideFadeIn 0.3s ease;
+}
+
+@keyframes slideFadeIn {
+    from {
+        transform: translateY(-15px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-content h2 {
+    margin: 0 0 1.5rem;
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: #222;
+    text-align: center;
+}
+
+.marker-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+/* Field groups */
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.field-group label {
+    font-weight: 500;
+    color: #444;
+}
+
+.field-group input,
+.field-group textarea,
+.field-group select {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #fafafa;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.field-group input:focus,
+.field-group textarea:focus,
+.field-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #fff;
+}
+
+/* For time/date side by side */
+/* Row layout */
+.field-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.field-row .field-group {
+    flex: 1;
+    /* Equal width columns */
+    min-width: 0;
+    /* Prevent overflow */
+}
+
+/* Inputs same height for alignment */
+.field-group input,
+.field-group select,
+.field-group textarea {
+    height: 42px;
+    line-height: 1.2;
+}
+
+
+/* Recurrence checkboxes */
+.recurrence-days {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1rem;
+    margin-top: 0.3rem;
+}
+
+.recurrence-days label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.95rem;
+    color: #333;
+}

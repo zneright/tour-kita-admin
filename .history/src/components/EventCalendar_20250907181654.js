@@ -1,0 +1,232 @@
+// src/components/EventScreen.js
+import React, { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
+import "./EventCalendar.css";
+import EventsModal from "./EventsModal";
+
+const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+const formatLocalDate = (date) => {
+    if (!date) return null;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+};
+
+function formatTime12Hour(time24) {
+    if (!time24) return "";
+    let [hours, minutes] = time24.split(":").map(Number);
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    return `${hours}:${minutes.toString().padStart(2, "0")} ${ampm}`;
+}
+
+const getDateKey = (date) => (date ? formatLocalDate(date) : null);
+
+const EventCalendar = () => {
+    const [month, setMonth] = useState(new Date().getMonth());
+    const [year, setYear] = useState(new Date().getFullYear());
+    const [events, setEvents] = useState([]);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const startOfMonth = new Date(year, month, 1);
+    const endOfMonth = new Date(year, month + 1, 0);
+    const startDayOfWeek = startOfMonth.getDay();
+    const totalDays = endOfMonth.getDate();
+
+    const goToPreviousMonth = () => {
+        if (month === 0) {
+            setMonth(11);
+            setYear((prev) => prev - 1);
+        } else {
+            setMonth((prev) => prev - 1);
+        }
+    };
+
+    const goToNextMonth = () => {
+        if (month === 11) {
+            setMonth(0);
+            setYear((prev) => prev + 1);
+        } else {
+            setMonth((prev) => prev + 1);
+        }
+    };
+
+    const isToday = (date) =>
+        date &&
+        date.getDate() === new Date().getDate() &&
+        date.getMonth() === new Date().getMonth() &&
+        date.getFullYear() === new Date().getFullYear();
+
+    // Build calendar days
+    const calendarDates = [];
+    for (let i = 0; i < startDayOfWeek; i++) calendarDates.push(null);
+    for (let day = 1; day <= totalDays; day++) {
+        calendarDates.push(new Date(year, month, day));
+    }
+
+    const fetchEvents = async () => {
+        try {
+            setLoading(true);
+            const eventSnap = await getDocs(collection(db, "events"));
+            const fetchedEvents = [];
+
+            eventSnap.forEach((doc) => {
+                const data = doc.data();
+                const recurrence = data.recurrence || {
+                    frequency: "once",
+                    daysOfWeek: [],
+                    endDate: "",
+                };
+
+                const baseEvent = {
+                    id: doc.id,
+                    title: data.title,
+                    description: data.description || "",
+                    time: data.eventStartTime || "",
+                    endTime: data.eventEndTime || "",
+                    address: data.customAddress || "Unknown Location",
+                    imageUrl: data.imageUrl || "",
+                    openToPublic: data.openToPublic || false,
+                    createdAt: data.createdAt || null,
+                    updatedAt: data.updatedAt || null,
+                    recurrence,
+                };
+
+                // One-time event
+                if (recurrence.frequency === "once") {
+                    fetchedEvents.push({
+                        ...baseEvent,
+                        date: data.startDate
+                            ? formatLocalDate(new Date(data.startDate))
+                            : null,
+                    });
+                }
+
+                // Weekly recurring events
+                if (
+                    recurrence.frequency === "weekly" &&
+                    data.startDate &&
+                    recurrence.endDate
+                ) {
+                    const start = new Date(data.startDate);
+                    const end = new Date(recurrence.endDate);
+
+                    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                        const dayName = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"][
+                            d.getDay()
+                        ];
+                        if (recurrence.daysOfWeek.includes(dayName)) {
+                            fetchedEvents.push({
+                                ...baseEvent,
+                                date: formatLocalDate(new Date(d)),
+                            });
+                        }
+                    }
+                }
+            });
+
+            setEvents(fetchedEvents);
+        } catch (error) {
+            console.error("Error fetching events:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchEvents();
+    }, []);
+
+    // Group events by date
+    const eventsByDate = {};
+    events.forEach((event) => {
+        const key = event.date;
+        if (!eventsByDate[key]) eventsByDate[key] = [];
+        eventsByDate[key].push(event);
+    });
+
+    return (
+        <div className="calendar">
+            <div className="calendar-navigation">
+                <button onClick={goToPreviousMonth}>←</button>
+                <h3>
+                    {startOfMonth.toLocaleString("default", { month: "long" })} {year}
+                </h3>
+                <button onClick={goToNextMonth}>→</button>
+            </div>
+
+            <div className="calendar-header">
+                {daysOfWeek.map((day) => (
+                    <div key={day} className="calendar-header-cell">
+                        {day}
+                    </div>
+                ))}
+            </div>
+
+            {loading ? (
+                <div
+                    style={{
+                        textAlign: "center",
+                        padding: "2rem",
+                        fontSize: "1.2rem",
+                        color: "#555",
+                    }}
+                >
+                    Loading events...
+                </div>
+            ) : (
+                <div className="calendar-grid">
+                    {calendarDates.map((date, index) => {
+                        const key = getDateKey(date);
+                        const dayEvents = date ? eventsByDate[key] || [] : [];
+
+                        return (
+                            <div
+                                key={index}
+                                className={`calendar-cell ${date ? "" : "empty-cell"}`}
+                            >
+                                {date && (
+                                    <div className={`calendar-date ${isToday(date) ? "today" : ""}`}>
+                                        {date.getDate()}
+                                    </div>
+                                )}
+
+                                {dayEvents.map((event, i) => (
+                                    <div
+                                        key={i}
+                                        className="calendar-event"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setSelectedEvent(event); // ✅ Open modal
+                                        }}
+                                    >
+                                        <div className="event-title">{event.title}</div>
+                                        <div className="event-time">
+                                            {event.time}
+                                            {event.endTime ? ` - ${event.endTime}` : ""}
+                                        </div>
+                                        <div className="event-location">{event.address}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+
+            {selectedEvent && (
+                <EventModal
+                    event={selectedEvent}
+                    onClose={() => setSelectedEvent(null)}
+                    onUpdate={fetchEvents}
+                />
+            )}
+        </div>
+    );
+};
+
+export default EventCalendar;
