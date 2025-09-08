@@ -91,13 +91,15 @@
 }
 
 .carousel-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     position: relative;
+    /* required for overlay */
+    min-height: 60vh;
+    overflow: hidden;
+    background-color: #e6f0ff;
+    padding: 0;
 }
 
-
+/* darken images slightly for contrast */
 .carousel-wrapper .carousel-image,
 .carousel-image {
     width: 100%;
@@ -107,6 +109,7 @@
     transition: transform 0.6s ease;
 }
 
+/* overlay gradient on the whole carousel */
 .carousel-wrapper::after {
     content: "";
     position: absolute;
@@ -132,34 +135,27 @@
 
 .hero-overlay {
     position: absolute;
-    top: 35%;
+    top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
     padding: 40px 20px;
     color: #fff;
     z-index: 10;
-    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     max-width: 90%;
     pointer-events: none;
 }
 
+
 .hero-overlay h1 {
-    font-family: var(--title-font);
-    font-weight: 700;
-    font-size: 2.5rem;
-    line-height: 1.02;
-    margin-bottom: 8px;
-    letter-spacing: 0.2px;
+    font-size: 2.2rem;
+    margin-bottom: 10px;
 }
 
 .hero-overlay p {
-    font-family: var(--body-font);
-    font-size: clamp(1rem, 1.6vw, 1.2rem);
-    margin: 0;
-    opacity: 0.95;
+    font-size: 1.1rem;
 }
-
 
 .download-banner {
     position: relative;
@@ -209,10 +205,6 @@
     transform: translateY(-2px);
 }
 
-.download-btn.android:active {
-    transform: scale(0.96);
-}
-
 .info-slides-section {
     background-color: #ddeeff;
     padding: 3rem 2rem;
@@ -254,8 +246,7 @@
 }
 
 .info-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
 }
 
 .info-card.ar {

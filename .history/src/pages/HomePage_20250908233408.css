@@ -91,12 +91,12 @@
 }
 
 .carousel-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     position: relative;
+    min-height: 60vh;
+    overflow: hidden;
+    background-color: #e6f0ff;
+    padding: 0;
 }
-
 
 .carousel-wrapper .carousel-image,
 .carousel-image {
@@ -227,14 +227,10 @@
 
 .info-slides {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    column-gap: 5rem;
-    row-gap: 1.5rem;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
 }
+
 
 .info-card:nth-child(3) {
     grid-column: 1 / span 2;

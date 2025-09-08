@@ -9,6 +9,7 @@ const HomePage = () => {
 
     return (
         <div className="home-wrapper">
+            {/* Header */}
             <header className="home-header">
                 <div className="header-left">
                     <img src={logo} alt="TourKita" className="header-logo" loading="lazy" />
@@ -17,29 +18,31 @@ const HomePage = () => {
                 <div className="header-right">
                     <button onClick={() => navigate("/faqs")} className="header-link">FAQ</button>
                     <button onClick={() => navigate("/privacy")} className="header-link">Privacy Policy</button>
-
                     <button className="header-button" onClick={() => navigate('/login')}>
                         Admin Login
                     </button>
                 </div>
             </header>
 
+            {/* Hero with Carousel */}
             <div className="carousel-wrapper">
                 <Carousel />
                 <div className="hero-overlay">
                     <h1>Explore Intramuros Like Never Before</h1>
                     <p>With AR, navigation, and historical guides at your fingertips</p>
                 </div>
+            </div>
 
-                <div className="download-banner">
-                    <h2>Ready to Explore?</h2>
-                    <p>Experience the history of Intramuros like never before with TourKita</p>
-                    <div className="download-buttons">
-                        <button className="download-btn android">Download for Android</button>
-                    </div>
+            {/* Download Banner */}
+            <div className="download-banner">
+                <h2>Ready to Explore?</h2>
+                <p>Experience the history of Intramuros like never before with TourKita</p>
+                <div className="download-buttons">
+                    <button className="download-btn android">Download for Android</button>
                 </div>
             </div>
 
+            {/* Why Choose */}
             <section className="info-slides-section">
                 <h2>Why Choose TourKita?</h2>
                 <div className="info-slides">
@@ -58,6 +61,7 @@ const HomePage = () => {
                 </div>
             </section>
 
+            {/* How it Works */}
             <section className="how-tourkita-works">
                 <h2 className="tourkita-steps-title">How TourKita Works</h2>
                 <div className="tourkita-steps-container">
@@ -88,6 +92,7 @@ const HomePage = () => {
                 </div>
             </section>
 
+            {/* Partnership */}
             <section className="partnership-section">
                 <h3>In Partnership With</h3>
                 <img
@@ -96,9 +101,13 @@ const HomePage = () => {
                     className="intramuros-logo"
                 />
                 <p className="partner-name">Intramuros Administration</p>
-                <p>TourKita works closely with the Intramuros Administration to bring you verified, culturally rich content and real-time historical experiences.</p>
+                <p>
+                    TourKita works closely with the Intramuros Administration to bring you
+                    verified, culturally rich content and real-time historical experiences.
+                </p>
             </section>
 
+            {/* Footer */}
             <footer className="footer">
                 <div className="footer-content">
                     <div className="footer-left">

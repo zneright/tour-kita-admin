@@ -91,12 +91,12 @@
 }
 
 .carousel-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     position: relative;
+    min-height: 60vh;
+    overflow: hidden;
+    background-color: #e6f0ff;
+    padding: 0;
 }
-
 
 .carousel-wrapper .carousel-image,
 .carousel-image {
@@ -147,7 +147,7 @@
 .hero-overlay h1 {
     font-family: var(--title-font);
     font-weight: 700;
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 4vw, 3rem);
     line-height: 1.02;
     margin-bottom: 8px;
     letter-spacing: 0.2px;
@@ -209,10 +209,6 @@
     transform: translateY(-2px);
 }
 
-.download-btn.android:active {
-    transform: scale(0.96);
-}
-
 .info-slides-section {
     background-color: #ddeeff;
     padding: 3rem 2rem;
@@ -254,8 +250,7 @@
 }
 
 .info-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
 }
 
 .info-card.ar {

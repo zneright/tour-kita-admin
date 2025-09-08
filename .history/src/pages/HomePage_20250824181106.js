@@ -11,13 +11,11 @@ const HomePage = () => {
         <div className="home-wrapper">
             <header className="home-header">
                 <div className="header-left">
-                    <img src={logo} alt="TourKita" className="header-logo" loading="lazy" />
+                    <img src={logo} alt="TourKita" className="header-logo" />
                     <span className="header-title">TourKita</span>
                 </div>
                 <div className="header-right">
                     <button onClick={() => navigate("/faqs")} className="header-link">FAQ</button>
-                    <button onClick={() => navigate("/privacy")} className="header-link">Privacy Policy</button>
-
                     <button className="header-button" onClick={() => navigate('/login')}>
                         Admin Login
                     </button>
@@ -109,7 +107,6 @@ const HomePage = () => {
                         <a href="/faqs" className="footer-link">FAQ</a>
                         <a href="https://intramuros.gov.ph" target="_blank" rel="noreferrer" className="footer-link">Intramuros Admin</a>
                         <a href="/privacy" className="footer-link">Privacy Policy</a>
-                        <a href="/terms" className="footer-link">Terms of Service</a>
                     </div>
                 </div>
             </footer>

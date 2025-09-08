@@ -91,12 +91,12 @@
 }
 
 .carousel-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     position: relative;
+    min-height: 60vh;
+    overflow: hidden;
+    background-color: #e6f0ff;
+    padding: 0;
 }
-
 
 .carousel-wrapper .carousel-image,
 .carousel-image {
@@ -207,10 +207,6 @@
 .download-btn.android:hover {
     background-color: #015fa4;
     transform: translateY(-2px);
-}
-
-.download-btn.android:active {
-    transform: scale(0.96);
 }
 
 .info-slides-section {

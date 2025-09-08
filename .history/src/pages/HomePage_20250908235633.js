@@ -27,17 +27,14 @@ const HomePage = () => {
             <div className="carousel-wrapper">
                 <Carousel />
                 <div className="hero-overlay">
-                    <h1>Explore Intramuros Like Never Before</h1>
-                    <p>With AR, navigation, and historical guides at your fingertips</p>
-                </div>
-
-                <div className="download-banner">
-                    <h2>Ready to Explore?</h2>
-                    <p>Experience the history of Intramuros like never before with TourKita</p>
-                    <div className="download-buttons">
+                    <h1 className="fade-in">Explore Intramuros Like Never Before</h1>
+                    <p className="fade-in delay">With AR, navigation, and historical guides at your fingertips</p>
+                    <div className="hero-buttons fade-in delay-2">
                         <button className="download-btn android">Download for Android</button>
+                        <button className="download-btn ios">Download for iOS</button>
                     </div>
                 </div>
+
             </div>
 
             <section className="info-slides-section">
@@ -85,6 +82,23 @@ const HomePage = () => {
                         <h4>Activate AR Camera</h4>
                         <p>Use your phone's AR view to see the past come alive in real time.</p>
                     </div>
+                </div>
+            </section>
+            <section className="about-section">
+                <h2>Our Story</h2>
+                <p>
+                    TourKita was built to bring the rich history of Intramuros into the
+                    modern world. With AR and navigation features, you can experience
+                    centuries-old landmarks in an entirely new way.
+                </p>
+            </section>
+            <section className="ar-preview">
+                <div className="ar-text">
+                    <h2>See the Past Come Alive</h2>
+                    <p>Point your camera at landmarks and watch history unfold with AR technology.</p>
+                </div>
+                <div className="ar-media">
+                    <img src="/assets/ar-demo.gif" alt="TourKita AR Demo" />
                 </div>
             </section>
 

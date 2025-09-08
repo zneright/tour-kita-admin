@@ -1,8 +1,10 @@
 .home-wrapper {
     font-family: 'Segoe UI', sans-serif;
-    color: #2e2e2e;
+    color: #eaeaea;
+    /* Light text */
     margin: 0;
-    background: linear-gradient(to bottom, #f2f8ff, #f2f8ff);
+    background: linear-gradient(to bottom, #0d0d0d, #1a1a1a);
+    /* Dark background */
 }
 
 .home-header {

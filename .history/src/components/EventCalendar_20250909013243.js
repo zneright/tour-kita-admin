@@ -14,7 +14,16 @@ const formatLocalDate = (date) => {
     return `${year}-${month}-${day}`;
 };
 
-
+function formatTime12Hour(time24) {
+    if (!time24) return "";
+    const [hourStr, minuteStr] = time24.split(":");
+    let hour = parseInt(hourStr, 10);
+    const minute = minuteStr;
+    const ampm = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12;
+    hour = hour ? hour : 12;
+    return `${hour}:${minute} ${ampm}`;
+}
 
 const getDateKey = (date) => (date ? formatLocalDate(date) : null);
 

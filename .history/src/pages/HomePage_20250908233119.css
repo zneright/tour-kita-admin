@@ -91,12 +91,12 @@
 }
 
 .carousel-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     position: relative;
+    min-height: 60vh;
+    overflow: hidden;
+    background-color: #e6f0ff;
+    padding: 0;
 }
-
 
 .carousel-wrapper .carousel-image,
 .carousel-image {
@@ -209,10 +209,6 @@
     transform: translateY(-2px);
 }
 
-.download-btn.android:active {
-    transform: scale(0.96);
-}
-
 .info-slides-section {
     background-color: #ddeeff;
     padding: 3rem 2rem;
@@ -247,15 +243,21 @@
     max-width: 450px;
     margin: 0 auto;
     border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     padding: 24px;
-    transition: transform 0.3s ease;
+    transition: transform 300ms cubic-bezier(.2, .9, .3, 1), box-shadow 300ms;
     text-align: center;
+    will-change: transform;
+    transform-origin: center;
+    /* variables used by mouse tilt JS */
+    --rx: 0deg;
+    --ry: 0deg;
+    transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) translateZ(0);
+    backface-visibility: hidden;
 }
 
 .info-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
 }
 
 .info-card.ar {

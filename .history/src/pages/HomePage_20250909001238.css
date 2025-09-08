@@ -1,0 +1,261 @@
+.home-wrapper {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    color: #fff;
+    background: #0d0d0d;
+    overflow-x: hidden;
+}
+
+/* Header */
+.home-header {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px);
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.header-logo {
+    height: 40px;
+    margin-right: 8px;
+}
+
+.header-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.header-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.header-link,
+.header-button {
+    font-size: 14px;
+    color: #fff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.header-link:hover,
+.header-button:hover {
+    opacity: 0.8;
+}
+
+.header-button {
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: #00c853;
+    border: none;
+}
+
+/* Hero / Carousel */
+.carousel-wrapper {
+    height: 100vh;
+    position: relative;
+}
+
+.carousel-wrapper .carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.55);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+    z-index: 10;
+    max-width: 90%;
+}
+
+.hero-overlay h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+}
+
+.hero-overlay p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* Download Banner */
+.download-banner {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 28px 32px;
+    color: #fff;
+    text-align: center;
+    max-width: 600px;
+    margin: -80px auto 60px auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.download-btn.android {
+    background: #00c853;
+    padding: 12px 28px;
+    font-size: 15px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.download-btn.android:hover {
+    background: #009624;
+    transform: translateY(-2px);
+}
+
+/* Info Slides */
+.info-slides-section {
+    background: #111;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.info-slides-section h2 {
+    font-size: 2rem;
+    margin-bottom: 40px;
+    color: #fff;
+}
+
+.info-slides {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.info-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.info-card:hover {
+    transform: translateY(-6px);
+}
+
+.info-card h4 {
+    color: #fff;
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+}
+
+.info-card p {
+    color: #ccc;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* How Tourkita Works */
+.how-tourkita-works {
+    background: #0d0d0d;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.tourkita-steps-title {
+    color: #fff;
+    font-size: 2.4rem;
+    margin-bottom: 40px;
+}
+
+.tourkita-steps-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.tourkita-step-card {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 24px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.tourkita-step-card:hover {
+    transform: translateY(-5px);
+}
+
+.step-icon-circle {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: #00c853;
+    color: white;
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Partnership */
+.partnership-section {
+    background: #111;
+    padding: 60px 20px;
+    text-align: center;
+    border-radius: 12px;
+    margin: 40px auto;
+    max-width: 900px;
+}
+
+.intramuros-logo {
+    height: 70px;
+    margin: 20px 0;
+}
+
+.partner-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* Footer */
+.footer {
+    background: #000;
+    color: #ccc;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.footer-logo {
+    width: 40px;
+    margin-bottom: 10px;
+}
+
+.footer-link {
+    color: #ccc;
+    margin: 0 10px;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-link:hover {
+    color: #00c853;
+}

@@ -109,7 +109,6 @@ const HomePage = () => {
                         <a href="/faqs" className="footer-link">FAQ</a>
                         <a href="https://intramuros.gov.ph" target="_blank" rel="noreferrer" className="footer-link">Intramuros Admin</a>
                         <a href="/privacy" className="footer-link">Privacy Policy</a>
-                        <a href="/terms" className="footer-link">Terms of Service</a>
                     </div>
                 </div>
             </footer>

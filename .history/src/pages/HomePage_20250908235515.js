@@ -26,19 +26,15 @@ const HomePage = () => {
 
             <div className="carousel-wrapper">
                 <Carousel />
-                <div className="hero-overlay">
-                    <h1>Explore Intramuros Like Never Before</h1>
-                    <p>With AR, navigation, and historical guides at your fingertips</p>
-                </div>
+               <div className="hero-overlay">
+  <h1 className="fade-in">Explore Intramuros Like Never Before</h1>
+  <p className="fade-in delay">With AR, navigation, and historical guides at your fingertips</p>
+  <div className="hero-buttons fade-in delay-2">
+    <button className="download-btn android">Download for Android</button>
+    <button className="download-btn ios">Download for iOS</button>
+  </div>
+</div>
 
-                <div className="download-banner">
-                    <h2>Ready to Explore?</h2>
-                    <p>Experience the history of Intramuros like never before with TourKita</p>
-                    <div className="download-buttons">
-                        <button className="download-btn android">Download for Android</button>
-                    </div>
-                </div>
-            </div>
 
             <section className="info-slides-section">
                 <h2>Why Choose TourKita?</h2>

@@ -1,0 +1,176 @@
+.home-wrapper {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    color: #fff;
+    background: #0d0d0d;
+    overflow-x: hidden;
+}
+
+/* Header */
+.home-header {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px);
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.header-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* Carousel / Hero */
+.carousel-wrapper {
+    height: 100vh;
+    position: relative;
+}
+
+.carousel-wrapper .carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.55);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+    z-index: 10;
+}
+
+.hero-overlay h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+}
+
+.hero-overlay p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* Download Banner */
+.download-banner {
+    margin-top: -80px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 24px 32px;
+    color: #fff;
+    text-align: center;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.download-btn.android {
+    background: #00c853;
+    padding: 12px 28px;
+    font-size: 15px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.download-btn.android:hover {
+    background: #009624;
+    transform: translateY(-2px);
+}
+
+/* Info cards */
+.info-slides-section {
+    background: #111;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.info-slides-section h2 {
+    font-size: 2rem;
+    margin-bottom: 40px;
+    color: #fff;
+}
+
+.info-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.info-card:hover {
+    transform: translateY(-6px);
+}
+
+.info-card h4 {
+    color: #fff;
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+}
+
+.info-card p {
+    color: #ccc;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Steps */
+.how-tourkita-works {
+    background: #0d0d0d;
+    padding: 80px 20px;
+}
+
+.tourkita-steps-title {
+    color: #fff;
+    font-size: 2.4rem;
+    margin-bottom: 40px;
+}
+
+.tourkita-step-card {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 24px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.tourkita-step-card:hover {
+    transform: translateY(-5px);
+}
+
+.step-icon-circle {
+    background: #00c853;
+    color: #fff;
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+}
+
+/* Partnership */
+.partnership-section {
+    background: #111;
+    padding: 60px 20px;
+    text-align: center;
+    border-radius: 12px;
+}
+
+/* Footer */
+.footer {
+    background: #000;
+    color: #ccc;
+    padding: 40px 20px;
+    text-align: center;
+}

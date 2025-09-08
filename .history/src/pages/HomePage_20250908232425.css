@@ -91,12 +91,12 @@
 }
 
 .carousel-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     position: relative;
+    min-height: 60vh;
+    overflow: hidden;
+    background-color: #e6f0ff;
+    padding: 0;
 }
-
 
 .carousel-wrapper .carousel-image,
 .carousel-image {
@@ -137,22 +137,25 @@
     transform: translate(-50%, -50%);
     text-align: center;
     padding: 40px 20px;
-    color: #fff;
+    color: ;
     z-index: 10;
     text-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
     max-width: 90%;
     pointer-events: none;
 }
 
+/* big, bold headline using Lora */
 .hero-overlay h1 {
     font-family: var(--title-font);
     font-weight: 700;
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 5.2vw, 3.6rem);
+    /* responsive */
     line-height: 1.02;
     margin-bottom: 8px;
     letter-spacing: 0.2px;
 }
 
+/* supporting paragraph in body font */
 .hero-overlay p {
     font-family: var(--body-font);
     font-size: clamp(1rem, 1.6vw, 1.2rem);
@@ -209,10 +212,6 @@
     transform: translateY(-2px);
 }
 
-.download-btn.android:active {
-    transform: scale(0.96);
-}
-
 .info-slides-section {
     background-color: #ddeeff;
     padding: 3rem 2rem;
@@ -254,8 +253,7 @@
 }
 
 .info-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
 }
 
 .info-card.ar {
