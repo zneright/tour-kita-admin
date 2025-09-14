@@ -1,0 +1,238 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(60, 40, 20, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    padding: 10px;
+}
+
+.modal-content {
+    background: #fefaf6;
+    padding: 2rem;
+    width: 700px;
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 12px 35px rgba(60, 40, 20, 0.25);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #6b3e26;
+}
+
+h2 {
+    margin: 0 0 1rem;
+    font-size: 1.6rem;
+    text-align: center;
+    color: #4e2a1e;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    gap: 12px;
+}
+
+.tab {
+    background: #eaddcf;
+    padding: 10px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #4b2e2e;
+    transition: background 0.3s, color 0.3s;
+}
+
+.tab.active {
+    background: #8b5e3c;
+    color: #fff;
+}
+
+.marker-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 18px;
+}
+
+.marker-form .full-width {
+    grid-column: 1 / -1;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field-group label {
+    font-weight: 600;
+    color: #4e2a1e;
+}
+
+.field-group input,
+.field-group select,
+.field-group textarea {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #c1a78a;
+    font-size: 0.95rem;
+    background: #fff7f0;
+    color: #3b2a1a;
+    transition: border 0.2s;
+}
+
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus {
+    border-color: #8b5e3c;
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.checkbox-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    color: #3b2a1a;
+}
+
+.dropzone {
+    border: 2px dashed #c1a78a;
+    padding: 18px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 8px;
+    background: #f8f2ea;
+    color: #5e3f2c;
+}
+
+.dropzone.drag-active {
+    background-color: #f0e0d0;
+    border-color: #a56b43;
+}
+
+.dropzone-preview {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    border-radius: 6px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.form-actions button {
+    padding: 10px 22px;
+    border: none;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-size: 0.95rem;
+    color: white;
+}
+
+.form-actions .next-button,
+.form-actions .back-button,
+.form-actions .save-button {
+    background-color: #8b5e3c;
+}
+
+.form-actions .next-button:hover,
+.form-actions .back-button:hover,
+.form-actions .save-button:hover {
+    background-color: #4e2a1e;
+}
+
+.form-actions .cancel-butn {
+    background-color: #b8503c;
+}
+
+.form-actions .cancel-butn:hover {
+    background-color: #a03b29;
+}
+
+
+.map-toggle-btn {
+    margin-top: 8px;
+    background-color: #7a4f32;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+.marker-description {
+    margin-top: 16px;
+    padding: 12px;
+    border-top: 1px solid #ccc;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.marker-description h4 {
+    margin: 0 0 6px;
+    font-size: 1.1rem;
+}
+
+.marker-description p {
+    margin: 0;
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+
+.image-preview {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.image-preview img {
+    max-width: 60%;
+    border-radius: 8px;
+    display: inline-block;
+}

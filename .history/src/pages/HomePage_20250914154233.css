@@ -1,0 +1,177 @@
+.home-wrapper {
+    font-family: 'Segoe UI', sans-serif;
+    color: #2e2e2e;
+    margin: 0;
+    background: linear-gradient(to bottom, #f8f4f0, #f1e7dd);
+}
+
+.home-header {
+    background: rgba(255, 248, 240, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 8px rgba(139, 94, 60, 0.2);
+    gap: 8px;
+    overflow-x: auto;
+}
+
+.header-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #5a3620;
+}
+
+.header-link {
+    position: relative;
+    font-size: 15px;
+    color: #4a2c1b;
+    padding: 6px 10px;
+}
+
+.header-link::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: #8b5e3c;
+    transition: width 0.3s;
+}
+
+.header-button {
+    background: linear-gradient(135deg, #6b4226, #a9744f);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.header-button:hover {
+    background: linear-gradient(135deg, #5a3620, #8b6042);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(107, 66, 38, 0.4);
+}
+
+.header-button:active {
+    transform: scale(0.96);
+    background: linear-gradient(135deg, #4a2c1b, #754e36);
+}
+
+.download-banner {
+    position: relative;
+    bottom: 20px;
+    max-width: 90%;
+    background: rgba(107, 66, 38, 0.95);
+    color: #fff;
+    padding: 20px 28px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.download-banner h2 {
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: #f8e4d0;
+}
+
+.download-btn.android {
+    background-color: #8b5e3c;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    white-space: nowrap;
+}
+
+.download-btn.android:hover {
+    background-color: #6b4226;
+    transform: translateY(-2px);
+}
+
+.info-slides-section {
+    background: linear-gradient(135deg, #f6ede4, #f1e1d0);
+    padding: 3rem 2rem;
+    margin-top: 2rem;
+}
+
+.info-slides-section h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #5a3620;
+}
+
+.info-card.ar {
+    background: linear-gradient(135deg, #8b5e3c, #a9744f);
+}
+
+.info-card.nav {
+    background: linear-gradient(135deg, #6b4226, #4a2c1b);
+}
+
+.info-card.guide {
+    background: linear-gradient(135deg, #c69c6d, #8b5e3c);
+}
+
+.how-tourkita-works {
+    background: linear-gradient(135deg, #f7ede3, #f1e2d2);
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.tourkita-steps-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 50px;
+    color: #4a2c1b;
+    text-shadow: 1px 1px 3px rgba(139, 94, 60, 0.2);
+}
+
+.step-icon-circle {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #8b5e3c, #c69c6d);
+    color: white;
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 12px rgba(139, 94, 60, 0.3);
+}
+
+.partnership-section {
+    text-align: center;
+    margin: 3rem 1rem;
+    background: #f5ede4;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(107, 66, 38, 0.2);
+}
+
+.footer {
+    background-color: #4a2c1b;
+    color: #ffffff;
+    padding: 24px 20px;
+    margin-top: 40px;
+}
+
+.footer-link:hover {
+    color: #c69c6d;
+}
