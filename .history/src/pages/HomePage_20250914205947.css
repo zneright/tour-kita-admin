@@ -1,0 +1,258 @@
+/* ===============================
+   HomePage.css - Minimalist Futuristic
+============================== */
+
+/* Fade-in scroll animation */
+.fade-in {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Wrapper */
+.home-wrapper {
+    font-family: 'Montserrat', 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom, #f8f7f3, #ffffff);
+    color: #1a1a1a;
+}
+
+/* Header */
+.home-header {
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+}
+
+.header-logo {
+    width: 50px;
+    margin-right: 10px;
+}
+
+.header-title {
+    font-weight: 700;
+    font-size: 1.6rem;
+}
+
+.header-link,
+.header-button {
+    margin-left: 15px;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.header-link:hover,
+.header-button:hover {
+    color: #ff6f61;
+}
+
+/* Carousel + Hero */
+.carousel-wrapper {
+    position: relative;
+    text-align: center;
+    padding-top: 4rem;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #1a1a1a;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.hero-overlay h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.hero-overlay p {
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+/* Download banner */
+.download-banner {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: #f0f0f0;
+    margin-top: 3rem;
+    border-radius: 12px;
+}
+
+.download-banner h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.download-banner p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.download-btn {
+    padding: 0.8rem 1.5rem;
+    background: #ff6f61;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.download-btn:hover {
+    background: #e65a4c;
+}
+
+/* Info slides */
+.info-slides-section {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.info-slides-section h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+.info-slides {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.info-card {
+    flex: 1 1 250px;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-10px);
+}
+
+.info-card h4 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.info-card p {
+    font-size: 1rem;
+}
+
+/* Steps section */
+.how-tourkita-works {
+    background: #f8f7f3;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.tourkita-step-card {
+    display: inline-block;
+    width: 220px;
+    margin: 1rem;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.tourkita-step-card:hover {
+    transform: translateY(-10px);
+}
+
+.step-icon-circle {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    background: #ff6f61;
+    color: #fff;
+}
+
+/* About Us */
+.about-us-section {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 4rem 2rem;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-us-image {
+    width: 300px;
+    border-radius: 12px;
+}
+
+.about-us-text {
+    max-width: 500px;
+}
+
+.about-us-text h4 {
+    font-weight: 700;
+    margin-top: 1rem;
+}
+
+/* Partnership */
+.partnership-section {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.intramuros-logo {
+    width: 100px;
+    margin: 1rem 0;
+}
+
+/* Footer */
+.footer {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 2rem;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.footer-link {
+    margin-left: 15px;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer-link:hover {
+    color: #ff6f61;
+}

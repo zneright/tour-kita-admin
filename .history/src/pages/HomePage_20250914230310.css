@@ -1,0 +1,369 @@
+/* ==============================
+   HomePage.css - Full Professional Version
+============================== */
+
+.home-wrapper {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding-top: 80px;
+    background: url('..') repeat center/cover, linear-gradient(to bottom, #f5f0e6, #ffffff);
+}
+
+/* Header */
+.home-header {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    gap: 8px;
+    overflow-x: auto;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-logo {
+    height: 42px;
+    transition: transform 0.3s ease;
+}
+
+.header-logo:hover {
+    transform: scale(1.05);
+}
+
+.header-title {
+    font-family: 'Georgia', serif;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    color: #8b5e3c;
+}
+
+.header-right {
+    display: flex;
+    gap: 12px;
+}
+
+.header-link,
+.header-button {
+    font-size: 15px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.header-link {
+    background: transparent;
+    color: #1c3d5a;
+}
+
+.header-link:hover {
+    color: #d38612;
+    transform: translateY(-2px);
+}
+
+.header-button {
+    background: #1c3d5a;
+    color: #fff;
+}
+
+.header-button:hover {
+    background: #704527;
+    transform: translateY(-3px) scale(1.05);
+}
+
+/* Carousel Hero */
+.carousel-wrapper {
+    position: relative;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    text-align: center;
+    color: white;
+    z-index: 10;
+    padding: 0 20px;
+}
+
+.hero-overlay h1 {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    color: #ffffff;
+    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+    animation: fadeInUp 1s forwards;
+}
+
+.hero-overlay p {
+    font-size: 1.3rem;
+    color: #f0f0f0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    animation: fadeInUp 1s forwards;
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Download Banner */
+.download-banner {
+    margin-top: 220px;
+    text-align: center;
+    color: #fff;
+}
+
+.download-btn {
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.download-btn.android {
+    background: #1c3d5a;
+    color: white;
+}
+
+.download-btn.android:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 22px rgba(0, 0, 0, 0.18);
+}
+
+/* Info Cards */
+.info-slides-section {
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.info-slides {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin-top: 40px;
+}
+
+.info-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(14px);
+    border-radius: 24px;
+    padding: 30px 20px;
+    width: 280px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    text-align: center;
+}
+
+.info-card:hover {
+    transform: translateY(-8px) rotateZ(-1deg);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+}
+
+.info-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+}
+
+/* Steps */
+.tourkita-steps-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+    position: relative;
+    padding: 80px 10%;
+}
+
+.tourkita-step-line {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    width: 80%;
+    height: 4px;
+    background: linear-gradient(to right, #1c3d5a, #8b5e3c);
+    z-index: 0;
+}
+
+.tourkita-step-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(14px);
+    border-radius: 20px;
+    padding: 28px 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1;
+    width: 220px;
+    text-align: center;
+}
+
+.tourkita-step-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+}
+
+.step-icon-circle {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.6rem;
+}
+
+/* About Us */
+.about-us-section {
+    padding: 80px 10%;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    color: #1c3d5a;
+}
+
+.about-us-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    align-items: center;
+}
+
+.about-us-image {
+    flex: 1 1 300px;
+    max-width: 400px;
+    border-radius: 20px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.about-us-text {
+    flex: 2 1 300px;
+}
+
+.about-us-text h4 {
+    color: #704527;
+    font-size: 1.5rem;
+}
+
+/* Partnerships */
+.partnership-section {
+    padding: 80px 10%;
+    text-align: center;
+    color: #1c3d5a;
+}
+
+.partnership-section img {
+    height: 80px;
+    margin: 20px 0;
+}
+
+/* Footer */
+.footer {
+    background: rgba(28, 61, 90, 0.9);
+    color: #fff;
+    padding: 40px 10%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer a {
+    color: #d38612;
+    text-decoration: none;
+    margin: 0 8px;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+/* Scroll Animations */
+.fade-in,
+.fade-in-up,
+.fade-in-left,
+.fade-in-right,
+.fade-in-zoom {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s ease-out;
+}
+
+.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.fade-in-left.visible {
+    transform: translateX(0);
+}
+
+.fade-in-right.visible {
+    transform: translateX(0);
+}
+
+.fade-in-zoom.visible {
+    transform: scale(1);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .tourkita-steps-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tourkita-step-line {
+        display: none;
+    }
+
+    .about-us-container {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-overlay h1 {
+        font-size: 2rem;
+    }
+
+    .hero-overlay p {
+        font-size: 1rem;
+    }
+
+    .info-card {
+        width: 100%;
+    }
+}

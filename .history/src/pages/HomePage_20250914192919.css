@@ -1,0 +1,312 @@
+/* General Wrapper */
+.home-wrapper {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background: linear-gradient(to bottom, #f5f0e6, #ffffff);
+    scroll-behavior: smooth;
+}
+
+/* Header */
+.home-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    padding: 12px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.12);
+    gap: 10px;
+    overflow-x: auto;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.header-logo {
+    height: 48px;
+    transition: transform 0.3s ease;
+}
+
+.header-logo:hover {
+    transform: scale(1.08);
+}
+
+.header-title {
+    font-family: 'Georgia', serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    color: #8b5e3c;
+}
+
+.header-right {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    align-items: center;
+    min-width: 0;
+    overflow-x: auto;
+}
+
+.header-link,
+.header-button {
+    font-size: 15px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.header-link {
+    position: relative;
+    color: #1c3d5a;
+    padding: 8px 12px;
+    transition: color 0.3s ease;
+}
+
+.header-link:hover {
+    color: #8b5e3c;
+}
+
+.header-link::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: #8b5e3c;
+    transition: width 0.3s;
+}
+
+.header-link:hover::after {
+    width: 100%;
+}
+
+.header-button {
+    background: linear-gradient(135deg, #1c3d5a, #8b5e3c);
+    color: #fff;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 26px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.header-button:hover {
+    background: linear-gradient(135deg, #16324a, #704527);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(28, 61, 90, 0.45);
+}
+
+.header-button:active {
+    transform: scale(0.96);
+    background: linear-gradient(135deg, #142a3d, #5a3620);
+}
+
+/* Carousel & Hero */
+.carousel-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 75vh;
+}
+
+.carousel-wrapper .carousel-image,
+.carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.82) contrast(1.02);
+    transition: transform 0.6s ease;
+}
+
+.carousel-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.65) 10%, rgba(0, 0, 0, 0) 40%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 40px 24px;
+    color: #fff;
+    z-index: 10;
+    text-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+    max-width: 85%;
+    pointer-events: none;
+    animation: fadeIn 1s ease forwards;
+}
+
+.hero-overlay h1 {
+    font-family: 'Georgia', serif;
+    font-weight: 700;
+    font-size: 3rem;
+    line-height: 1.1;
+    margin-bottom: 14px;
+    letter-spacing: 0.4px;
+}
+
+.hero-overlay p {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: clamp(1rem, 1.7vw, 1.25rem);
+    margin: 0;
+    opacity: 0.95;
+}
+
+/* Download Banner */
+.download-banner {
+    position: relative;
+    bottom: 24px;
+    max-width: 85%;
+    background: rgba(28, 61, 90, 0.95);
+    color: #fff;
+    padding: 26px 32px;
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    animation: slideUp 1s ease forwards;
+}
+
+.download-banner h2 {
+    font-family: 'Georgia', serif;
+    font-size: 26px;
+    margin-bottom: 12px;
+    color: #fff;
+}
+
+.download-banner p {
+    font-size: 15px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.download-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.download-btn.android {
+    background-color: #8b5e3c;
+    color: #fff;
+    border: none;
+    padding: 14px 26px;
+    font-size: 15px;
+    border-radius: 26px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    min-height: 48px;
+    white-space: nowrap;
+}
+
+.download-btn.android:hover {
+    background-color: #6b4226;
+    transform: translateY(-2px);
+}
+
+.download-btn.android:active {
+    transform: scale(0.96);
+}
+
+/* Info Slides Section */
+.info-slides-section {
+    background: linear-gradient(135deg, #f5f0e6, #ffffff);
+    padding: 120px 40px 80px;
+    margin-top: 3rem;
+}
+
+.info-slides-section h2 {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    color: #1c3d5a;
+    font-family: 'Georgia', serif;
+    font-size: 2.2rem;
+}
+
+.info-slides {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.info-card {
+    width: 100%;
+    border-radius: 18px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    padding: 28px 22px;
+    transition: transform 0.3s ease;
+    text-align: center;
+    animation: zoomIn 0.6s ease forwards;
+}
+
+.info-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+}
+
+.info-card h4 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #ffffff;
+    font-family: 'Georgia', serif;
+}
+
+.info-card p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #ffffff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-overlay h1 {
+        font-size: 2rem;
+    }
+
+    .download-banner h2 {
+        font-size: 20px;
+    }
+
+    .download-banner p {
+        font-size: 13px;
+    }
+
+    .info-slides {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .info-card {
+        padding: 18px;
+    }
+
+    .header-title {
+        font-size: 20px;
+    }
+
+    .header-button {
+        display: none !important;
+    }
+}

@@ -1,0 +1,491 @@
+/* ==============================
+   HomePage.css - Sleek Version
+============================== */
+
+/* ===== Global Wrapper ===== */
+.home-wrapper {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background: linear-gradient(to bottom, #f5f5f5, #ffffff);
+    color: #222;
+    scroll-behavior: smooth;
+}
+
+/* ===== Header ===== */
+.home-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    gap: 12px;
+    transition: background 0.3s ease, padding 0.3s ease;
+}
+
+.home-header.scrolled {
+    padding: 10px 24px;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Header Left ===== */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-logo {
+    height: 46px;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
+}
+
+.header-logo:hover {
+    transform: scale(1.08);
+    filter: brightness(1.2);
+}
+
+.header-title {
+    font-family: 'Georgia', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #8b5e3c;
+    letter-spacing: 0.6px;
+    cursor: default;
+}
+
+/* ===== Header Right ===== */
+.header-right {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.header-link,
+.header-button {
+    font-size: 15px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.header-link {
+    color: #1c3d5a;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.header-link:hover {
+    color: #8b5e3c;
+    background: rgba(139, 94, 60, 0.08);
+}
+
+.header-link::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: #8b5e3c;
+    transition: width 0.3s ease;
+}
+
+.header-link:hover::after {
+    width: 100%;
+}
+
+.header-button {
+    background: linear-gradient(135deg, #1c3d5a, #8b5e3c);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 28px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(28, 61, 90, 0.25);
+    transition: all 0.3s ease;
+}
+
+.header-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(28, 61, 90, 0.35);
+    background: linear-gradient(135deg, #16324a, #704527);
+}
+
+.header-button:active {
+    transform: scale(0.97);
+}
+
+/* ===== Carousel Section ===== */
+.carousel-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 80vh;
+    overflow: hidden;
+}
+
+.carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.78) contrast(1.05);
+    transition: transform 0.6s ease, filter 0.5s ease;
+}
+
+.carousel-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.65) 10%, rgba(0, 0, 0, 0) 40%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+/* ===== Hero Overlay ===== */
+.hero-overlay {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+    z-index: 10;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    max-width: 85%;
+    pointer-events: none;
+    animation: fadeIn 1s ease forwards;
+}
+
+.hero-overlay h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
+}
+
+.hero-overlay p {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    opacity: 0.95;
+}
+
+/* ===== Download Banner ===== */
+.download-banner {
+    position: absolute;
+    bottom: 30px;
+    max-width: 90%;
+    background: rgba(28, 61, 90, 0.9);
+    color: #fff;
+    padding: 26px 32px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    animation: slideUp 1s ease forwards;
+    backdrop-filter: blur(6px);
+}
+
+.download-banner h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.download-banner p {
+    font-size: 1rem;
+    margin-bottom: 18px;
+    line-height: 1.5;
+}
+
+.download-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.download-btn.android {
+    background: #8b5e3c;
+    padding: 12px 28px;
+    font-size: 15px;
+    border-radius: 26px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.download-btn.android:hover {
+    background: #6b4226;
+    transform: translateY(-2px) scale(1.02);
+}
+
+.download-btn.android:active {
+    transform: scale(0.96);
+}
+
+/* ===== Info Slides ===== */
+.info-slides-section {
+    background: linear-gradient(135deg, #fdfbf8, #ffffff);
+    padding: 120px 40px 80px;
+    text-align: center;
+}
+
+.info-slides-section h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+    color: #1c3d5a;
+}
+
+.info-slides {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.info-card {
+    padding: 28px 22px;
+    border-radius: 20px;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(6px);
+}
+
+.info-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+.info-card.ar {
+    background: linear-gradient(135deg, #1f3a93, #00c6ff);
+}
+
+.info-card.nav {
+    background: linear-gradient(135deg, #0f2027, #2c5364);
+}
+
+.info-card.guide {
+    background: linear-gradient(135deg, #d38312, #a83279);
+}
+
+.info-card h4 {
+    font-size: 1.4rem;
+    margin-bottom: 0.6rem;
+    font-family: 'Georgia', serif;
+}
+
+.info-card p {
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* ===== Step Cards ===== */
+.tourkita-step-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 28px 22px;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tourkita-step-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+}
+
+.step-icon-circle {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #1c3d5a, #3b7ca9);
+    color: #fff;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 14px rgba(28, 61, 90, 0.28);
+}
+
+.tourkita-step-card h4 {
+    font-size: 1.35rem;
+    color: #222;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.tourkita-step-card p {
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.6;
+}
+
+/* ===== About Us Section ===== */
+.about-us-section {
+    background: linear-gradient(135deg, #ffffff, #f8f6f3);
+    padding: 120px 20px;
+}
+
+.about-us-title {
+    font-family: 'Georgia', serif;
+    font-size: 2.6rem;
+    color: #1c3d5a;
+    margin-bottom: 3rem;
+}
+
+.about-us-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+    align-items: center;
+}
+
+.about-us-image {
+    width: 100%;
+    border-radius: 24px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+    object-fit: cover;
+    max-height: 400px;
+}
+
+.about-us-text h4 {
+    font-family: 'Georgia', serif;
+    font-size: 1.9rem;
+    color: #8b5e3c;
+    margin-bottom: 12px;
+}
+
+.about-us-text p {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #333;
+}
+
+/* ===== Footer ===== */
+.footer {
+    background-color: #1c3d5a;
+    color: #fff;
+    padding: 36px 20px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-logo {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    filter: brightness(1100%);
+    transition: transform 0.3s ease;
+}
+
+.footer-logo:hover {
+    transform: scale(1.08);
+}
+
+.footer-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.3s ease;
+}
+
+.footer-link:hover {
+    color: #f5f0e6;
+}
+
+/* ===== Animations ===== */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(60px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes zoomIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ===== Media Queries ===== */
+@media (max-width: 768px) {
+    .home-wrapper {
+        padding-top: 120px;
+    }
+
+    .header-title {
+        font-size: 20px;
+    }
+
+    .header-button {
+        display: none;
+    }
+
+    .hero-overlay {
+        top: 30%;
+        padding: 20px;
+        max-width: 95%;
+    }
+
+    .download-banner {
+        width: 95%;
+        bottom: 20px;
+        padding: 18px;
+        border-radius: 18px;
+    }
+
+    .info-slides {
+        grid-template-columns: 1fr;
+        row-gap: 1.8rem;
+    }
+
+    .about-us-text {
+        text-align: center;
+    }
+}

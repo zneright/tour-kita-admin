@@ -1,0 +1,388 @@
+/* General Wrapper */
+.home-wrapper {
+    font-family: 'Segoe UI', sans-serif;
+    color: #fff;
+    margin: 0;
+    background: linear-gradient(180deg, #0d0d1a 0%, #1a1a2e 100%);
+    overflow-x: hidden;
+}
+
+/* Header */
+.home-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: rgba(20, 20, 35, 0.7);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-logo {
+    height: 50px;
+    width: auto;
+}
+
+.header-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #00fff0;
+    text-shadow: 0 0 8px #00fff0, 0 0 20px rgba(0, 255, 240, 0.3);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-link {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #ccc;
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
+    transition: all 0.3s;
+}
+
+.header-link:hover {
+    color: #00fff0;
+    text-shadow: 0 0 12px #00fff0;
+}
+
+.header-button {
+    padding: 8px 18px;
+    background: #00fff0;
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.header-button:hover {
+    background: #00d9c0;
+    box-shadow: 0 0 20px #00fff0;
+}
+
+/* Hero Section */
+.carousel-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 25%;
+    left: 10%;
+    color: #fff;
+    z-index: 2;
+    max-width: 500px;
+    text-shadow: 0 0 10px rgba(0, 255, 240, 0.8);
+}
+
+.hero-overlay h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.2;
+    background: linear-gradient(90deg, #00fff0, #0055ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-overlay p {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin-top: 12px;
+}
+
+/* Download Banner */
+.download-banner {
+    position: absolute;
+    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 255, 240, 0.2);
+    padding: 28px 36px;
+    border-radius: 20px;
+    text-align: center;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 40px rgba(0, 255, 240, 0.2);
+    max-width: 90%;
+}
+
+.download-banner h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #00fff0;
+}
+
+.download-banner p {
+    font-size: 1rem;
+    margin-bottom: 18px;
+    color: #ccc;
+}
+
+.download-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.download-btn {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 16px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.4s;
+    font-weight: 700;
+    color: #000;
+}
+
+.download-btn.android {
+    background: #00fff0;
+    box-shadow: 0 0 20px #00fff0;
+}
+
+.download-btn.android:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 30px #00fff0, 0 0 60px rgba(0, 255, 240, 0.4);
+}
+
+/* Floating Shapes */
+.floating-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(0, 255, 240, 0.15);
+    pointer-events: none;
+    box-shadow: 0 0 12px rgba(0, 255, 240, 0.5), 0 0 30px rgba(0, 255, 240, 0.2);
+}
+
+/* Fade-in animation */
+.fade-in-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 1s ease-out;
+}
+
+.fade-in-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Info Slides Section */
+.info-slides-section {
+    padding: 100px 20px;
+    text-align: center;
+    background: linear-gradient(180deg, #0d0d1a 0%, #1a1a2e 100%);
+}
+
+.info-slides {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    margin-top: 50px;
+}
+
+.info-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 28px;
+    width: 280px;
+    box-shadow: 0 8px 24px rgba(0, 255, 240, 0.1);
+    transition: all 0.4s;
+}
+
+.info-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 12px 40px rgba(0, 255, 240, 0.3);
+}
+
+.info-card h4 {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.info-card p {
+    color: #ccc;
+}
+
+/* How TourKita Works */
+.how-tourkita-works {
+    padding: 100px 20px;
+    background: #0d0d1a;
+}
+
+.tourkita-steps-container {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    margin-top: 50px;
+}
+
+.tourkita-step-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 28px;
+    width: 260px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0, 255, 240, 0.1);
+    transition: all 0.4s;
+}
+
+.tourkita-step-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 12px 40px rgba(0, 255, 240, 0.3);
+}
+
+.step-icon-circle {
+    font-size: 2.2rem;
+    margin-bottom: 14px;
+    text-shadow: 0 0 10px #00fff0;
+}
+
+/* About Us Section */
+.about-us-section {
+    padding: 100px 20px;
+    background: linear-gradient(180deg, #1a1a2e 0%, #0d0d1a 100%);
+}
+
+.about-us-container {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 50px;
+}
+
+.about-us-image {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 20px;
+    box-shadow: 0 12px 40px rgba(0, 255, 240, 0.2);
+}
+
+.about-us-text {
+    flex: 1;
+    color: #ccc;
+}
+
+/* Partnership Section */
+.partnership-section {
+    padding: 80px 20px;
+    text-align: center;
+    background: #0d0d1a;
+}
+
+.intramuros-logo {
+    height: 80px;
+    margin: 16px 0;
+    filter: brightness(1.2);
+}
+
+.partner-name {
+    font-weight: 700;
+    color: #00fff0;
+    margin-bottom: 8px;
+}
+
+/* Footer */
+.footer {
+    padding: 50px 20px;
+    background: #0d0d1a;
+    color: #ccc;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer-logo {
+    height: 40px;
+}
+
+.footer-link {
+    color: #00fff0;
+    margin-left: 16px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.footer-link:hover {
+    text-shadow: 0 0 12px #00fff0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+
+    .info-slides,
+    .tourkita-steps-container,
+    .about-us-container {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-title {
+        font-size: 1.4rem;
+    }
+
+    .hero-overlay h1 {
+        font-size: 2rem;
+    }
+
+    .hero-overlay p {
+        font-size: 1rem;
+    }
+
+    .download-banner {
+        padding: 18px 20px;
+    }
+
+    .download-btn {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+    }
+
+    /* Hide Admin Button */
+    .header-button {
+        display: none;
+    }
+
+    /* Hide Floating Circles on Mobile */
+    .floating-circle {
+        display: none;
+    }
+}

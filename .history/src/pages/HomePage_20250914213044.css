@@ -1,0 +1,478 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #4a90e2;
+    --secondary-color: #f5f5f5;
+    --accent-color: #ff7f50;
+    --text-color: #222;
+    --card-bg: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.08);
+    --transition: 0.3s ease-in-out;
+    --gradient-primary: linear-gradient(135deg, #4a90e2, #50c9c3);
+    --gradient-accent: linear-gradient(135deg, #ff7f50, #ffb347);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0
+}
+
+body,
+html {
+    font-family: 'Inter', sans-serif;
+    background: var(--secondary-color);
+    color: var(--text-color);
+    scroll-behavior: smooth
+}
+
+.home-wrapper {
+    width: 100%;
+    overflow-x: hidden
+}
+
+.home-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px var(--shadow)
+}
+
+.header-left {
+    display: flex;
+    align-items: center
+}
+
+.header-logo {
+    height: 50px;
+    transition: all var(--transition)
+}
+
+.header-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-left: 0.5rem;
+    color: var(--primary-color)
+}
+
+.header-right {
+    display: flex;
+    align-items: center
+}
+
+.header-link {
+    margin-right: 1rem;
+    background: transparent;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: color var(--transition)
+}
+
+.header-link:hover {
+    color: var(--primary-color)
+}
+
+.header-button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition)
+}
+
+.header-button:hover {
+    background: var(--accent-color);
+    transform: translateY(-2px)
+}
+
+.carousel-wrapper {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 25%;
+    left: 10%;
+    color: white;
+    z-index: 2;
+    max-width: 500px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s forwards
+}
+
+.hero-overlay h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    line-height: 1.2
+}
+
+.hero-overlay p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9)
+}
+
+.download-banner {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 1.5rem 3rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px var(--shadow);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1.2s forwards
+}
+
+.download-banner h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color)
+}
+
+.download-banner p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: #555
+}
+
+.download-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem
+}
+
+.download-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    color: white;
+    background: var(--gradient-primary);
+    cursor: pointer;
+    transition: all var(--transition)
+}
+
+.download-btn:hover {
+    background: var(--gradient-accent);
+    transform: translateY(-3px)
+}
+
+.info-slides-section {
+    padding: 5rem 2rem;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1.4s forwards
+}
+
+.info-slides-section h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    color: var(--primary-color)
+}
+
+.info-slides {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap
+}
+
+.info-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 280px;
+    box-shadow: 0 4px 15px var(--shadow);
+    transition: transform var(--transition), box-shadow var(--transition);
+    opacity: 0;
+    transform: translateY(20px)
+}
+
+.info-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px var(--shadow)
+}
+
+.info-card h4 {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem
+}
+
+.info-card p {
+    font-weight: 400;
+    color: #555;
+    line-height: 1.5;
+    font-size: 0.95rem
+}
+
+.how-tourkita-works {
+    background: #f0f8ff;
+    padding: 5rem 2rem;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1.6s forwards
+}
+
+.tourkita-steps-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    color: var(--primary-color)
+}
+
+.tourkita-steps-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem
+}
+
+.tourkita-step-card {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 16px;
+    width: 250px;
+    box-shadow: 0 4px 15px var(--shadow);
+    transition: transform var(--transition), box-shadow var(--transition);
+    opacity: 0;
+    transform: translateY(20px)
+}
+
+.tourkita-step-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px var(--shadow)
+}
+
+.step-icon-circle {
+    font-size: 2rem;
+    margin-bottom: 1rem
+}
+
+.about-us-section {
+    padding: 5rem 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1.8s forwards
+}
+
+.about-us-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: var(--primary-color)
+}
+
+.about-us-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3rem;
+    justify-content: center
+}
+
+.about-us-image {
+    width: 350px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px var(--shadow);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 2s forwards
+}
+
+.about-us-text {
+    max-width: 500px
+}
+
+.about-us-text h4 {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem
+}
+
+.about-us-text p {
+    line-height: 1.6;
+    color: #555;
+    font-size: 0.95rem;
+    margin-bottom: 1rem
+}
+
+.partnership-section {
+    padding: 5rem 2rem;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 2.2s forwards
+}
+
+.partnership-section h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: var(--primary-color)
+}
+
+.intramuros-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 2.4s forwards
+}
+
+.partner-name {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #333
+}
+
+.footer {
+    background: #222;
+    color: #eee;
+    padding: 3rem 2rem;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 2.6s forwards
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto
+}
+
+.footer-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem
+}
+
+.footer-logo {
+    height: 50px
+}
+
+.footer-right {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center
+}
+
+.footer-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color var(--transition)
+}
+
+.footer-link:hover {
+    color: var(--accent-color)
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px)
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0)
+    }
+}
+
+@media(max-width:1024px) {
+
+    .info-slides,
+    .tourkita-steps-container {
+        flex-direction: column;
+        align-items: center
+    }
+
+    .about-us-container {
+        flex-direction: column
+    }
+
+    .hero-overlay {
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%)
+    }
+}
+
+@media(max-width:768px) {
+    .hero-overlay h1 {
+        font-size: 2rem
+    }
+
+    .download-banner {
+        padding: 1rem 2rem
+    }
+
+    .info-card,
+    .tourkita-step-card {
+        width: 90%
+    }
+
+    .about-us-image {
+        width: 80%
+    }
+}
+
+@media(max-width:480px) {
+    .hero-overlay h1 {
+        font-size: 1.5rem
+    }
+
+    .hero-overlay p {
+        font-size: 0.9rem
+    }
+
+    .download-banner h2 {
+        font-size: 1.5rem
+    }
+
+    .download-banner p {
+        font-size: 0.85rem
+    }
+}
