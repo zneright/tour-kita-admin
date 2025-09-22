@@ -631,7 +631,7 @@ const FeedbackReview = () => {
                     {/* --------------------------------------------------
               Drilldown area (hierarchical)
               -------------------------------------------------- */}
-                    <div className="ratings-drilldown" style={{ marginTop: 20 }}>
+                    <div className="drill-row" style={{ marginTop: 20 }}>
                         {/* YEARLY view (top of the hierarchy) */}
                         {viewLevel === "yearly" && (
                             <>

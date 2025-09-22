@@ -264,6 +264,7 @@
     margin-bottom: 20px;
 }
 
+
 .drill-card {
     flex: 1 1 180px;
     background: #fff;
@@ -293,38 +294,7 @@
     color: #666;
 }
 
-.drill-row {
-    display: flex;
-    flex-wrap: nowrap;
-    /* keep items in one row */
-    overflow-x: auto;
-    /* enable horizontal scroll if too many */
-    gap: 16px;
-    /* spacing between cards */
-    padding: 10px 0;
-}
-
-.drill-row::-webkit-scrollbar {
-    height: 8px;
-    /* horizontal scrollbar size */
-}
-
-.drill-row::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-}
-
-.drill-row::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-.drill-card,
-.drill-group {
-    min-width: 220px;
-    flex: 0 0 auto;
-}
-
-
+/* No Data Message */
 .no-data {
     text-align: center;
     font-size: 14px;
@@ -332,6 +302,7 @@
     padding: 20px 0;
 }
 
+/* Table inside drilldown */
 .drilldown-table {
     width: 100%;
     border-collapse: collapse;

@@ -69,7 +69,18 @@ const FeedbackReview = () => {
     const [selectedMonth, setSelectedMonth] = useState(null); // {year, monthIndex}
     const [selectedWeekRange, setSelectedWeekRange] = useState(null); // {start:Date,end:Date}
     const [selectedDay, setSelectedDay] = useState(null); // Date object
-
+const daysForWeekRange = (start, end) => {
+  const days = eachDayOfInterval({ start, end }).map((d) => {
+    const dayStart = startOfDay(d);
+    const dayEnd = endOfDay(d);
+    return {
+      date: d,
+      label: format(d, "EEEE, MMM d"), // Monday, Aug 4
+      entries: entriesFor(dayStart, dayEnd), // ✅ now includes all feedback in that day
+    };
+  });
+  return days;
+};
     // Keep time filter only as convenience — top-level chart not included here (you said below table)
     const [timeFilter, setTimeFilter] = useState("Weekly");
 
@@ -313,15 +324,11 @@ const FeedbackReview = () => {
 
     // days for week range
     const daysForWeekRange = (start, end) => {
-        const days = eachDayOfInterval({ start, end }).map((d) => {
-            const dayStart = startOfDay(d);
-            const dayEnd = endOfDay(d);
-            return {
-                date: d,
-                label: format(d, "EEEE, MMM d"), // Monday, Aug 4
-                entries: entriesFor(dayStart, dayEnd), // ✅ now includes all feedback in that day
-            };
-        });
+        const days = eachDayOfInterval({ start, end }).map((d) => ({
+            date: d,
+            label: format(d, "EEEE, MMM d"), // Monday, Aug 4
+            entries: entriesFor(d, d), // entries where createdAt within that day (we'll treat start==end)
+        }));
         return days;
     };
 

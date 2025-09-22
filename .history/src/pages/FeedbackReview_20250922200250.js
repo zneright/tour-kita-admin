@@ -11,7 +11,7 @@ import {
 import { db } from "../firebase";
 import Sidebar from "../components/Sidebar";
 import "./FeedbackReview.css";
-import { startOfDay, endOfDay } from "date-fns";
+
 import {
     startOfWeek,
     endOfWeek,
@@ -34,8 +34,13 @@ import {
     isWithinInterval,
 } from "date-fns";
 
+/*
+  Hierarchical drilldown:
+  yearly -> quarterly -> monthly -> weeks (within month) -> days -> table
+*/
 
 const FeedbackReview = () => {
+    // --- existing states (kept)
     const [searchTerm, setSearchTerm] = useState("");
     const [activeTab, setActiveTab] = useState("Location Feedback");
     const [feedbackList, setFeedbackList] = useState([]);
@@ -313,15 +318,11 @@ const FeedbackReview = () => {
 
     // days for week range
     const daysForWeekRange = (start, end) => {
-        const days = eachDayOfInterval({ start, end }).map((d) => {
-            const dayStart = startOfDay(d);
-            const dayEnd = endOfDay(d);
-            return {
-                date: d,
-                label: format(d, "EEEE, MMM d"), // Monday, Aug 4
-                entries: entriesFor(dayStart, dayEnd), // ✅ now includes all feedback in that day
-            };
-        });
+        const days = eachDayOfInterval({ start, end }).map((d) => ({
+            date: d,
+            label: format(d, "EEEE, MMM d"), // Monday, Aug 4
+            entries: entriesFor(d, d), // entries where createdAt within that day (we'll treat start==end)
+        }));
         return days;
     };
 

@@ -379,11 +379,14 @@ const FeedbackReview = () => {
 
     // ----- Render helpers (cards & table)
     const PeriodCard = ({ title, avg, count, onClick }) => (
-        <div className="drill-card" onClick={onClick} role="button" tabIndex={0}>
-            <h4>{title}</h4>
-            <p>Avg: {avg ? avg.toFixed(2) : "—"}</p>
-            <p>{count ? `${count} feedback(s)` : "No data"}</p>
+        <div
+            className={`drill-card ${isTop ? "top" : "low"}`}
+            onClick={() => handleSelect(item)}
+        >
+            <h4>{isTop ? "🏅 " : "⚠️ "}{item.name}</h4>
+            <p>Avg Rating: {item.avg.toFixed(1)}</p>
         </div>
+
     );
 
     // ---- Final filtered table for selected day/week/month etc.

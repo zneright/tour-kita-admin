@@ -692,11 +692,14 @@ const FeedbackReview = () => {
                                                         setViewLevel("monthly");
                                                     }}
                                                 />
-                                                <div style={{ marginTop: 8 }}>
-                                                    <small>Top: {top[0]?.key ?? "—"}</small>
-                                                    <br />
-                                                    <small>Low: {bottom[0]?.key ?? "—"}</small>
-                                                </div>
+                                               <div 
+  className={`drill-card ${isTop ? "top" : "low"}`} 
+  onClick={() => handleSelect(item)}
+>
+  <h4>{isTop ? "🏅 " : "⚠️ "}{item.name}</h4>
+  <p>Avg Rating: {item.avg.toFixed(1)}</p>
+</div>
+
                                             </div>
                                         );
                                     })}

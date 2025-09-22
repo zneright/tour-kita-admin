@@ -80,7 +80,18 @@ const FeedbackReview = () => {
         if (tsOrDate instanceof Date) return tsOrDate;
         return new Date(tsOrDate);
     };
-
+const daysForWeekRange = (start, end) => {
+  const days = eachDayOfInterval({ start, end }).map((d) => {
+    const dayStart = startOfDay(d);
+    const dayEnd = endOfDay(d);
+    return {
+      date: d,
+      label: format(d, "EEEE, MMM d"), // Monday, Aug 4
+      entries: entriesFor(dayStart, dayEnd), // ✅ now includes all feedback in that day
+    };
+  });
+  return days;
+};
     // ----- fetch feedbacks
     useEffect(() => {
         const fetchFeedback = async () => {
@@ -313,15 +324,11 @@ const FeedbackReview = () => {
 
     // days for week range
     const daysForWeekRange = (start, end) => {
-        const days = eachDayOfInterval({ start, end }).map((d) => {
-            const dayStart = startOfDay(d);
-            const dayEnd = endOfDay(d);
-            return {
-                date: d,
-                label: format(d, "EEEE, MMM d"), // Monday, Aug 4
-                entries: entriesFor(dayStart, dayEnd), // ✅ now includes all feedback in that day
-            };
-        });
+        const days = eachDayOfInterval({ start, end }).map((d) => ({
+            date: d,
+            label: format(d, "EEEE, MMM d"), // Monday, Aug 4
+            entries: entriesFor(d, d), // entries where createdAt within that day (we'll treat start==end)
+        }));
         return days;
     };
 

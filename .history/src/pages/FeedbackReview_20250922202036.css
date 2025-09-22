@@ -321,10 +321,12 @@
 .drill-card,
 .drill-group {
     min-width: 220px;
+    /* each card width *
     flex: 0 0 auto;
 }
 
 
+/* No Data Message */
 .no-data {
     text-align: center;
     font-size: 14px;
@@ -332,6 +334,7 @@
     padding: 20px 0;
 }
 
+/* Table inside drilldown */
 .drilldown-table {
     width: 100%;
     border-collapse: collapse;

@@ -332,6 +332,7 @@
     padding: 20px 0;
 }
 
+/* Table inside drilldown */
 .drilldown-table {
     width: 100%;
     border-collapse: collapse;
