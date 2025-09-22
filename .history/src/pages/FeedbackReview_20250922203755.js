@@ -1,3 +1,4 @@
+// FeedbackReview.js
 import React, { useState, useEffect, useMemo } from "react";
 import {
     collection,
@@ -61,18 +62,18 @@ const FeedbackReview = () => {
     const maxDisplay = 20;
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const [viewLevel, setViewLevel] = useState("yearly");
+    const [viewLevel, setViewLevel] = useState("yearly"); 
     const [selectedYear, setSelectedYear] = useState(null);
-    const [selectedQuarter, setSelectedQuarter] = useState(null);
-    const [selectedMonth, setSelectedMonth] = useState(null);
+    const [selectedQuarter, setSelectedQuarter] = useState(null); 
+    const [selectedMonth, setSelectedMonth] = useState(null); 
     const [selectedWeekRange, setSelectedWeekRange] = useState(null);
-    const [selectedDay, setSelectedDay] = useState(null);
+    const [selectedDay, setSelectedDay] = useState(null); 
 
     const [timeFilter, setTimeFilter] = useState("Weekly");
 
     const asDate = (tsOrDate) => {
         if (!tsOrDate) return null;
-        if (tsOrDate.toDate) return tsOrDate.toDate();
+        if (tsOrDate.toDate) return tsOrDate.toDate(); 
         if (tsOrDate instanceof Date) return tsOrDate;
         return new Date(tsOrDate);
     };
@@ -251,7 +252,7 @@ const FeedbackReview = () => {
 
     const monthsForQuarter = (year, quarter) => {
         const months = [];
-        const startMonth = (quarter - 1) * 3;
+        const startMonth = (quarter - 1) * 3; 
         for (let m = 0; m < 3; m++) {
             const monthIndex = startMonth + m;
             const mStart = startOfMonth(new Date(year, monthIndex, 1));
@@ -260,7 +261,7 @@ const FeedbackReview = () => {
             months.push({
                 year,
                 monthIndex,
-                label: format(mStart, "LLLL yyyy"),
+                label: format(mStart, "LLLL yyyy"), 
                 start: mStart,
                 end: mEnd,
                 entries,
@@ -274,19 +275,17 @@ const FeedbackReview = () => {
         const mEnd = endOfMonth(new Date(year, monthIndex, 1));
         const weekStarts = eachWeekOfInterval({ start: mStart, end: mEnd }, { weekStartsOn: 1 });
         const weeks = weekStarts.map((ws) => {
-            const we = endOfWeek(ws, { weekStartsOn: 1 });
+            const we = endOfWeek(ws, { weekStartsOn: 1 }); 
             const start = ws < mStart ? mStart : ws;
             const end = we > mEnd ? mEnd : we;
             const entries = entriesFor(start, end);
             const label =
                 start.getMonth() === end.getMonth()
-                    ? `${format(start, "MMM d")}–${format(end, "d")}`
+                    ? `${format(start, "MMM d")}–${format(end, "d")}` // Aug 4–10
                     : `${format(start, "MMM d")}–${format(end, "MMM d")}`;
             return { start, end, label, entries };
         });
-        return weeks;
     };
-
 
     const daysForWeekRange = (start, end) => {
         const days = eachDayOfInterval({ start, end }).map((d) => {

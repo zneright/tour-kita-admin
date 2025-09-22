@@ -1,3 +1,4 @@
+// FeedbackReview.js
 import React, { useState, useEffect, useMemo } from "react";
 import {
     collection,
@@ -61,22 +62,26 @@ const FeedbackReview = () => {
     const maxDisplay = 20;
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const [viewLevel, setViewLevel] = useState("yearly");
+    // --- drilldown states
+    const [viewLevel, setViewLevel] = useState("yearly"); // 'yearly'|'quarterly'|'monthly'|'weekly'|'daily'|'table'
     const [selectedYear, setSelectedYear] = useState(null);
-    const [selectedQuarter, setSelectedQuarter] = useState(null);
-    const [selectedMonth, setSelectedMonth] = useState(null);
-    const [selectedWeekRange, setSelectedWeekRange] = useState(null);
-    const [selectedDay, setSelectedDay] = useState(null);
+    const [selectedQuarter, setSelectedQuarter] = useState(null); // 1..4
+    const [selectedMonth, setSelectedMonth] = useState(null); // {year, monthIndex}
+    const [selectedWeekRange, setSelectedWeekRange] = useState(null); // {start:Date,end:Date}
+    const [selectedDay, setSelectedDay] = useState(null); // Date object
 
+    // Keep time filter only as convenience — top-level chart not included here (you said below table)
     const [timeFilter, setTimeFilter] = useState("Weekly");
 
+    // helper to normalize timestamp to Date
     const asDate = (tsOrDate) => {
         if (!tsOrDate) return null;
-        if (tsOrDate.toDate) return tsOrDate.toDate();
+        if (tsOrDate.toDate) return tsOrDate.toDate(); // Firestore Timestamp
         if (tsOrDate instanceof Date) return tsOrDate;
         return new Date(tsOrDate);
     };
 
+    // ----- fetch feedbacks
     useEffect(() => {
         const fetchFeedback = async () => {
             try {
@@ -92,12 +97,14 @@ const FeedbackReview = () => {
             }
         };
         fetchFeedback();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         calculateStats(feedbackList, activeTab);
     }, [activeTab, feedbackList]);
 
+    // --- summary stats (existing)
     const calculateStats = (data, tabType) => {
         let filtered;
         if (tabType === "Feature Feedback") {
@@ -144,6 +151,8 @@ const FeedbackReview = () => {
             }
         }
     };
+
+    // --- filtering for the table above (existing)
     const filteredFeedback = feedbackList.filter(
         (item) =>
             (isAllTab ||
@@ -194,6 +203,11 @@ const FeedbackReview = () => {
             setIsSending(false);
         }
     };
+
+    // ----------------------------
+    // Helper grouping + drilldown helpers
+    // ----------------------------
+    // Only include entries that match activeTab (Location / Feature / All)
     const entriesFor = (start, end) =>
         feedbackList.filter((f) => {
             const d = asDate(f.createdAt);
@@ -206,6 +220,7 @@ const FeedbackReview = () => {
             return true;
         });
 
+    // For a list of feedback entries, return avg rating per place/feature
     const avgPerKey = (items) => {
         const map = {};
         items.forEach((it) => {
@@ -222,16 +237,19 @@ const FeedbackReview = () => {
         return arr;
     };
 
+    // Year list from data (sorted descending)
     const years = useMemo(() => {
         const set = new Set();
         feedbackList.forEach((f) => {
             const d = asDate(f.createdAt);
             if (d) set.add(getYear(d));
         });
+        // include current year even if no data? The user wanted "still show average this year if partial"
         set.add(getYear(new Date()));
         return Array.from(set).sort((a, b) => b - a);
     }, [feedbackList]);
 
+    // get quarters for a year (Q1..Q4) but return label + range and data presence
     const quartersForYear = (year) => {
         const arr = [];
         for (let q = 1; q <= 4; q++) {
@@ -249,9 +267,10 @@ const FeedbackReview = () => {
         return arr;
     };
 
+    // months in a quarter
     const monthsForQuarter = (year, quarter) => {
         const months = [];
-        const startMonth = (quarter - 1) * 3;
+        const startMonth = (quarter - 1) * 3; // 0-indexed
         for (let m = 0; m < 3; m++) {
             const monthIndex = startMonth + m;
             const mStart = startOfMonth(new Date(year, monthIndex, 1));
@@ -260,7 +279,7 @@ const FeedbackReview = () => {
             months.push({
                 year,
                 monthIndex,
-                label: format(mStart, "LLLL yyyy"),
+                label: format(mStart, "LLLL yyyy"), // "August 2025"
                 start: mStart,
                 end: mEnd,
                 entries,
@@ -269,38 +288,44 @@ const FeedbackReview = () => {
         return months;
     };
 
+    // weeks for a month — produce array of ranges (weekStart-weekEnd) where weekStart is Monday and weekEnd Sunday,
+    // but clipped to the month range. Label like "Aug 4–10"
     const weeksForMonth = (year, monthIndex) => {
         const mStart = startOfMonth(new Date(year, monthIndex, 1));
         const mEnd = endOfMonth(new Date(year, monthIndex, 1));
+        // get all Monday starts within the month range using eachWeekOfInterval with weekStartsOn Monday
         const weekStarts = eachWeekOfInterval({ start: mStart, end: mEnd }, { weekStartsOn: 1 });
         const weeks = weekStarts.map((ws) => {
-            const we = endOfWeek(ws, { weekStartsOn: 1 });
+            const we = endOfWeek(ws, { weekStartsOn: 1 }); // Sunday
             const start = ws < mStart ? mStart : ws;
             const end = we > mEnd ? mEnd : we;
             const entries = entriesFor(start, end);
             const label =
                 start.getMonth() === end.getMonth()
-                    ? `${format(start, "MMM d")}–${format(end, "d")}`
+                    ? `${format(start, "MMM d")}–${format(end, "d")}` // Aug 4–10
                     : `${format(start, "MMM d")}–${format(end, "MMM d")}`;
             return { start, end, label, entries };
         });
+        // Edge case: if month starts in middle of week and we didn't get the first few days (eachWeekOfInterval starts at first week start),
+        // ensure first partial week is included (eachWeekOfInterval includes it). So above should be fine.
         return weeks;
     };
 
-
+    // days for week range
     const daysForWeekRange = (start, end) => {
         const days = eachDayOfInterval({ start, end }).map((d) => {
             const dayStart = startOfDay(d);
             const dayEnd = endOfDay(d);
             return {
                 date: d,
-                label: format(d, "EEEE, MMM d"),
-                entries: entriesFor(dayStart, dayEnd),
+                label: format(d, "EEEE, MMM d"), // Monday, Aug 4
+                entries: entriesFor(dayStart, dayEnd), // ✅ now includes all feedback in that day
             };
         });
         return days;
     };
 
+    // ---- UI click handlers to drill down
     const goToQuarterly = (year) => {
         setSelectedYear(year);
         setSelectedQuarter(null);
@@ -332,14 +357,17 @@ const FeedbackReview = () => {
         setViewLevel("table");
     };
 
+    // helper to get top and bottom per period (returns top and bottom arrays)
     const topAndBottomForEntries = (entries) => {
         const arr = avgPerKey(entries);
         if (!arr.length) return { top: [], bottom: [] };
+        // top = first 3, bottom = last 3 (you can adjust)
         const top = arr.slice(0, 3);
         const bottom = arr.slice(-3).reverse();
         return { top, bottom };
     };
 
+    // small helper to test if a date equals given day in terms of date portion
     const isSameDay = (d1, d2) => {
         if (!d1 || !d2) return false;
         return (

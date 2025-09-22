@@ -284,7 +284,7 @@ const FeedbackReview = () => {
                     : `${format(start, "MMM d")}–${format(end, "MMM d")}`;
             return { start, end, label, entries };
         });
-        return weeks;
+        return weeks; // <-- 🔥 this was missing
     };
 
 

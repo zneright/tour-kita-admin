@@ -1,3 +1,4 @@
+// FeedbackReview.js
 import React, { useState, useEffect, useMemo } from "react";
 import {
     collection,
@@ -61,22 +62,26 @@ const FeedbackReview = () => {
     const maxDisplay = 20;
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const [viewLevel, setViewLevel] = useState("yearly");
+    // --- drilldown states
+    const [viewLevel, setViewLevel] = useState("yearly"); // 'yearly'|'quarterly'|'monthly'|'weekly'|'daily'|'table'
     const [selectedYear, setSelectedYear] = useState(null);
-    const [selectedQuarter, setSelectedQuarter] = useState(null);
-    const [selectedMonth, setSelectedMonth] = useState(null);
-    const [selectedWeekRange, setSelectedWeekRange] = useState(null);
-    const [selectedDay, setSelectedDay] = useState(null);
+    const [selectedQuarter, setSelectedQuarter] = useState(null); // 1..4
+    const [selectedMonth, setSelectedMonth] = useState(null); // {year, monthIndex}
+    const [selectedWeekRange, setSelectedWeekRange] = useState(null); // {start:Date,end:Date}
+    const [selectedDay, setSelectedDay] = useState(null); // Date object
 
+    // Keep time filter only as convenience — top-level chart not included here (you said below table)
     const [timeFilter, setTimeFilter] = useState("Weekly");
 
+    // helper to normalize timestamp to Date
     const asDate = (tsOrDate) => {
         if (!tsOrDate) return null;
-        if (tsOrDate.toDate) return tsOrDate.toDate();
+        if (tsOrDate.toDate) return tsOrDate.toDate(); // Firestore Timestamp
         if (tsOrDate instanceof Date) return tsOrDate;
         return new Date(tsOrDate);
     };
 
+    // ----- fetch feedbacks
     useEffect(() => {
         const fetchFeedback = async () => {
             try {
@@ -92,12 +97,14 @@ const FeedbackReview = () => {
             }
         };
         fetchFeedback();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         calculateStats(feedbackList, activeTab);
     }, [activeTab, feedbackList]);
 
+    // --- summary stats (existing)
     const calculateStats = (data, tabType) => {
         let filtered;
         if (tabType === "Feature Feedback") {
@@ -251,7 +258,7 @@ const FeedbackReview = () => {
 
     const monthsForQuarter = (year, quarter) => {
         const months = [];
-        const startMonth = (quarter - 1) * 3;
+        const startMonth = (quarter - 1) * 3; 
         for (let m = 0; m < 3; m++) {
             const monthIndex = startMonth + m;
             const mStart = startOfMonth(new Date(year, monthIndex, 1));
@@ -260,7 +267,7 @@ const FeedbackReview = () => {
             months.push({
                 year,
                 monthIndex,
-                label: format(mStart, "LLLL yyyy"),
+                label: format(mStart, "LLLL yyyy"), 
                 start: mStart,
                 end: mEnd,
                 entries,
@@ -274,19 +281,17 @@ const FeedbackReview = () => {
         const mEnd = endOfMonth(new Date(year, monthIndex, 1));
         const weekStarts = eachWeekOfInterval({ start: mStart, end: mEnd }, { weekStartsOn: 1 });
         const weeks = weekStarts.map((ws) => {
-            const we = endOfWeek(ws, { weekStartsOn: 1 });
+            const we = endOfWeek(ws, { weekStartsOn: 1 }); 
             const start = ws < mStart ? mStart : ws;
             const end = we > mEnd ? mEnd : we;
             const entries = entriesFor(start, end);
             const label =
                 start.getMonth() === end.getMonth()
-                    ? `${format(start, "MMM d")}–${format(end, "d")}`
+                    ? `${format(start, "MMM d")}–${format(end, "d")}` // Aug 4–10
                     : `${format(start, "MMM d")}–${format(end, "MMM d")}`;
             return { start, end, label, entries };
         });
-        return weeks;
     };
-
 
     const daysForWeekRange = (start, end) => {
         const days = eachDayOfInterval({ start, end }).map((d) => {

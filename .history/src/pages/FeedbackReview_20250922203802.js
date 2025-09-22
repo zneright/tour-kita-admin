@@ -280,13 +280,11 @@ const FeedbackReview = () => {
             const entries = entriesFor(start, end);
             const label =
                 start.getMonth() === end.getMonth()
-                    ? `${format(start, "MMM d")}–${format(end, "d")}`
+                    ? `${format(start, "MMM d")}–${format(end, "d")}` // Aug 4–10
                     : `${format(start, "MMM d")}–${format(end, "MMM d")}`;
             return { start, end, label, entries };
         });
-        return weeks;
     };
-
 
     const daysForWeekRange = (start, end) => {
         const days = eachDayOfInterval({ start, end }).map((d) => {
