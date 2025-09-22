@@ -1,0 +1,202 @@
+/* Container */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background:
+        linear-gradient(rgba(60, 36, 21, 0.7), rgba(160, 121, 94, 0.7)),
+        url('https://images.unsplash.com/photo-1581167768311-e9b74e7168c1?auto=format&fit=crop&w=1470&q=80');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: 'Segoe UI', sans-serif;
+    box-sizing: border-box;
+}
+
+/* Login Box */
+.login-box {
+    position: relative;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    padding: 50px 30px 40px 30px;
+    border-radius: 18px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    animation: fadeIn 0.8s ease-in-out;
+    overflow: hidden;
+}
+
+/* Decorative corner arrows with glow */
+.login-box::before,
+.login-box::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: #d4af37;
+    transform: rotate(45deg);
+    box-shadow: 0 0 12px #d4af37, 0 0 20px #d4af37;
+    transition: all 0.3s ease;
+}
+
+.login-box::before {
+    top: -7px;
+    left: -7px;
+}
+
+.login-box::after {
+    bottom: -7px;
+    right: -7px;
+}
+
+/* Arrow hover glow effect */
+.login-box:hover::before,
+.login-box:hover::after {
+    box-shadow: 0 0 20px #d4af37, 0 0 30px #ffd700, 0 0 40px #d4af37;
+}
+
+/* Logo */
+.logo {
+    height: 140px;
+    margin-bottom: 25px;
+    border-radius: 12px;
+    border: 3px solid #d4af37;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 6px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.logo:hover {
+    animation: pulse 1.5s infinite;
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #ffd700, 0 0 40px #d4af37;
+}
+
+/* Error Message */
+.error-message {
+    color: #ffdddd;
+    background: #3c1c1c;
+    padding: 10px 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    border: 1px solid #883434;
+    word-wrap: break-word;
+}
+
+/* Form */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Input Groups */
+.input-group {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #d4af37;
+    font-size: 16px;
+}
+
+input {
+    width: 100%;
+    padding: 14px 12px 14px 38px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+input::placeholder {
+    color: #e4e0e1;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+input:focus {
+    border-color: #d4af37;
+    background-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 14px;
+    background-color: #6e513d;
+    color: #E4E0E1;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+button:hover {
+    background-color: #493628;
+    transform: translateY(-2px);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.7);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.15);
+        opacity: 0.7;
+    }
+}
+
+/* Responsive */
+@media screen and (max-width: 420px) {
+    .login-box {
+        padding: 40px 20px 30px 20px;
+    }
+
+    .logo {
+        height: 120px;
+        margin-bottom: 20px;
+    }
+
+    input,
+    button {
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,252 @@
+/* Container */
+.login-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background:
+        linear-gradient(rgba(60, 36, 21, 0.7), rgba(160, 121, 94, 0.7)),
+        url('https://images.unsplash.com/photo-1581167768311-e9b74e7168c1?auto=format&fit=crop&w=1470&q=80');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+}
+
+/* Floating AR Particles */
+.particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #0073ff;
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: float 10s linear infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: translateY(-40px) translateX(20px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(0) translateX(0);
+        opacity: 0.5;
+    }
+}
+
+/* Login Box */
+.login-box {
+    position: relative;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    padding: 50px 30px 40px 30px;
+    border-radius: 18px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    animation: fadeIn 0.8s ease-in-out;
+    overflow: hidden;
+}
+
+/* Corner AR-like markers */
+/* Clean AR-style corner markers */
+.login-box::before,
+.login-box::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    box-sizing: border-box;
+}
+
+er
+
+
+/* Logo */
+.logo {
+    height: 140px;
+    margin-bottom: 25px;
+    padding: 6px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    border-radius: 12px;
+}
+
+.logo:hover {
+    animation: pulse 1.5s infinite;
+    transform: scale(1.1);
+}
+
+/* Error Message */
+.error-message {
+    color: #ffdddd;
+    background: #3c1c1c;
+    padding: 10px 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    border: 1px solid #883434;
+    word-wrap: break-word;
+}
+
+/* Form */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Input Groups */
+.input-group {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #d4af37;
+    font-size: 16px;
+}
+
+input {
+    width: 100%;
+    padding: 14px 12px 14px 38px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+input::placeholder {
+    color: #e4e0e1;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+input:focus {
+    border-color: #d4af37;
+    background-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 14px;
+    background-color: #6e513d;
+    color: #E4E0E1;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+button:hover {
+    background-color: #493628;
+    transform: translateY(-2px);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.7);
+}
+
+/* Floating Navigation Dots */
+.nav-dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #fef7d3;
+    border-radius: 50%;
+    top: 50%;
+    left: 10%;
+    animation: navDotMove 6s infinite alternate;
+}
+
+.nav-dot:nth-child(2) {
+    left: 20%;
+    animation-delay: 2s;
+}
+
+.nav-dot:nth-child(3) {
+    left: 30%;
+    animation-delay: 4s;
+}
+
+@keyframes navDotMove {
+    0% {
+        transform: translateY(0);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: translateY(-15px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 0.6;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.15);
+        opacity: 0.7;
+    }
+}
+
+/* Responsive */
+@media screen and (max-width: 420px) {
+    .login-box {
+        padding: 40px 20px 30px 20px;
+    }
+
+    .logo {
+        height: 120px;
+        margin-bottom: 20px;
+    }
+
+    input,
+    button {
+        font-size: 14px;
+    }
+}

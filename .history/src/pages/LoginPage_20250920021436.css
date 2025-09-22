@@ -1,0 +1,35 @@
+/* Clean AR-style corner markers */
+.login-box::before,
+.login-box::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    box-sizing: border-box;
+}
+
+/* Top-left corner marker */
+.login-box::before {
+    top: 0;
+    left: 0;
+    border-top: 2px solid #d4af37;
+    border-left: 2px solid #d4af37;
+    border-radius: 4px 0 0 0;
+    box-shadow: 0 0 8px #ffd700, 0 0 15px #d4af37;
+}
+
+/* Bottom-right corner marker */
+.login-box::after {
+    bottom: 0;
+    right: 0;
+    border-bottom: 2px solid #d4af37;
+    border-right: 2px solid #d4af37;
+    border-radius: 0 0 4px 0;
+    box-shadow: 0 0 8px #ffd700, 0 0 15px #d4af37;
+}
+
+/* Optional hover glow for subtle AR effect */
+.login-box:hover::before,
+.login-box:hover::after {
+    box-shadow: 0 0 12px #ffd700, 0 0 20px #d4af37;
+}
