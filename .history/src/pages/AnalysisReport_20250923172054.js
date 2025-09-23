@@ -444,8 +444,8 @@ const AnalysisReport = () => {
                                 <option value="student">Students</option>
                                 <option value="tourist">Tourists</option>
                                 <option value="local">Locals</option>
-                                <option value="foreign national">Foreign Nationals</option>
-                                <option value="researcher">Researchers</option>
+                                <option value="foreign national">Foreign NAtionals</option>
+                                <option value="researcher">Researcher</option>
                             </select>
                         </div>
                     </div>

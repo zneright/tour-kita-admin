@@ -441,11 +441,11 @@ const AnalysisReport = () => {
                             <label>User Type:</label>
                             <select value={userType} onChange={(e) => setUserType(e.target.value)}>
                                 <option value="All">All</option>
-                                <option value="student">Students</option>
-                                <option value="tourist">Tourists</option>
-                                <option value="local">Locals</option>
-                                <option value="foreign national">Foreign Nationals</option>
-                                <option value="researcher">Researchers</option>
+                                <option value="student">Student</option>
+                                <option value="tourist">Tourist</option>
+                                <option value="local">Local</option>
+                                <option value="foreign">Foreign</option>
+                                <option value="researcher">Researcher</option>
                             </select>
                         </div>
                     </div>

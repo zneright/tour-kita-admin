@@ -92,7 +92,6 @@
 }
 
 .chart-container {
-    background-color: #fff;
     padding: 1rem;
     padding-bottom: 150px;
     margin-bottom: 1.5rem;
@@ -102,8 +101,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
 
 .chart-container h3,
 .chart-container h4 {

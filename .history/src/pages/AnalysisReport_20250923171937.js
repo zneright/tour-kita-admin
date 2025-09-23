@@ -82,6 +82,7 @@ const AnalysisReport = () => {
 
     const filteredUsers = useMemo(() => {
         return users.filter(user => {
+            // Normalize both sides to lowercase for reliable comparison
             if (userType.toLowerCase() !== 'all' && user.userType.toLowerCase() !== userType.toLowerCase()) {
                 return false;
             }
@@ -185,7 +186,7 @@ const AnalysisReport = () => {
 
         periodKeys.forEach(p => {
             group[p] = {};
-            allKeys.forEach(k => { group[p][k] = 0; });
+            allKeys.forEach(k => { group[p][k] = 0; }); // zero-fill
         });
 
         filteredUsers.forEach(u => {
@@ -258,6 +259,7 @@ const AnalysisReport = () => {
             const entry = { period: pk, total: 0 };
             ageGroups.forEach(ag => entry[ag] = 0);
 
+            // Initialize months/weeks safely
             if (filter === 'Monthly') {
                 entry.weeks = Array.from({ length: 5 }, (_, i) => ({ week: `Week ${i + 1}`, count: 0 }));
             } else {
@@ -441,11 +443,11 @@ const AnalysisReport = () => {
                             <label>User Type:</label>
                             <select value={userType} onChange={(e) => setUserType(e.target.value)}>
                                 <option value="All">All</option>
-                                <option value="student">Students</option>
-                                <option value="tourist">Tourists</option>
-                                <option value="local">Locals</option>
-                                <option value="foreign national">Foreign Nationals</option>
-                                <option value="researcher">Researchers</option>
+                                <option value="student">Student</option>
+                                <option value="tourist">Tourist</option>
+                                <option value="local">Local</option>
+                                <option value="foreign">Foreign</option>
+                                <option value="researcher">Researcher</option>
                             </select>
                         </div>
                     </div>

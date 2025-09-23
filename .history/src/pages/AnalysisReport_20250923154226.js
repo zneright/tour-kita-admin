@@ -82,21 +82,11 @@ const AnalysisReport = () => {
 
     const filteredUsers = useMemo(() => {
         return users.filter(user => {
-            if (userType.toLowerCase() !== 'all' && user.userType.toLowerCase() !== userType.toLowerCase()) {
-                return false;
-            }
-
+            if (userType !== 'All' && user.userType !== userType.toLowerCase()) return false;
             const date = moment(user.registeredDate);
-            if (!date.isValid()) return false;
-
-            if (filter === 'Yearly') {
-                return date.year() === selectedYear;
-            }
-
-            return true;
+            return filter === 'Yearly' || date.year() === selectedYear;
         });
     }, [selectedYear, userType, filter, users]);
-
 
     const getGroupedFeedback = (typeKey, labelKey) => {
         const relevant = feedbacks.filter(f => f.feedbackType === typeKey && typeof f.rating === 'number');
@@ -185,7 +175,7 @@ const AnalysisReport = () => {
 
         periodKeys.forEach(p => {
             group[p] = {};
-            allKeys.forEach(k => { group[p][k] = 0; });
+            allKeys.forEach(k => { group[p][k] = 0; }); // zero-fill
         });
 
         filteredUsers.forEach(u => {
@@ -258,6 +248,7 @@ const AnalysisReport = () => {
             const entry = { period: pk, total: 0 };
             ageGroups.forEach(ag => entry[ag] = 0);
 
+            // Initialize months/weeks safely
             if (filter === 'Monthly') {
                 entry.weeks = Array.from({ length: 5 }, (_, i) => ({ week: `Week ${i + 1}`, count: 0 }));
             } else {
@@ -352,12 +343,10 @@ const AnalysisReport = () => {
                     {loading ? (
                         <div className="skeleton-faq">
                             <div className="skeleton skeleton-faq-title"></div>
-                            {Array.from({ length: 5 }).map((_, i) => (
-                                <div key={i} className="skeleton-faq-item">
-                                    <div className="skeleton skeleton-faq-q"></div>
-                                    <div className="skeleton skeleton-faq-a"></div>
-                                </div>
-                            ))}
+                            <div className="skeleton-faq-item">
+                                <div className="skeleton skeleton-faq-q"></div>
+                                <div className="skeleton skeleton-faq-a"></div>
+                            </div>
                         </div>
                     ) : (
                         <>
@@ -376,50 +365,26 @@ const AnalysisReport = () => {
                             {activeFeedbackTab === 'location' && (
                                 <>
                                     <h4>Location Feedbacks ({locationCount})</h4>
-                                    {locationFeedbacks.length === 0 ? (
-                                        <div className="skeleton-faq">
-                                            {Array.from({ length: 5 }).map((_, i) => (
-                                                <div key={i} className="skeleton skeleton-faq-item">
-                                                    <div className="skeleton skeleton-faq-q"></div>
-                                                    <div className="skeleton skeleton-faq-a"></div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : locationFeedbacks.map((loc, idx) => (
-                                        <div key={idx} className="feedback-card">
-                                            <strong>{loc.name}</strong> — Rating: {loc.average}⭐ ({loc.count})
-                                        </div>
-                                    ))}
+                                    {locationFeedbacks.map((loc, idx) => <div key={idx} className="feedback-card"><strong>{loc.name}</strong> — Rating: {loc.average}⭐ ({loc.count})</div>)}
                                 </>
                             )}
 
                             {activeFeedbackTab === 'app' && (
                                 <>
                                     <h4>App Feedbacks ({appCount})</h4>
-                                    {appFeedbacks.length === 0 ? (
-                                        <div className="skeleton-faq">
-                                            {Array.from({ length: 5 }).map((_, i) => (
-                                                <div key={i} className="skeleton skeleton-faq-item">
-                                                    <div className="skeleton skeleton-faq-q"></div>
-                                                    <div className="skeleton skeleton-faq-a"></div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : appFeedbacks.map((f, idx) => (
-                                        <div key={idx} className="feedback-card">
-                                            <strong>{f.name}</strong> — Rating: {f.average}⭐ ({f.count})
-                                        </div>
-                                    ))}
+                                    {appFeedbacks.map((f, idx) => <div key={idx} className="feedback-card"><strong>{f.name}</strong> — Rating: {f.average}⭐ ({f.count})</div>)}
                                 </>
                             )}
                         </>
                     )}
                 </div>
+
+                {/* Filters */}
                 <div className="filter-container mt-8">
                     <div className="chart-filters">
                         <div className="filter-group">
                             <label>Filter By:</label>
-                            <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+                            <select value={filter} onChange={e => setFilter(e.target.value)}>
                                 <option value="Monthly">Monthly</option>
                                 <option value="Quarterly">Quarterly</option>
                                 <option value="Yearly">Yearly</option>
@@ -428,28 +393,25 @@ const AnalysisReport = () => {
                         {showYearSelection && (
                             <div className="filter-group">
                                 <label>Year:</label>
-                                <select value={selectedYear} onChange={(e) => setSelectedYear(Number(e.target.value))}>
-                                    {[...new Set(users.map(u => moment(u.registeredDate).year()))]
-                                        .sort((a, b) => b - a)
-                                        .map(year => (
-                                            <option key={year} value={year}>{year}</option>
-                                        ))}
+                                <select value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))}>
+                                    {[...new Set(users.map(u => moment(u.registeredDate).year()))].sort((a, b) => b - a).map(year => <option key={year} value={year}>{year}</option>)}
                                 </select>
                             </div>
                         )}
                         <div className="filter-group">
                             <label>User Type:</label>
-                            <select value={userType} onChange={(e) => setUserType(e.target.value)}>
+                            <select value={userType} onChange={e => setUserType(e.target.value)}>
                                 <option value="All">All</option>
-                                <option value="student">Students</option>
-                                <option value="tourist">Tourists</option>
-                                <option value="local">Locals</option>
-                                <option value="foreign national">Foreign Nationals</option>
-                                <option value="researcher">Researchers</option>
+                                <option value="student">Student</option>
+                                <option value="tourist">Tourist</option>
+                                <option value="local">Local</option>
+                                <option value="researcher">Researcher</option>
+                                <option value="foreign national">Foreign National</option>
                             </select>
                         </div>
                     </div>
                 </div>
+
                 {/* Registration Trends */}
                 <div className="chart-container">
                     <h3>Registration Trends</h3>

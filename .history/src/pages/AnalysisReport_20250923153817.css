@@ -92,9 +92,9 @@
 }
 
 .chart-container {
-    background-color: #fff;
     padding: 1rem;
     padding-bottom: 150px;
+    /* extra bottom padding for scroll/tooltips */
     margin-bottom: 1.5rem;
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -102,8 +102,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
 
 .chart-container h3,
 .chart-container h4 {

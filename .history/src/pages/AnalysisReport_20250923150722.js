@@ -82,21 +82,11 @@ const AnalysisReport = () => {
 
     const filteredUsers = useMemo(() => {
         return users.filter(user => {
-            if (userType.toLowerCase() !== 'all' && user.userType.toLowerCase() !== userType.toLowerCase()) {
-                return false;
-            }
-
+            if (userType !== 'All' && user.userType !== userType.toLowerCase()) return false;
             const date = moment(user.registeredDate);
-            if (!date.isValid()) return false;
-
-            if (filter === 'Yearly') {
-                return date.year() === selectedYear;
-            }
-
-            return true;
+            return filter === 'Yearly' || date.year() === selectedYear;
         });
     }, [selectedYear, userType, filter, users]);
-
 
     const getGroupedFeedback = (typeKey, labelKey) => {
         const relevant = feedbacks.filter(f => f.feedbackType === typeKey && typeof f.rating === 'number');
@@ -123,6 +113,41 @@ const AnalysisReport = () => {
 
     const locationCount = feedbacks.filter(f => f.feedbackType === 'Location Feedback').length;
     const appCount = feedbacks.filter(f => f.feedbackType === 'App Feedback').length;
+
+    const getUserActivityData = useMemo(() => {
+        const activity = {};
+        filteredUsers.forEach(user => {
+            const date = moment(user.registeredDate);
+            let key = filter === 'Monthly' ? date.format('MMM') : filter === 'Quarterly' ? `Q${Math.ceil((date.month() + 1) / 3)}` : date.year().toString();
+            activity[key] = (activity[key] || 0) + 1;
+        });
+
+        const getKeys = () => {
+            if (filter === 'Monthly') return moment.monthsShort();
+            if (filter === 'Quarterly') return ['Q1', 'Q2', 'Q3', 'Q4'];
+            return [...new Set(filteredUsers.map(user => moment(user.registeredDate).year()))].sort().map(String);
+        };
+
+        return getKeys().map(name => ({ name, users: activity[name] || 0 }));
+    }, [filteredUsers, filter]);
+
+    const generateChartData = (keyFn, valueFn) => {
+        const periods = filter === 'Monthly' ? moment.monthsShort() : filter === 'Quarterly' ? ['Q1', 'Q2', 'Q3', 'Q4'] : [...new Set(filteredUsers.map(u => moment(u.registeredDate).year()))].sort();
+        const group = {};
+        periods.forEach(p => group[p] = {});
+
+        filteredUsers.forEach(u => {
+            const periodKey = keyFn(u);
+            const val = valueFn(u);
+            group[periodKey][val] = (group[periodKey][val] || 0) + 1;
+        });
+
+        const allKeys = [...new Set(filteredUsers.map(valueFn))];
+        return Object.entries(group).map(([period, counts]) => {
+            allKeys.forEach(k => { if (!(k in counts)) counts[k] = 0; });
+            return { period, ...counts };
+        });
+    };
     const quarterMonths = {
         Q1: ['Jan', 'Feb', 'Mar'],
         Q2: ['Apr', 'May', 'Jun'],
@@ -130,97 +155,42 @@ const AnalysisReport = () => {
         Q4: ['Oct', 'Nov', 'Dec']
     };
 
-    const getUserActivityData = useMemo(() => {
-        const activity = {};
-        const periodKeys = filter === 'Monthly' ? moment.monthsShort()
-            : filter === 'Quarterly' ? ['Q1', 'Q2', 'Q3', 'Q4']
-                : [...new Set(filteredUsers.map(u => moment(u.registeredDate).year()))].sort().map(String);
-
-        periodKeys.forEach(pk => {
-            activity[pk] = { users: 0, months: {} };
-            if (filter === 'Quarterly') {
-                quarterMonths[pk].forEach(m => activity[pk].months[m] = 0);
-            } else if (filter === 'Yearly') {
-                moment.monthsShort().forEach(m => activity[pk].months[m] = 0);
-            }
-        });
-
-        filteredUsers.forEach(user => {
-            const date = moment(user.registeredDate);
-            if (!date.isValid()) return;
-
-            if (filter === 'Monthly') {
-                const key = date.format('MMM');
-                activity[key].users += 1;
-            } else if (filter === 'Quarterly') {
-                const monthIndex = date.month(); // 0-11
-                const quarter = monthIndex <= 2 ? 'Q1' : monthIndex <= 5 ? 'Q2' : monthIndex <= 8 ? 'Q3' : 'Q4';
-                const monthName = date.format('MMM');
-                activity[quarter].users += 1;
-                activity[quarter].months[monthName] += 1;
-            } else {
-                const year = date.year().toString();
-                const monthName = date.format('MMM');
-                activity[year].users += 1;
-                activity[year].months[monthName] += 1;
-            }
-        });
-
-        return periodKeys.map(pk => ({
-            name: pk,
-            users: activity[pk].users,
-            months: activity[pk].months
-        }));
-    }, [filteredUsers, filter]);
-
-
-
-    const generateChartData = (keyFn, valueFn) => {
-        const periodKeys = filter === 'Monthly' ? moment.monthsShort()
-            : filter === 'Quarterly' ? ['Q1', 'Q2', 'Q3', 'Q4']
-                : [...new Set(filteredUsers.map(u => moment(u.registeredDate).year()))].sort().map(String);
-
-        const allKeys = [...new Set(filteredUsers.map(valueFn))];
-        const group = {};
-
-        periodKeys.forEach(p => {
-            group[p] = {};
-            allKeys.forEach(k => { group[p][k] = 0; });
-        });
-
-        filteredUsers.forEach(u => {
-            const period = keyFn(u);
-            const val = valueFn(u);
-            if (!group[period]) group[period] = {};
-            group[period][val] = (group[period][val] || 0) + 1;
-        });
-
-        return periodKeys.map(period => ({ period, ...group[period] }));
-    };
-
     const CustomAgeTooltip = ({ active, payload, label, filter }) => {
         if (!active || !payload || payload.length === 0) return null;
 
-        const data = payload[0].payload;
         let breakdown = [];
 
-        if (filter === 'Monthly' && data.weeks) {
-            breakdown = data.weeks.map(w => `${w.week}: ${w.count}`);
-        } else if ((filter === 'Quarterly' || filter === 'Yearly') && data.months) {
-            breakdown = Object.entries(data.months).map(([m, count]) => `${m}: ${count}`);
+        if (filter === 'Monthly') {
+            // Show week counts for this month
+            payload.forEach(entry => {
+                if (entry.payload.weeks) {
+                    entry.payload.weeks.forEach(w => breakdown.push(`${w.week}: ${w.count}`));
+                }
+            });
+        } else if (filter === 'Quarterly') {
+            const months = quarterMonths[label] || [];
+            breakdown = months.map(m => {
+                const monthData = payload[0].payload[m];
+                return `${m}: ${monthData || 0}`;
+            });
+        } else if (filter === 'Yearly') {
+            breakdown = moment.monthsShort().map(m => {
+                const monthData = payload[0].payload[m];
+                return `${m}: ${monthData || 0}`;
+            });
         }
 
+        const total = payload.reduce((sum, entry) => sum + entry.value, 0);
+
         return (
-            <div style={{ background: '#fff', border: '1px solid #ccc', padding: 10, borderRadius: 5 }}>
-                <p><strong>{label}</strong></p>
+            <div className="custom-tooltip" style={{ background: '#fff', border: '1px solid #ccc', padding: 10, borderRadius: 5 }}>
+                <p><strong>{filter} Breakdown: {label}</strong></p>
                 {breakdown.map((b, i) => <p key={i}>{b}</p>)}
                 <hr />
-                <p><strong>Total Users: {data.total || 0}</strong></p>
+                <p><strong>Total: {total}</strong></p>
             </div>
         );
     };
-
-
 
 
 
@@ -240,10 +210,8 @@ const AnalysisReport = () => {
     ), [filteredUsers, filter]);
 
     const ageGroupChartData = useMemo(() => {
-        const periodKeys = filter === 'Monthly'
-            ? moment.monthsShort()
-            : filter === 'Quarterly'
-                ? ['Q1', 'Q2', 'Q3', 'Q4']
+        const periodKeys = filter === 'Monthly' ? moment.monthsShort()
+            : filter === 'Quarterly' ? ['Q1', 'Q2', 'Q3', 'Q4']
                 : [...new Set(filteredUsers.map(u => moment(u.registeredDate).year()))].sort().map(String);
 
         const ageGroups = [...new Set(filteredUsers.map(u => {
@@ -255,43 +223,33 @@ const AnalysisReport = () => {
         }).filter(Boolean))];
 
         const data = periodKeys.map(pk => {
-            const entry = { period: pk, total: 0 };
-            ageGroups.forEach(ag => entry[ag] = 0);
+            const entry = { period: pk };
+            ageGroups.forEach(ag => { entry[ag] = 0; });
 
             if (filter === 'Monthly') {
-                entry.weeks = Array.from({ length: 5 }, (_, i) => ({ week: `Week ${i + 1}`, count: 0 }));
-            } else {
-                entry.months = {};
-                const months = filter === 'Quarterly' ? quarterMonths[pk] : moment.monthsShort();
-                months.forEach(m => entry.months[m] = 0);
+                entry.weeks = [];
+                for (let w = 1; w <= 5; w++) { // assuming max 5 weeks
+                    entry.weeks.push({ week: `Week ${w}`, count: 0 });
+                }
             }
 
             filteredUsers.forEach(u => {
                 const date = moment(u.registeredDate);
-                if (!date.isValid()) return;
-
-                const period = filter === 'Monthly'
-                    ? date.format('MMM')
-                    : filter === 'Quarterly'
-                        ? `Q${Math.ceil((date.month() + 1) / 3)}`
+                const period = filter === 'Monthly' ? date.format('MMM')
+                    : filter === 'Quarterly' ? `Q${Math.ceil((date.month() + 1) / 3)}`
                         : date.year().toString();
 
-                if (period !== pk) return;
+                if (period === pk) {
+                    const rangeStart = Math.floor(u.age / 10) * 10;
+                    const ageGroup = u.age >= 90 ? '90+' : `${rangeStart}-${rangeStart + 9}`;
+                    entry[ageGroup] = (entry[ageGroup] || 0) + 1;
 
-                const rangeStart = Math.floor(u.age / 10) * 10;
-                const ageGroup = u.age >= 90 ? '90+' : `${rangeStart}-${rangeStart + 9}`;
-                entry[ageGroup] += 1;
-                entry.total += 1;
-
-                if (filter === 'Monthly') {
-                    const weekIndex = Math.min(4, Math.floor((date.date() - 1) / 7));
-                    entry.weeks[weekIndex].count += 1;
-                } else {
-                    const monthName = date.format('MMM');
-                    if (entry.months[monthName] != null) entry.months[monthName] += 1;
+                    if (filter === 'Monthly') {
+                        const week = Math.ceil(date.date() / 7); // week number in month
+                        entry.weeks[week - 1].count += 1;
+                    }
                 }
             });
-
             return entry;
         });
 
@@ -352,12 +310,10 @@ const AnalysisReport = () => {
                     {loading ? (
                         <div className="skeleton-faq">
                             <div className="skeleton skeleton-faq-title"></div>
-                            {Array.from({ length: 5 }).map((_, i) => (
-                                <div key={i} className="skeleton-faq-item">
-                                    <div className="skeleton skeleton-faq-q"></div>
-                                    <div className="skeleton skeleton-faq-a"></div>
-                                </div>
-                            ))}
+                            <div className="skeleton-faq-item">
+                                <div className="skeleton skeleton-faq-q"></div>
+                                <div className="skeleton skeleton-faq-a"></div>
+                            </div>
                         </div>
                     ) : (
                         <>
@@ -376,50 +332,26 @@ const AnalysisReport = () => {
                             {activeFeedbackTab === 'location' && (
                                 <>
                                     <h4>Location Feedbacks ({locationCount})</h4>
-                                    {locationFeedbacks.length === 0 ? (
-                                        <div className="skeleton-faq">
-                                            {Array.from({ length: 5 }).map((_, i) => (
-                                                <div key={i} className="skeleton skeleton-faq-item">
-                                                    <div className="skeleton skeleton-faq-q"></div>
-                                                    <div className="skeleton skeleton-faq-a"></div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : locationFeedbacks.map((loc, idx) => (
-                                        <div key={idx} className="feedback-card">
-                                            <strong>{loc.name}</strong> — Rating: {loc.average}⭐ ({loc.count})
-                                        </div>
-                                    ))}
+                                    {locationFeedbacks.map((loc, idx) => <div key={idx} className="feedback-card"><strong>{loc.name}</strong> — Rating: {loc.average}⭐ ({loc.count})</div>)}
                                 </>
                             )}
 
                             {activeFeedbackTab === 'app' && (
                                 <>
                                     <h4>App Feedbacks ({appCount})</h4>
-                                    {appFeedbacks.length === 0 ? (
-                                        <div className="skeleton-faq">
-                                            {Array.from({ length: 5 }).map((_, i) => (
-                                                <div key={i} className="skeleton skeleton-faq-item">
-                                                    <div className="skeleton skeleton-faq-q"></div>
-                                                    <div className="skeleton skeleton-faq-a"></div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : appFeedbacks.map((f, idx) => (
-                                        <div key={idx} className="feedback-card">
-                                            <strong>{f.name}</strong> — Rating: {f.average}⭐ ({f.count})
-                                        </div>
-                                    ))}
+                                    {appFeedbacks.map((f, idx) => <div key={idx} className="feedback-card"><strong>{f.name}</strong> — Rating: {f.average}⭐ ({f.count})</div>)}
                                 </>
                             )}
                         </>
                     )}
                 </div>
+
+                {/* Filters */}
                 <div className="filter-container mt-8">
                     <div className="chart-filters">
                         <div className="filter-group">
                             <label>Filter By:</label>
-                            <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+                            <select value={filter} onChange={e => setFilter(e.target.value)}>
                                 <option value="Monthly">Monthly</option>
                                 <option value="Quarterly">Quarterly</option>
                                 <option value="Yearly">Yearly</option>
@@ -428,105 +360,67 @@ const AnalysisReport = () => {
                         {showYearSelection && (
                             <div className="filter-group">
                                 <label>Year:</label>
-                                <select value={selectedYear} onChange={(e) => setSelectedYear(Number(e.target.value))}>
-                                    {[...new Set(users.map(u => moment(u.registeredDate).year()))]
-                                        .sort((a, b) => b - a)
-                                        .map(year => (
-                                            <option key={year} value={year}>{year}</option>
-                                        ))}
+                                <select value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))}>
+                                    {[...new Set(users.map(u => moment(u.registeredDate).year()))].sort((a, b) => b - a).map(year => <option key={year} value={year}>{year}</option>)}
                                 </select>
                             </div>
                         )}
                         <div className="filter-group">
                             <label>User Type:</label>
-                            <select value={userType} onChange={(e) => setUserType(e.target.value)}>
+                            <select value={userType} onChange={e => setUserType(e.target.value)}>
                                 <option value="All">All</option>
-                                <option value="student">Students</option>
-                                <option value="tourist">Tourists</option>
-                                <option value="local">Locals</option>
-                                <option value="foreign national">Foreign Nationals</option>
-                                <option value="researcher">Researchers</option>
+                                <option value="student">Student</option>
+                                <option value="tourist">Tourist</option>
+                                <option value="local">Local</option>
+                                <option value="researcher">Researcher</option>
+                                <option value="foreign national">Foreign National</option>
                             </select>
                         </div>
                     </div>
                 </div>
-                {/* Registration Trends */}
+
+                {/* Charts */}
                 <div className="chart-container">
                     <h3>Registration Trends</h3>
-                    {loading ? (
-                        <div className="skeleton" style={{ height: 300, borderRadius: 10 }}></div>
-                    ) : (
+                    {loading ? <div className="skeleton" style={{ height: 300, borderRadius: 10 }}></div> :
                         <ResponsiveContainer width="100%" height={300}>
-                            <LineChart data={getUserActivityData}>
-                                <XAxis dataKey="name" />
-                                <YAxis />
-                                <Tooltip />
-                                <Line type="monotone" dataKey="users" stroke="#82ca9d" />
-                            </LineChart>
+                            <LineChart data={getUserActivityData}><XAxis dataKey="name" /><YAxis /><Tooltip /><Line type="monotone" dataKey="users" stroke="#82ca9d" /></LineChart>
                         </ResponsiveContainer>
-                    )}
+                    }
                 </div>
 
-                {/* Gender Distribution */}
                 <div className="chart-container">
                     <h3>Gender Distribution ({filter === 'Yearly' ? selectedYear : filter})</h3>
-                    {loading ? (
-                        <div className="skeleton" style={{ height: 300, borderRadius: 10 }}></div>
-                    ) : (
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={genderChartData}>
-                                <XAxis dataKey="period" />
-                                <YAxis />
-                                <Tooltip />
-                                {Object.keys(genderChartData[0] || {})
-                                    .filter(k => k !== 'period')
-                                    .map((gender, idx) => (
-                                        <Bar key={gender} dataKey={gender} stackId="a" fill={COLORS[idx % COLORS.length]} />
-                                    ))}
-                            </BarChart>
-                        </ResponsiveContainer>
-                    )}
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={genderChartData}>
+                            <XAxis dataKey="period" /><YAxis /><Tooltip />
+                            {Object.keys(genderChartData[0] || {}).filter(k => k !== 'period').map((gender, idx) => <Bar key={gender} dataKey={gender} stackId="a" fill={COLORS[idx % COLORS.length]} />)}
+                        </BarChart>
+                    </ResponsiveContainer>
                 </div>
 
-                {/* User Type Distribution */}
                 <div className="chart-container">
                     <h3>User Type Distribution ({filter === 'Yearly' ? selectedYear : filter})</h3>
-                    {loading ? (
-                        <div className="skeleton" style={{ height: 300, borderRadius: 10 }}></div>
-                    ) : (
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={userTypeChartData}>
-                                <XAxis dataKey="period" />
-                                <YAxis />
-                                <Tooltip />
-                                {Object.keys(userTypeChartData[0] || {})
-                                    .filter(k => k !== 'period')
-                                    .map((type, idx) => (
-                                        <Bar key={type} dataKey={type} stackId="a" fill={COLORS[idx % COLORS.length]} />
-                                    ))}
-                            </BarChart>
-                        </ResponsiveContainer>
-                    )}
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={userTypeChartData}>
+                            <XAxis dataKey="period" /><YAxis /><Tooltip />
+                            {Object.keys(userTypeChartData[0] || {}).filter(k => k !== 'period').map((type, idx) => <Bar key={type} dataKey={type} stackId="a" fill={COLORS[idx % COLORS.length]} />)}
+                        </BarChart>
+                    </ResponsiveContainer>
                 </div>
 
-                {/* Age Group Distribution */}
-                <div className="chart-container">
-                    <h3>Age Group Distribution ({filter === 'Yearly' ? selectedYear : filter})</h3>
-                    {loading ? (
-                        <div className="skeleton" style={{ height: 300, borderRadius: 10 }}></div>
-                    ) : (
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={ageGroupChartData.data}>
-                                <XAxis dataKey="period" />
-                                <YAxis />
-                                <Tooltip content={<CustomAgeTooltip filter={filter} />} />
-                                {ageGroupChartData.ageGroups.map((ag, idx) => (
-                                    <Bar key={ag} dataKey={ag} stackId="a" fill={COLORS[idx % COLORS.length]} />
-                                ))}
-                            </BarChart>
-                        </ResponsiveContainer>
-                    )}
-                </div>
+                <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={ageGroupChartData.data}>
+                        <XAxis dataKey="period" />
+                        <YAxis />
+                        <Tooltip content={<CustomAgeTooltip filter={filter} />} />
+                        {ageGroupChartData.ageGroups.map((ag, idx) => (
+                            <Bar key={ag} dataKey={ag} stackId="a" fill={COLORS[idx % COLORS.length]} />
+                        ))}
+                    </BarChart>
+                </ResponsiveContainer>
+
+
 
             </main>
         </div>

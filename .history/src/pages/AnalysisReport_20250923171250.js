@@ -82,21 +82,11 @@ const AnalysisReport = () => {
 
     const filteredUsers = useMemo(() => {
         return users.filter(user => {
-            if (userType.toLowerCase() !== 'all' && user.userType.toLowerCase() !== userType.toLowerCase()) {
-                return false;
-            }
-
+            if (userType !== 'All' && user.userType !== userType.toLowerCase()) return false;
             const date = moment(user.registeredDate);
-            if (!date.isValid()) return false;
-
-            if (filter === 'Yearly') {
-                return date.year() === selectedYear;
-            }
-
-            return true;
+            return filter === 'Yearly' || date.year() === selectedYear;
         });
     }, [selectedYear, userType, filter, users]);
-
 
     const getGroupedFeedback = (typeKey, labelKey) => {
         const relevant = feedbacks.filter(f => f.feedbackType === typeKey && typeof f.rating === 'number');
@@ -185,7 +175,7 @@ const AnalysisReport = () => {
 
         periodKeys.forEach(p => {
             group[p] = {};
-            allKeys.forEach(k => { group[p][k] = 0; });
+            allKeys.forEach(k => { group[p][k] = 0; }); // zero-fill
         });
 
         filteredUsers.forEach(u => {
@@ -258,6 +248,7 @@ const AnalysisReport = () => {
             const entry = { period: pk, total: 0 };
             ageGroups.forEach(ag => entry[ag] = 0);
 
+            // Initialize months/weeks safely
             if (filter === 'Monthly') {
                 entry.weeks = Array.from({ length: 5 }, (_, i) => ({ week: `Week ${i + 1}`, count: 0 }));
             } else {
@@ -415,41 +406,36 @@ const AnalysisReport = () => {
                         </>
                     )}
                 </div>
-                <div className="filter-container mt-8">
-                    <div className="chart-filters">
-                        <div className="filter-group">
-                            <label>Filter By:</label>
-                            <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-                                <option value="Monthly">Monthly</option>
-                                <option value="Quarterly">Quarterly</option>
-                                <option value="Yearly">Yearly</option>
+                {/* Filter Options */}
+                <div className="filter-options">
+                    <label>View by: </label>
+                    <select value={filter} onChange={e => setFilter(e.target.value)}>
+                        <option value="Monthly">Monthly</option>
+                        <option value="Quarterly">Quarterly</option>
+                        <option value="Yearly">Yearly</option>
+                    </select>
+
+                    {showYearSelection && (
+                        <>
+                            <label>Year: </label>
+                            <select value={selectedYear} onChange={e => setSelectedYear(parseInt(e.target.value))}>
+                                {Array.from({ length: 5 }).map((_, i) => {
+                                    const year = currentYear - i;
+                                    return <option key={year} value={year}>{year}</option>;
+                                })}
                             </select>
-                        </div>
-                        {showYearSelection && (
-                            <div className="filter-group">
-                                <label>Year:</label>
-                                <select value={selectedYear} onChange={(e) => setSelectedYear(Number(e.target.value))}>
-                                    {[...new Set(users.map(u => moment(u.registeredDate).year()))]
-                                        .sort((a, b) => b - a)
-                                        .map(year => (
-                                            <option key={year} value={year}>{year}</option>
-                                        ))}
-                                </select>
-                            </div>
-                        )}
-                        <div className="filter-group">
-                            <label>User Type:</label>
-                            <select value={userType} onChange={(e) => setUserType(e.target.value)}>
-                                <option value="All">All</option>
-                                <option value="student">Students</option>
-                                <option value="tourist">Tourists</option>
-                                <option value="local">Locals</option>
-                                <option value="foreign national">Foreign Nationals</option>
-                                <option value="researcher">Researchers</option>
-                            </select>
-                        </div>
-                    </div>
+                        </>
+                    )}
+
+                    <label>User Type: </label>
+                    <select value={userType} onChange={e => setUserType(e.target.value)}>
+                        <option value="All">All</option>
+                        <option value="guest">Guest</option>
+                        <option value="registered">Registered</option>
+                    </select>
                 </div>
+
+
                 {/* Registration Trends */}
                 <div className="chart-container">
                     <h3>Registration Trends</h3>
