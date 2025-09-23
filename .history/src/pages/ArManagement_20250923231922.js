@@ -4,7 +4,7 @@ import { FiBox, FiPlusCircle } from "react-icons/fi";
 import Sidebar from "../components/Sidebar";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
-import ARUploadModal from "../components/ARUploadModal";
+import ARUploadModal from "./ARUploadModal";
 
 const ArManagement = () => {
     const [showUploadForm, setShowUploadForm] = useState(false);
