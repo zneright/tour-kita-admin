@@ -472,7 +472,6 @@ const FeedbackReview = () => {
                             <tr>
                                 <th></th>
                                 <th>Email</th>
-                                {isAllTab && <th>App Feature</th>}
                                 <th>{isFeatureTab ? "App Feature" : "Location"}</th>
                                 <th>Feedback</th>
                                 <th>Image</th>
@@ -482,12 +481,11 @@ const FeedbackReview = () => {
                             </tr>
                         </thead>
 
-
                         <tbody>
                             {loading ? (
                                 [...Array(5)].map((_, i) => (
                                     <tr key={i}>
-                                        <td colSpan="9">
+                                        <td colSpan="8">
                                             <div className="skeleton-card">
                                                 <div className="skeleton skeleton-title"></div>
                                                 <div className="skeleton skeleton-line medium"></div>
@@ -502,14 +500,7 @@ const FeedbackReview = () => {
                                     <tr key={entry.id}>
                                         <td>{index + 1}</td>
                                         <td>{entry.email}</td>
-                                        {isAllTab && (
-                                            <td>
-                                                {entry.feedbackType === "App Feedback"
-                                                    ? entry.feature || "N/A"
-                                                    : "—"}
-                                            </td>
-                                        )}
-                                        <td>{isFeatureTab ? entry.feature || "—" : entry.location || "—"}</td>
+                                        <td>{isFeatureTab ? entry.feature || "N/A" : entry.location || "N/A"}</td>
                                         <td>{entry.comment}</td>
                                         <td>
                                             {entry.imageUrl ? (
@@ -534,9 +525,7 @@ const FeedbackReview = () => {
                                                 onClick={() => {
                                                     setSelectedUserEmail(entry.email);
                                                     setSelectedFeatureOrLocation(
-                                                        isFeatureTab
-                                                            ? entry.feature || "N/A"
-                                                            : entry.location || "N/A"
+                                                        isFeatureTab ? entry.feature || "N/A" : entry.location || "N/A"
                                                     );
                                                     setIsModalOpen(true);
                                                 }}
@@ -548,13 +537,29 @@ const FeedbackReview = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="9" style={{ textAlign: "center", padding: "20px" }}>
+                                    <td colSpan="8" style={{ textAlign: "center", padding: "20px" }}>
                                         No feedback found.
                                     </td>
                                 </tr>
                             )}
-                        </tbody>
 
+                            {filteredFeedback.length > 5 && (
+                                <tr>
+                                    <td colSpan="8" style={{ textAlign: "center", padding: "10px" }}>
+                                        {!isExpanded && (
+                                            <button className="show-more-btn" onClick={handleShowMore}>
+                                                Show More
+                                            </button>
+                                        )}
+                                        {isExpanded && (
+                                            <button className="show-less-btn" onClick={handleShowLess}>
+                                                Close
+                                            </button>
+                                        )}
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
                     </table>
 
                     {/* Image modal */}
@@ -601,31 +606,36 @@ const FeedbackReview = () => {
                                 <h3>Years (click a year to open quarters)</h3>
                                 <div className="drill-row">
                                     {years.length ? (
-                                        years.map((y) => {
-                                            const start = startOfYear(new Date(y, 0, 1));
-                                            const end = endOfYear(new Date(y, 0, 1));
-                                            const entries = entriesFor(start, end);
-                                            const { top, low } = topAndBottomForEntries(entries);
-                                            const avgTop = avgPerKey(entries)[0]?.avg ?? null;
+                                        {
+                                            years.map((y) => {
+                                                const start = startOfYear(new Date(y, 0, 1));
+                                                const end = endOfYear(new Date(y, 0, 1));
+                                                const entries = entriesFor(start, end);
+                                                const { top, low } = topAndBottomForEntries(entries);
+                                                const avgTop = avgPerKey(entries)[0]?.avg ?? null;
 
-                                            return (
-                                                <div key={y} className="drill-group">
-                                                    <PeriodCard
-                                                        title={`${y}`}
-                                                        avg={avgTop}
-                                                        count={entries.length}
-                                                        onClick={() => goToQuarterly(y)}
-                                                    />
-                                                    <small className="top">Top: {top}</small><br />
-                                                    <small className="low">Low: {low}</small>
+                                                return (
+                                                    <div key={y} className="drill-group">
+                                                        <PeriodCard
+                                                            title={`${y}`}
+                                                            avg={avgTop}
+                                                            count={entries.length}
+                                                            onClick={() => goToQuarterly(y)}
+                                                        />
+                                                        <div style={{ marginTop: 4 }}>
+                                                            <small className="top">Top: {top}</small>
+                                                            <br />
+                                                            <small className="low">Low: {low}</small>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })
+                                        }
 
-                                                </div>
-                                            );
-                                        })
+
                                     ) : (
                                         <p>No years / data</p>
                                     )}
-
                                 </div>
                             </>
                         )}
@@ -652,9 +662,8 @@ const FeedbackReview = () => {
                                                     count={qObj.entries.length}
                                                     onClick={() => goToMonthly(qObj)}
                                                 />
-                                                <small className="top">Top: {top}</small><br />
+                                                <small className="top">Top: {top}</small>
                                                 <small className="low">Low: {low}</small>
-
                                             </div>
                                         );
                                     })}
@@ -695,7 +704,7 @@ const FeedbackReview = () => {
                                                     count={mObj.entries.length}
                                                     onClick={() => goToWeeks(mObj)}
                                                 />
-                                                <small className="top">Top: {top}</small><br />
+                                                <small className="top">Top: {top}</small>
                                                 <small className="low">Low: {low}</small>
                                             </div>
                                         );
@@ -737,9 +746,8 @@ const FeedbackReview = () => {
                                                     count={w.entries.length}
                                                     onClick={() => goToDays(w)}
                                                 />
-                                                <small className="top">Top: {top}</small><br />
+                                                <small className="top">Top: {top}</small>
                                                 <small className="low">Low: {low}</small>
-
                                             </div>
                                         );
                                     })}
@@ -768,23 +776,24 @@ const FeedbackReview = () => {
                                 </div>
 
                                 <div className="drill-row">
-                                    {daysForWeekRange(selectedWeekRange.start, selectedWeekRange.end).map((dayObj, idx) => {
-                                        const { top, low } = topAndBottomForEntries(dayObj.entries);
-                                        const avgTop = avgPerKey(dayObj.entries)[0]?.avg ?? null;
+                                    {weeksForMonth(selectedMonth.year, selectedMonth.monthIndex).map((w, idx) => {
+                                        const { top, low } = topAndBottomForEntries(w.entries);
+                                        const avgTop = avgPerKey(w.entries)[0]?.avg ?? null;
 
                                         return (
                                             <div key={idx} className="drill-group">
                                                 <PeriodCard
-                                                    title={dayObj.label}
+                                                    title={w.label}
                                                     avg={avgTop}
-                                                    count={dayObj.entries.length}
-                                                    onClick={() => goToTableForDay(dayObj)}
+                                                    count={w.entries.length}
+                                                    onClick={() => goToDays(w)}
                                                 />
-                                                <small className="top">Top: {top}</small><br />
+                                                <small className="top">Top: {top}</small>
                                                 <small className="low">Low: {low}</small>
                                             </div>
                                         );
                                     })}
+
                                 </div>
                             </>
                         )}
@@ -811,7 +820,6 @@ const FeedbackReview = () => {
                                         <tr>
                                             <th></th>
                                             <th>Email</th>
-                                            {activeTab === "All Feedback" && <th>App Feature</th>}
                                             <th>{isFeatureTab ? "App Feature" : "Location"}</th>
                                             <th>Feedback</th>
                                             <th>Image</th>
@@ -826,8 +834,7 @@ const FeedbackReview = () => {
                                                 <tr key={f.id || i}>
                                                     <td>{i + 1}</td>
                                                     <td>{f.email}</td>
-                                                    {activeTab === "All Feedback" && <td>{f.feedbackType === "App Feedback" ? f.feature || "N/A" : "—"}</td>}
-                                                    <td>{isFeatureTab ? f.feature || "—" : f.location || "—"}</td>
+                                                    <td>{isFeatureTab ? f.feature || "N/A" : f.location || "N/A"}</td>
                                                     <td>{f.comment}</td>
                                                     <td>
                                                         {f.imageUrl ? (
@@ -851,9 +858,7 @@ const FeedbackReview = () => {
                                                             className="action-btn"
                                                             onClick={() => {
                                                                 setSelectedUserEmail(f.email);
-                                                                setSelectedFeatureOrLocation(
-                                                                    isFeatureTab ? f.feature || "N/A" : f.location || "N/A"
-                                                                );
+                                                                setSelectedFeatureOrLocation(isFeatureTab ? f.feature || "N/A" : f.location || "N/A");
                                                                 setIsModalOpen(true);
                                                             }}
                                                         >
@@ -864,7 +869,7 @@ const FeedbackReview = () => {
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan={activeTab === "All Feedback" ? 9 : 8} style={{ textAlign: "center", padding: 20 }}>
+                                                <td colSpan="8" style={{ textAlign: "center", padding: 20 }}>
                                                     No feedback for this day.
                                                 </td>
                                             </tr>
@@ -873,7 +878,6 @@ const FeedbackReview = () => {
                                 </table>
                             </>
                         )}
-
                     </div>
                 </div>
             </div>

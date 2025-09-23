@@ -107,7 +107,6 @@
     font-size: 22px;
     margin-bottom: 1rem;
     color: #1e2a38;
-    letter-spacing: 0.3px;
 }
 
 .chart-container button {
@@ -148,12 +147,12 @@
 .age-distribution,
 .top-destinations,
 .feedback-card {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 16px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
     margin-top: 2rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #fdfaf6;
-    padding: 26px;
-    border-radius: 16px;
 }
 
 .feedback-card {

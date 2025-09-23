@@ -509,7 +509,7 @@ const FeedbackReview = () => {
                                                     : "—"}
                                             </td>
                                         )}
-                                        <td>{isFeatureTab ? entry.feature || "—" : entry.location || "—"}</td>
+                                        <td>{isFeatureTab ? entry.feature || "N/A" : entry.location || "N/A"}</td>
                                         <td>{entry.comment}</td>
                                         <td>
                                             {entry.imageUrl ? (
@@ -535,7 +535,7 @@ const FeedbackReview = () => {
                                                     setSelectedUserEmail(entry.email);
                                                     setSelectedFeatureOrLocation(
                                                         isFeatureTab
-                                                            ? entry.feature || "N/A"
+                                                            ? entry.feature || "-"
                                                             : entry.location || "N/A"
                                                     );
                                                     setIsModalOpen(true);
@@ -827,7 +827,7 @@ const FeedbackReview = () => {
                                                     <td>{i + 1}</td>
                                                     <td>{f.email}</td>
                                                     {activeTab === "All Feedback" && <td>{f.feedbackType === "App Feedback" ? f.feature || "N/A" : "—"}</td>}
-                                                    <td>{isFeatureTab ? f.feature || "—" : f.location || "—"}</td>
+                                                    <td>{isFeatureTab ? f.feature || "N/A" : f.location || "N/A"}</td>
                                                     <td>{f.comment}</td>
                                                     <td>
                                                         {f.imageUrl ? (

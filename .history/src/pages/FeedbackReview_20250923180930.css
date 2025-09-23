@@ -63,7 +63,7 @@
 
 .feedback-table th,
 .feedback-table td {
-    padding: 14px 10px;
+    padding: 14px 16px;
     border-bottom: 1px solid #eee;
     text-align: left;
     font-size: 14px;
@@ -298,6 +298,7 @@
 .drill-row {
     display: flex;
     flex-wrap: wrap;
+    /* allow cards to go to next line if needed */
     gap: 12px;
     padding: 10px 0;
     justify-content: flex-start;
@@ -402,16 +403,6 @@
 
 .drill-card.low p {
     color: #d32f2f;
-}
-
-.top {
-    color: #28a745;
-    font-weight: bold;
-}
-
-.low {
-    color: #dc3545;
-    font-weight: bold;
 }
 
 .drill-card.top:hover {

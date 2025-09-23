@@ -487,7 +487,7 @@ const FeedbackReview = () => {
                             {loading ? (
                                 [...Array(5)].map((_, i) => (
                                     <tr key={i}>
-                                        <td colSpan="9">
+                                        <td colSpan="8">
                                             <div className="skeleton-card">
                                                 <div className="skeleton skeleton-title"></div>
                                                 <div className="skeleton skeleton-line medium"></div>
@@ -502,14 +502,7 @@ const FeedbackReview = () => {
                                     <tr key={entry.id}>
                                         <td>{index + 1}</td>
                                         <td>{entry.email}</td>
-                                        {isAllTab && (
-                                            <td>
-                                                {entry.feedbackType === "App Feedback"
-                                                    ? entry.feature || "N/A"
-                                                    : "—"}
-                                            </td>
-                                        )}
-                                        <td>{isFeatureTab ? entry.feature || "—" : entry.location || "—"}</td>
+                                        <td>{isFeatureTab ? entry.feature || "N/A" : entry.location || "N/A"}</td>
                                         <td>{entry.comment}</td>
                                         <td>
                                             {entry.imageUrl ? (
@@ -534,9 +527,7 @@ const FeedbackReview = () => {
                                                 onClick={() => {
                                                     setSelectedUserEmail(entry.email);
                                                     setSelectedFeatureOrLocation(
-                                                        isFeatureTab
-                                                            ? entry.feature || "N/A"
-                                                            : entry.location || "N/A"
+                                                        isFeatureTab ? entry.feature || "N/A" : entry.location || "N/A"
                                                     );
                                                     setIsModalOpen(true);
                                                 }}
@@ -548,13 +539,29 @@ const FeedbackReview = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="9" style={{ textAlign: "center", padding: "20px" }}>
+                                    <td colSpan="8" style={{ textAlign: "center", padding: "20px" }}>
                                         No feedback found.
                                     </td>
                                 </tr>
                             )}
-                        </tbody>
 
+                            {filteredFeedback.length > 5 && (
+                                <tr>
+                                    <td colSpan="8" style={{ textAlign: "center", padding: "10px" }}>
+                                        {!isExpanded && (
+                                            <button className="show-more-btn" onClick={handleShowMore}>
+                                                Show More
+                                            </button>
+                                        )}
+                                        {isExpanded && (
+                                            <button className="show-less-btn" onClick={handleShowLess}>
+                                                Close
+                                            </button>
+                                        )}
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
                     </table>
 
                     {/* Image modal */}
@@ -827,7 +834,7 @@ const FeedbackReview = () => {
                                                     <td>{i + 1}</td>
                                                     <td>{f.email}</td>
                                                     {activeTab === "All Feedback" && <td>{f.feedbackType === "App Feedback" ? f.feature || "N/A" : "—"}</td>}
-                                                    <td>{isFeatureTab ? f.feature || "—" : f.location || "—"}</td>
+                                                    <td>{isFeatureTab ? f.feature || "N/A" : f.location || "N/A"}</td>
                                                     <td>{f.comment}</td>
                                                     <td>
                                                         {f.imageUrl ? (

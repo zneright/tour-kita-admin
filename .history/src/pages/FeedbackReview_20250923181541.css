@@ -63,7 +63,7 @@
 
 .feedback-table th,
 .feedback-table td {
-    padding: 14px 10px;
+    padding: 14px 16px;
     border-bottom: 1px solid #eee;
     text-align: left;
     font-size: 14px;
@@ -243,64 +243,27 @@
 /* Drilldown Container */
 .ratings-drilldown {
     margin-top: 30px;
-    padding: 20px;
+    padding: 24px;
     background: #fff8f0;
     border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
+/* Section Title */
 .ratings-drilldown h3 {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 16px;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 20px;
     color: #5a3e2b;
 }
 
-/* Drilldown Cards (Year, Quarter, Month, Week, Day) */
-.drilldown-level {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-.drill-card {
-    flex: 1 1 calc(100% / 7 - 12px);
-    min-width: 100px;
-    max-width: 200px;
-    background: #fff;
-    border-radius: 12px;
-    padding: 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    border: 1px solid #e2d5c1;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-.drill-card:hover {
-    background: #fef6eb;
-    transform: translateY(-4px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
-}
-
-.drill-card h4 {
-    font-size: 16px;
-    color: #333;
-    margin-bottom: 8px;
-}
-
-.drill-card p {
-    font-size: 14px;
-    color: #666;
-}
-
+/* Drilldown Row */
 .drill-row {
     display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 10px 0;
-    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 16px;
+    padding-bottom: 8px;
 }
 
 .drill-row::-webkit-scrollbar {
@@ -308,29 +271,128 @@
 }
 
 .drill-row::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #bfa38c;
     border-radius: 3px;
 }
 
-
 .drill-row::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #9c7b61;
 }
 
-.drill-card,
-.drill-group {
+/* Drill Cards */
+.drill-card {
     flex: 0 0 auto;
-    min-width: 180px;
+    min-width: 140px;
+    max-width: 200px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: 1px solid #e2d5c1;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
 }
 
+.drill-card:hover {
+    background: #fff4e6;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
 
+.drill-card h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #5a3e2b;
+    margin-bottom: 8px;
+}
 
+.drill-card p {
+    font-size: 15px;
+    color: #7a5c43;
+}
+
+/* Top/Low Variants */
+.drill-card.top {
+    background: #e6f7ed;
+    border: 1px solid #b6e3c8;
+    box-shadow: 0 2px 10px rgba(0, 128, 0, 0.1);
+}
+
+.drill-card.top h4,
+.drill-card.top p {
+    color: #1b5e20;
+}
+
+.drill-card.low {
+    background: #fdecea;
+    border: 1px solid #f5c6cb;
+    box-shadow: 0 2px 10px rgba(179, 0, 0, 0.1);
+}
+
+.drill-card.low h4,
+.drill-card.low p {
+    color: #b71c1c;
+}
+
+/* Drill Card Icon */
+.drill-card .icon {
+    font-size: 20px;
+    margin-top: 6px;
+    display: block;
+}
+
+/* Back Button */
+.back-btn {
+    display: inline-block;
+    margin-bottom: 16px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #6c4c3f;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s ease;
+}
+
+.back-btn:hover {
+    background: #54362a;
+}
+
+/* Drilldown Table */
+.drilldown-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+}
+
+.drilldown-table th,
+.drilldown-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.drilldown-table th {
+    background: #f4e9df;
+    color: #4a3325;
+    font-weight: 600;
+}
+
+.drilldown-table tr:nth-child(even) {
+    background: #faf6f2;
+}
+
+/* No Data Message */
 .no-data {
     text-align: center;
     font-size: 14px;
     color: #888;
     padding: 20px 0;
 }
+
 
 .drilldown-table {
     width: 100%;
@@ -402,16 +464,6 @@
 
 .drill-card.low p {
     color: #d32f2f;
-}
-
-.top {
-    color: #28a745;
-    font-weight: bold;
-}
-
-.low {
-    color: #dc3545;
-    font-weight: bold;
 }
 
 .drill-card.top:hover {

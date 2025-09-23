@@ -63,7 +63,7 @@
 
 .feedback-table th,
 .feedback-table td {
-    padding: 14px 10px;
+    padding: 14px 16px;
     border-bottom: 1px solid #eee;
     text-align: left;
     font-size: 14px;
@@ -266,8 +266,11 @@
 
 .drill-card {
     flex: 1 1 calc(100% / 7 - 12px);
+    /* automatically fit up to 7 cards per row */
     min-width: 100px;
+    /* smallest allowed width */
     max-width: 200px;
+    /* optional max width */
     background: #fff;
     border-radius: 12px;
     padding: 16px;
@@ -298,6 +301,7 @@
 .drill-row {
     display: flex;
     flex-wrap: wrap;
+    /* allow cards to go to next line if needed */
     gap: 12px;
     padding: 10px 0;
     justify-content: flex-start;
@@ -356,6 +360,7 @@
     background: #faf6f2;
 }
 
+/* Back button */
 .back-btn {
     display: inline-block;
     margin-bottom: 15px;
@@ -389,6 +394,7 @@
     color: #2e7d32;
 }
 
+/* Lowest Destination Card */
 .drill-card.low {
     background: #fdecea;
     border: 1px solid #f5c6cb;
@@ -397,6 +403,7 @@
 
 .drill-card.low h4 {
     color: #b71c1c;
+    /* Dark red */
     font-weight: 700;
 }
 
@@ -404,16 +411,7 @@
     color: #d32f2f;
 }
 
-.top {
-    color: #28a745;
-    font-weight: bold;
-}
-
-.low {
-    color: #dc3545;
-    font-weight: bold;
-}
-
+/* Hover tweaks */
 .drill-card.top:hover {
     background: #d9f2e3;
     transform: translateY(-5px);
@@ -424,4 +422,45 @@
     background: #fbe3e1;
     transform: translateY(-5px);
     box-shadow: 0 4px 12px rgba(179, 0, 0, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard-main {
+        margin-left: 0;
+        padding: 16px;
+    }
+
+    .cards-container {
+        flex-direction: column;
+    }
+
+    .card {
+        width: 100%;
+    }
+
+    .search-bar {
+        margin-top: 10px;
+    }
+
+    .feedback-table th,
+    .feedback-table td {
+        font-size: 13px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 18px;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .send-btn,
+    .cancel-btn {
+        width: 100%;
+    }
 }

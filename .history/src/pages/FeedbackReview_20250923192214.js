@@ -509,7 +509,7 @@ const FeedbackReview = () => {
                                                     : "—"}
                                             </td>
                                         )}
-                                        <td>{isFeatureTab ? entry.feature || "—" : entry.location || "—"}</td>
+                                        <td>{isFeatureTab ? entry.feature || "N/A" : entry.location || "N/A"}</td>
                                         <td>{entry.comment}</td>
                                         <td>
                                             {entry.imageUrl ? (
