@@ -1,0 +1,221 @@
+.notification-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1100;
+    padding: 1rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.notification-modal {
+    background-color: #ffffff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    padding: 1.5rem;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-y: auto;
+    font-family: 'Segoe UI', sans-serif;
+    animation: fadeInSlide 0.35s ease;
+}
+
+.notification-close-btn {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    font-size: 1.6rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #555;
+    transition: color 0.2s;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.notification-info-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.notification-info-item {
+    flex: 1;
+    min-width: 120px;
+    background-color: #f8f9fa;
+    padding: 0.5rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.notification-close-btn:hover {
+    color: #000;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.notification-header h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    color: #333;
+    flex: 1;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.notification-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #fff;
+    background-color: #007bff;
+    white-space: nowrap;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.notification-badge.public {
+    background-color: #28a745;
+}
+
+.notification-badge.private {
+    background-color: #6c757d;
+}
+
+.notification-info-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.notification-info-card {
+    flex: 1;
+    min-width: 120px;
+    background-color: #f8f9fa;
+    padding: 0.7rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-weight: 500;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.notification-description {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #444;
+    font-family: 'Segoe UI', sans-serif;
+    white-space: pre-line;
+    /* keep line breaks */
+    text-align: justify;
+    /* 👈 makes text justified */
+}
+
+
+.notification-image-wrapper {
+    margin-bottom: 1rem;
+    border-radius: 12px;
+}
+
+.notification-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    border-radius: 12px;
+}
+
+.notification-image:hover {
+    transform: scale(1.02);
+}
+
+.notification-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.notification-button {
+    padding: 0.6rem 1.4rem;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.notification-edit-btn {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.notification-edit-btn:hover {
+    background-color: #0056b3;
+}
+
+.notification-delete-btn {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.notification-delete-btn:hover {
+    background-color: #a71d2a;
+}
+
+@media(max-width: 500px) {
+    .notification-info-cards {
+        flex-direction: column;
+    }
+
+    .notification-info-card {
+        width: 100%;
+    }
+
+    .notification-header h2 {
+        font-size: 1.5rem;
+    }
+
+
+}
+
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+
+}
