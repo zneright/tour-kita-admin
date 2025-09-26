@@ -1,0 +1,17 @@
+/* Container for all table controls */
+.table-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* Search input */
+.search-bar {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    flex: 1 1 200px;
+    /* grow and shrink */
+    min-w

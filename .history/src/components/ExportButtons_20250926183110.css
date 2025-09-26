@@ -1,0 +1,40 @@
+.export-buttons-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.export-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* PDF button */
+.export-btn.pdf {
+    background-color: #ff6f3c;
+    /* TourKita orange */
+}
+
+.export-btn.pdf:hover {
+    background-color: #e65c1f;
+}
+
+/* Excel button */
+.export-btn.excel {
+    background-color: #3c91e6;
+    /* TourKita blue */
+}
+
+.export-btn.excel:hover {
+    background-color: #3277c0;
+}

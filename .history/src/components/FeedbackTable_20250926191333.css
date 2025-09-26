@@ -1,0 +1,127 @@
+/* Container for all table controls */
+.table-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* Search input */
+.search-bar {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    flex: 1 1 200px;
+    /* grow and shrink */
+    min-width: 180px;
+    font-size: 14px;
+}
+
+/* Filter dropdown */
+.filter-select {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fff;
+}
+
+/* Date range container */
+.date-range {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.date-range input[type="date"] {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* Export buttons container */
+.export-buttons-container {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+    /* push buttons to the right */
+}
+
+/* Export buttons */
+.export-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.export-btn.pdf {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.export-btn.pdf:hover {
+    background-color: #c0392b;
+}
+
+.export-btn.excel {
+    background-color: #27ae60;
+    color: #fff;
+}
+
+.export-btn.excel:hover {
+    background-color: #1e8449;
+}
+
+/* Skeleton cards alignment */
+.skeleton-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+}
+
+.skeleton {
+    background-color: #ddd;
+    border-radius: 4px;
+}
+
+.skeleton-title {
+    height: 16px;
+    width: 40%;
+}
+
+.skeleton-line {
+    height: 10px;
+    width: 100%;
+}
+
+.skeleton-line.medium {
+    width: 70%;
+}
+
+.skeleton-line.short {
+    width: 50%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .table-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .export-buttons-container {
+        margin-left: 0;
+        justify-content: flex-start;
+    }
+}
